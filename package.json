@@ -22,15 +22,15 @@
     "@tailwindcss/typography": "0.5.10",
     "next": "14.1.0",
     "next-sanity": "5.5.11",
-    "react": "^18.2.0",
-    "react-dom": "18.2.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
     "sanity": "3.28.0",
     "sanity-plugin-iframe-pane": "2.6.1",
     "styled-components": "6.1.8",
     "three": "^0.168.0"
   },
   "devDependencies": {
-    "@types/react": "18.2.55",
+    "@types/react": "^18.3.7",
     "autoprefixer": "10.4.17",
     "eslint": "8.56.0",
     "eslint-config-next": "14.1.0",
