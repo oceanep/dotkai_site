@@ -2,7 +2,7 @@ import { DragControls } from '@react-three/drei'
 import { Canvas } from '@react-three/fiber'
 import type { GetStaticProps, InferGetStaticPropsType } from 'next'
 import { useLiveQuery } from 'next-sanity/preview'
-import { useState } from 'react'
+import { Suspense, useState } from 'react'
 import Box from '~/components/Box'
 
 import Card from '~/components/Card'
@@ -53,7 +53,9 @@ export default function IndexPage(
           onDragStart={() => setOrbActive(false)}
           onDragEnd={() => setOrbActive(true)}
         >
-          <Box rotateX={3} rotateY={0.2} />
+          <Suspense fallback={'...loading'}>
+            <Box rotateX={3} rotateY={0.2} />
+          </Suspense>
         </DragControls>
         <Controls
           active={orbActive}
