@@ -1,21 +1,14 @@
-import { DragControls } from '@react-three/drei'
 import { Canvas } from '@react-three/fiber'
+import { ACESFilmicToneMapping, LinearSRGBColorSpace, SRGBColorSpace } from 'three'
 import type { GetStaticProps, InferGetStaticPropsType } from 'next'
 import { useLiveQuery } from 'next-sanity/preview'
-import { Suspense, useState } from 'react'
-import Box from '~/components/Box'
 
-import Card from '~/components/Card'
-import Container from '~/components/Container'
-import Floor from '~/components/Floor'
-import LightBulb from '~/components/LightBulb'
-import Controls from '~/components/OrbitControls'
-import Welcome from '~/components/Welcome'
 import { readToken } from '~/lib/sanity.api'
 import { getClient } from '~/lib/sanity.client'
 import { getPosts, type Post, postsQuery } from '~/lib/sanity.queries'
 import type { SharedPageProps } from '~/pages/_app'
 import { SceneContainer } from '~/styles/styled'
+import LandingExperience from '~/components/LandingExperience'
 
 export const getStaticProps: GetStaticProps<
   SharedPageProps & {
@@ -38,29 +31,26 @@ export default function IndexPage(
   props: InferGetStaticPropsType<typeof getStaticProps>,
 ) {
   const [posts] = useLiveQuery<Post[]>(props.posts, postsQuery)
-  const [orbActive, setOrbActive] = useState<boolean>(true);
+  
+
   return (
     <SceneContainer>
       <Canvas
         shadows
+        dpr={ [1, 3] }
+        gl={{
+          antialias: false,
+          toneMapping: ACESFilmicToneMapping,
+          outputColorSpace: SRGBColorSpace
+        }}
         camera={{
-          position: [-6, 7, 7]
+          fov: 45,
+          near: 0.1,
+          far: 200,
+          position: [3, 2, 6]
         }}
       >
-        <ambientLight color={"white"} intensity={0.3} />
-        <LightBulb position={[0, 3, 0]} />
-        <DragControls
-          onDragStart={() => setOrbActive(false)}
-          onDragEnd={() => setOrbActive(true)}
-        >
-          <Suspense fallback={'...loading'}>
-            <Box rotateX={3} rotateY={0.2} />
-          </Suspense>
-        </DragControls>
-        <Controls
-          active={orbActive}
-        />
-        <Floor position={[0, -1, 0]}/>
+        <LandingExperience />
       </Canvas>
     </SceneContainer>
     // <Container>

@@ -7,7 +7,8 @@ const Controls:FC<{active: boolean}> = ({active}) => {
   return (
     <OrbitControls 
       camera={camera} 
-      domElement={gl.domElement} 
+      domElement={gl.domElement}
+      makeDefault
       enableRotate={active}
     />
   );

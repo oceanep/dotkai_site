@@ -2,7 +2,7 @@ import '~/styles/global.css'
 
 import type { AppProps } from 'next/app'
 import { IBM_Plex_Mono, Inter, PT_Serif } from 'next/font/google'
-import { lazy } from 'react'
+import { lazy, StrictMode } from 'react'
 
 export interface SharedPageProps {
   draftMode: boolean
@@ -37,22 +37,24 @@ export default function App({
   const { draftMode, token } = pageProps
   return (
     <>
-      <style jsx global>
-        {`
-          :root {
-            --font-family-sans: ${sans.style.fontFamily};
-            --font-family-serif: ${serif.style.fontFamily};
-            --font-family-mono: ${mono.style.fontFamily};
-          }
-        `}
-      </style>
-      {draftMode ? (
-        <PreviewProvider token={token}>
+      <StrictMode>
+        <style jsx global>
+          {`
+            :root {
+              --font-family-sans: ${sans.style.fontFamily};
+              --font-family-serif: ${serif.style.fontFamily};
+              --font-family-mono: ${mono.style.fontFamily};
+            }
+          `}
+        </style>
+        {draftMode ? (
+          <PreviewProvider token={token}>
+            <Component {...pageProps} />
+          </PreviewProvider>
+        ) : (
           <Component {...pageProps} />
-        </PreviewProvider>
-      ) : (
-        <Component {...pageProps} />
-      )}
+        )}
+      </StrictMode>
     </>
   )
 }
