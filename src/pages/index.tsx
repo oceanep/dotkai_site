@@ -2,10 +2,12 @@ import { Canvas } from '@react-three/fiber'
 import { ACESFilmicToneMapping, LinearSRGBColorSpace, SRGBColorSpace } from 'three'
 import type { GetStaticProps, InferGetStaticPropsType } from 'next'
 import { useLiveQuery } from 'next-sanity/preview'
+import { Leva } from 'leva'
 
 import { readToken } from '~/lib/sanity.api'
 import { getClient } from '~/lib/sanity.client'
 import { getPosts, type Post, postsQuery } from '~/lib/sanity.queries'
+
 import type { SharedPageProps } from '~/pages/_app'
 import { SceneContainer } from '~/styles/styled'
 import LandingExperience from '~/components/LandingExperience'
@@ -35,6 +37,9 @@ export default function IndexPage(
 
   return (
     <SceneContainer>
+      <Leva
+        collapsed
+      />
       <Canvas
         shadows
         dpr={ [1, 3] }
