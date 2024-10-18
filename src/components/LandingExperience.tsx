@@ -1,19 +1,25 @@
-import { FC } from "react";
+import { FC, Suspense, useState } from "react";
 import { Text, DragControls, Float } from '@react-three/drei'
-import { Suspense, useState } from 'react'
+import { Perf } from 'r3f-perf'
+import { useControls } from "leva";
+
 
 import Floor from '~/components/Floor'
 import LogoMesh from '~/components/Logo'
 import Controls from '~/components/Controls'
 import CustomObject from "./CustomObject";
-import { useFrame } from "@react-three/fiber";
 
 const LandingExperience:FC = () => {
     
     const [orbActive, setOrbActive] = useState<boolean>(true);
 
+    const { perfVisible } = useControls({
+        perfVisible: true
+    });
+
     return (
         <>
+            { perfVisible && <Perf position="top-left" /> }
             <color args={[ '#fedbfd' ]} attach="background" />
             <ambientLight color={"white"} intensity={0.3} />
             <directionalLight
