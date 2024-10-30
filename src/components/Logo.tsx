@@ -39,11 +39,13 @@ const LogoMesh:FC = () => {
             <mesh
                 ref={logoRef}
                 position={[position.x, position.y, 0]}
+                castShadow
             >
                 <primitive object={gltf.scene} /> 
             </mesh>
             <PivotControls
                 depthTest={false}
+                offset={[ 0, 0, 0]}
                 lineWidth={4}
                 axisColors={[ '#9381ff', '#ff4d6d', '#7ae582' ]}
                 scale={100}
@@ -56,6 +58,7 @@ const LogoMesh:FC = () => {
                     position-z={-0.2}
                     scale={0.75}
                     visible={visible}
+                    castShadow
                 >
                     <boxGeometry args={[4,2,0,9,9,0]}/>
                     <meshBasicMaterial color={color} wireframe />
