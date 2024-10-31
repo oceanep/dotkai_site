@@ -1,6 +1,5 @@
 import { FC, Suspense, useEffect, useRef, useState } from "react";
 import { 
-    Text, 
     DragControls, 
     Float, 
     useHelper, 
@@ -15,7 +14,7 @@ import {
 } from '@react-three/drei'
 import { Perf } from 'r3f-perf'
 import { useControls } from "leva";
-import { DirectionalLightHelper } from "three";
+import { DirectionalLightHelper, Vector3 } from "three";
 
 
 import Floor from '~/components/Floor'
@@ -23,6 +22,7 @@ import LogoMesh from '~/components/Logo'
 import Controls from '~/components/Controls'
 import CustomObject from "./CustomObject";
 import { useThree } from "@react-three/fiber";
+import Fallback from "./Fallback";
 
 const LandingExperience:FC = () => {
     
@@ -39,7 +39,7 @@ const LandingExperience:FC = () => {
 
     const { size, samples, focus } = useControls("soft shadows", {
         size: {
-            value: 20,
+            value: 4.5,
             min: 0,
             max: 50,
         },
@@ -61,24 +61,24 @@ const LandingExperience:FC = () => {
         }
     });
 
-    const { color, opacity, blur, scale, far, near } = useControls("contact shadows", {
-        color: '#000000',
-        opacity: {
-            value: 0.5, min: 0, max: 1
-        },
-        blur: {
-            value: 1, min: 0, max: 10
-        },
-        scale: {
-            value: 10, min: 0, max: 15
-        },
-        far: {
-            value: 3, min: 0, max: 50
-        },
-        near: {
-            value: 0, min: -50, max: 0
-        }
-    });
+    // const { color, opacity, blur, scale, far, near } = useControls("contact shadows", {
+    //     color: '#000000',
+    //     opacity: {
+    //         value: 0.5, min: 0, max: 1
+    //     },
+    //     blur: {
+    //         value: 1, min: 0, max: 10
+    //     },
+    //     scale: {
+    //         value: 10, min: 0, max: 15
+    //     },
+    //     far: {
+    //         value: 3, min: 0, max: 50
+    //     },
+    //     near: {
+    //         value: 0, min: -50, max: 0
+    //     }
+    // });
 
     const { 
         envMapIntensity, 
@@ -122,32 +122,31 @@ const LandingExperience:FC = () => {
     return (
         <>
             { perfVisible && <Perf position="top-left" /> }
+            <color args={[ backgroundColor ]} attach="background" />
             <Environment
-                background
+                // background
                 //add 1 to all y positions to use
                 // ground={{
                 //     height: envMapHeight,
                 //     radius: envMapRadius,
                 //     scale: envMapScale
                 // }}
-                files="./environmentMaps/beautiful_sunrise_at_coast_2k.hdr"
+                files="/environmentMaps/beautiful_sunrise_at_coast_2k.hdr"
                 // resolution={32}
             >
-                {/* <color args={[ backgroundColor ]} attach="background" />
                 <Lightformer
                     position={[0,0,-3]}
                     scale={5}
                     color={envColor}
                     intensity={10}
                     form="ring"
-                /> */}
+                />
             </Environment>
-            {/* <BakeShadows />  */}
-            {/* <SoftShadows
+            <SoftShadows
                 size={size}
                 samples={samples}
                 focus={focus} 
-            />  */}
+            /> 
             {/* <ambientLight color={"white"} intensity={0.3} /> */}
             <directionalLight
                 ref={ directionalLight }
@@ -155,8 +154,9 @@ const LandingExperience:FC = () => {
                 intensity={2.5}
                 castShadow
                 shadow-mapSize={[1024,1024]}
-            />
+                />
             {/* <Sky sunPosition={sunPosition} /> */}
+            {/* <BakeShadows />  */}
             {/*Use one of the below prerendered shadows if no lights*/}
             {/* <ContactShadows
                 position={[0, -0.94, 0]}
@@ -190,26 +190,15 @@ const LandingExperience:FC = () => {
                 onDragStart={() => setOrbActive(false)}
                 onDragEnd={() => setOrbActive(true)}
             > */}
-                <Suspense fallback={"...loading"}>
-                    {/* <Box rotateX={3} rotateY={0.2} /> */}
+                <Suspense 
+                    fallback={
+                        <Fallback 
+                            fontSize={.5} 
+                            color="#9ce928" 
+                            position={new Vector3( 0.5, 0.5, 0)} 
+                        />
+                    }>
                     <LogoMesh />
-                    <Float
-                        speed={5}
-                        floatIntensity={2}
-                    >
-                        <Text
-                            font="./fonts/mofuji04.ttf"
-                            fontSize={.5}
-                            color="#9ce928"
-                            position-y={0.5}
-                            maxWidth={2}
-                            textAlign="center"
-                            castShadow
-                        >
-                            LOADING...
-                        </Text>
-                    </Float>
-                    {/* <CustomObject/> */}
                 </Suspense>
             {/* </DragControls> */}
             <Controls active={orbActive} />
