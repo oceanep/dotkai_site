@@ -2,48 +2,46 @@
 
 import { FC, useRef } from "react";
 import { useFrame, useLoader } from "@react-three/fiber";
-import { Html, PivotControls } from "@react-three/drei";
+import { Html, PivotControls, useGLTF } from "@react-three/drei";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import { Group, Mesh } from "three";
 import { useControls } from "leva";
 
 import { Inner3dPill } from "~/styles/styled";
+import OceanLogo from "./OceanLogo";
 
 const LogoMesh:FC = () => {
-    const fileUrl = "/Models/Logo Model/ocean_logo.gltf";
+    const fileUrl = "/models/Logo Model/ocean_logo.glb";
+    const testUrl = "/models/adamHead/adamHead.gltf";
     
     const group = useRef<Group>(null!);
     const logoRef = useRef<Mesh>(null!);
     const boxRef = useRef<Mesh>(null!);
     
-    const { position, color, visible } = useControls({
+    const { position, color, visible, rotate } = useControls({
         position: {
             value: { x: 0, y: 0 },
             step: 0.1,
-            joystick: 'invertY'
+            joystick: "invertY"
         },
-        color: '#b383ff',
-        visible: true
-    })
+        color: "#b383ff",
+        visible: true,
+        rotate: true
+    });
 
-    const gltf = useLoader(GLTFLoader, fileUrl);
-    console.log('checking gltf: ', gltf)
+    // const model = useLoader(GLTFLoader, fileUrl);
+    const model = useGLTF(fileUrl);
+    console.log("checking model: ", model)
     
 
     useFrame((state, delta) => {
-        group.current.rotation.y += delta;
+        if (rotate) group.current.rotation.y += delta;
     });
 
     return (
         <group ref={group}>
-            <mesh
-                ref={logoRef}
-                position={[position.x, position.y, 0]}
-                castShadow
-            >
-                <primitive object={gltf.scene} /> 
-            </mesh>
-            <PivotControls
+            <OceanLogo />
+            {/* <PivotControls
                 depthTest={false}
                 offset={[ 0, 0, 0]}
                 lineWidth={4}
@@ -51,30 +49,30 @@ const LogoMesh:FC = () => {
                 scale={100}
                 fixed={true}
                 visible={visible}
-            >
+            > */}
                 <mesh
                     ref={boxRef}
                     position-y={0.5}
                     position-z={-0.2}
                     scale={0.75}
                     visible={visible}
-                    castShadow
                 >
                     <boxGeometry args={[4,2,0,9,9,0]}/>
                     <meshBasicMaterial color={color} wireframe />
-                    <Html
+                    {/* <Html
                         position={[0.5,0.5,0.5]}
                         center
                         distanceFactor={4}
                         occlude={[boxRef]}
                     >
                         <Inner3dPill>This is a pill</Inner3dPill>
-                    </Html>
+                    </Html> */}
                 </mesh>
-            </PivotControls>
+            {/* </PivotControls> */}
             {/* <TransformControls object={boxRef} /> */}
         </group>
     );
 }
+useGLTF.preload("/models/adamHead/adamHead.glb");
 
 export default LogoMesh;

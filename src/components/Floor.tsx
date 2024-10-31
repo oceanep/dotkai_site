@@ -6,13 +6,14 @@ const Floor:FC<MeshProps>  = (props) => {
     return (
         <mesh {...props} receiveShadow>
             <boxGeometry args={[3, 0.1, 3]}/>
-            <MeshReflectorMaterial
+            <meshStandardMaterial color="greenyellow" />
+            {/* <MeshReflectorMaterial
                 mirror={0.5}
                 resolution={512}
                 blur={[500,500]}
                 mixBlur={0.5}
                 color="#e84746"
-            />
+            /> */}
         </mesh>
     )
 };
