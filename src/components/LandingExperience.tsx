@@ -24,6 +24,7 @@ import CustomObject from "./CustomObject";
 import { useThree } from "@react-three/fiber";
 import Fallback from "./Fallback";
 import ComputerMesh from "./ComputerMesh";
+import Accents from "./Accents";
 
 const LandingExperience:FC = () => {
     
@@ -205,6 +206,9 @@ const LandingExperience:FC = () => {
                         scale={0.2}
                         position={[0,-0.94,0]}
                         rotation={[0,0.75,0]}
+                    />
+                    <Accents
+                        scale={0.0004}
                     />
                 </Suspense>
             {/* </DragControls> */}

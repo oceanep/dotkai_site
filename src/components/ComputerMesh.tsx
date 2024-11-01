@@ -1,17 +1,11 @@
 import { useAnimations, useGLTF } from "@react-three/drei";
 import { Vector3 } from "@react-three/fiber";
 import { FC, useEffect } from "react";
-
-interface IMeshProps {
-    scale?: number,
-    position?: Vector3,
-    rotation?: Vector3
-}
+import { IMeshProps } from "~/utils/types";
 
 const ComputerMesh:FC<IMeshProps> = (props) => {
     const computer = useGLTF('/models/smol_terrarium.glb');
     const animations = useAnimations(computer.animations, computer.scene);
-    console.log(animations)
 
     useEffect(() => {
         const action = animations.actions.Animation

@@ -8,11 +8,9 @@ import { Group, Mesh } from "three";
 import { useControls } from "leva";
 
 import { Inner3dPill } from "~/styles/styled";
-import OceanLogo from "./OceanLogo";
+import OceanLogo from "../jsx-models/LogoMesh";
 
-const LogoMesh:FC = () => {
-    const testUrl = "/models/adamHead/adamHead.gltf";
-    
+const LogoMesh:FC = () => {    
     const group = useRef<Group>(null!);
     const logoRef = useRef<Mesh>(null!);
     const boxRef = useRef<Mesh>(null!);
@@ -67,6 +65,5 @@ const LogoMesh:FC = () => {
         </group>
     );
 }
-useGLTF.preload("/models/adamHead/adamHead.gltf");
 
 export default LogoMesh;
