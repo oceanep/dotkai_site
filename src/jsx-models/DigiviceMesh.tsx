@@ -1,54 +1,41 @@
-import React, { useRef } from 'react'
-import { useGLTF } from '@react-three/drei'
+
+import React, { useRef, useMemo, useContext, createContext } from 'react'
+import { Merged, useGLTF } from '@react-three/drei'
 import { GLTFResult } from '~/utils/types'
 
-export function DigiviceMesh(props: JSX.IntrinsicElements['group']) {
-  const { nodes, materials } = useGLTF('/digivice.glb') as GLTFResult
-
+const context = createContext(undefined)
+export function Instances({ children, ...props }) {
+  const { nodes } = useGLTF('/models/digivice.glb') as GLTFResult
+  const instances = useMemo(
+    () => ({
+      DigiviceBodyLights: nodes.Digivice_Body_Lights_0,
+      DigiviceBodyBody: nodes.Digivice_Body_Body_0,
+      DigiviceBodyScreen: nodes.Digivice_Body_Screen_0,
+      DigiviceBodyScreenCorner: nodes.Digivice_Body_Screen_Corner_0,
+      ButtonsButtons: nodes.Buttons_Buttons_0,
+      AntennaAntenna: nodes.Antenna_Antenna_0,
+    }),
+    [nodes]
+  )
   return (
-    <group {...props} dispose={null}>
+    <Merged meshes={instances} {...props}>
+      {(instances) => <context.Provider value={instances} children={children} />}
+    </Merged>
+  )
+}
+
+export function DigiviceMesh(props: JSX.IntrinsicElements['group']) {
+  const instances = useContext(context)
+  return (
+    <group {...props} dispose={null} scale={0.0002}>
       <group rotation={[-Math.PI / 2, 0, 0]} scale={10}>
-        <mesh
-          castShadow
-          receiveShadow
-          geometry={nodes.Digivice_Body_Lights_0.geometry}
-          material={materials.Lights}
-        />
-        <mesh
-          castShadow
-          receiveShadow
-          geometry={nodes.Digivice_Body_Body_0.geometry}
-          material={materials.Body}
-        />
-        <mesh
-          castShadow
-          receiveShadow
-          geometry={nodes.Digivice_Body_Screen_0.geometry}
-          material={materials.Screen}
-        />
-        <mesh
-          castShadow
-          receiveShadow
-          geometry={nodes.Digivice_Body_Screen_Corner_0.geometry}
-          material={materials.Screen_Corner}
-        />
+        <instances.DigiviceBodyLights />
+        <instances.DigiviceBodyBody />
+        <instances.DigiviceBodyScreen />
+        <instances.DigiviceBodyScreenCorner />
       </group>
-      <mesh
-        castShadow
-        receiveShadow
-        geometry={nodes.Buttons_Buttons_0.geometry}
-        material={materials.Buttons}
-        rotation={[-Math.PI / 2, 0, 0]}
-        scale={0.1}
-      />
-      <mesh
-        castShadow
-        receiveShadow
-        geometry={nodes.Antenna_Antenna_0.geometry}
-        material={materials.Antenna}
-        rotation={[-Math.PI, -Math.PI / 6, 0]}
-        scale={0.1}
-      />
+      <instances.ButtonsButtons rotation={[-Math.PI / 2, 0, 0]} scale={0.1} />
+      <instances.AntennaAntenna rotation={[-Math.PI, -Math.PI / 6, 0]} scale={0.1} />
     </group>
   )
 }

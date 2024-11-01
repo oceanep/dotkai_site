@@ -1,16 +1,17 @@
 import { FC } from 'react';
 import { useGLTF, Clone } from '@react-three/drei'
 import { ICloneProps, IMeshProps } from '~/utils/types';
+import { DigiviceMesh, Instances } from '~/jsx-models/DigiviceMesh';
 
 const Accents:FC<ICloneProps> = (props) => {
     const fileUrl = "/models/digivice.glb";
     const model = useGLTF(fileUrl);
     
     return (
-        <>
+        <Instances>
             {
                 [...Array(100)].map( (x,i) => (
-                    <mesh
+                    <DigiviceMesh
                         key={`model-${Math.random}-${i}`}
                         position={[
                             (Math.random() - 0.5) * 5,
@@ -23,13 +24,11 @@ const Accents:FC<ICloneProps> = (props) => {
                             Math.random() * Math.PI,
                             0
                         ]}
-                    >
-                        <Clone object={model.scene} {...props} />
-                    </mesh>
+                    />
                     
                 ))
             }
-        </>
+        </Instances>
     );
 }
 useGLTF.preload("/models/digivice.glb");
