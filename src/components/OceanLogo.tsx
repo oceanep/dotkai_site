@@ -72,4 +72,4 @@ export default function OceanLogo(props: JSX.IntrinsicElements['group']) {
   )
 }
 
-useGLTF.preload('/ocean_logo.glb')
+useGLTF.preload('/models/Logo Model/ocean_logo.glb')

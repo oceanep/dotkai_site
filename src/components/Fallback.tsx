@@ -1,6 +1,6 @@
 import { FC, useRef } from "react";
 import { Float, Text } from "@react-three/drei";
-import { Vector3 } from "three";
+import { Vector3 } from "@react-three/fiber";
 
 interface TFallbackProps {
     fontSize?: number,

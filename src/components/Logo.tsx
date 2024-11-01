@@ -11,7 +11,6 @@ import { Inner3dPill } from "~/styles/styled";
 import OceanLogo from "./OceanLogo";
 
 const LogoMesh:FC = () => {
-    const fileUrl = "/models/Logo Model/ocean_logo.glb";
     const testUrl = "/models/adamHead/adamHead.gltf";
     
     const group = useRef<Group>(null!);
@@ -28,11 +27,6 @@ const LogoMesh:FC = () => {
         visible: true,
         rotate: true
     });
-
-    // const model = useLoader(GLTFLoader, fileUrl);
-    const model = useGLTF(fileUrl);
-    console.log("checking model: ", model)
-    
 
     useFrame((state, delta) => {
         if (rotate) group.current.rotation.y += delta;
@@ -73,6 +67,6 @@ const LogoMesh:FC = () => {
         </group>
     );
 }
-useGLTF.preload("/models/adamHead/adamHead.glb");
+useGLTF.preload("/models/adamHead/adamHead.gltf");
 
 export default LogoMesh;

@@ -23,6 +23,7 @@ import Controls from '~/components/Controls'
 import CustomObject from "./CustomObject";
 import { useThree } from "@react-three/fiber";
 import Fallback from "./Fallback";
+import ComputerMesh from "./ComputerMesh";
 
 const LandingExperience:FC = () => {
     
@@ -151,10 +152,11 @@ const LandingExperience:FC = () => {
             <directionalLight
                 ref={ directionalLight }
                 position={sunPosition}
-                intensity={2.5}
+                intensity={3.5}
                 castShadow
                 shadow-mapSize={[1024,1024]}
-                />
+                shadow-normalBias={0.04}
+            />
             {/* <Sky sunPosition={sunPosition} /> */}
             {/* <BakeShadows />  */}
             {/*Use one of the below prerendered shadows if no lights*/}
@@ -195,10 +197,15 @@ const LandingExperience:FC = () => {
                         <Fallback 
                             fontSize={.5} 
                             color="#9ce928" 
-                            position={new Vector3( 0.5, 0.5, 0)} 
+                            position={[0.5, 0.5, 0]} 
                         />
                     }>
                     <LogoMesh />
+                    <ComputerMesh 
+                        scale={0.2}
+                        position={[0,-0.94,0]}
+                        rotation={[0,0.75,0]}
+                    />
                 </Suspense>
             {/* </DragControls> */}
             <Controls active={orbActive} />
