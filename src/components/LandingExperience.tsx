@@ -1,4 +1,5 @@
 import { FC, Suspense, useEffect, useRef, useState } from "react";
+import { CapsuleGeometry, Color, DirectionalLightHelper, MathUtils, MeshStandardMaterial } from "three";
 import { 
     DragControls, 
     Float, 
@@ -14,29 +15,59 @@ import {
 } from '@react-three/drei'
 import { Perf } from 'r3f-perf'
 import { useControls } from "leva";
-import { DirectionalLightHelper, Vector3 } from "three";
-
 
 import Floor from '~/components/Floor'
 import LogoMesh from '~/components/Logo'
 import Controls from '~/components/Controls'
-import CustomObject from "./CustomObject";
-import { useThree } from "@react-three/fiber";
+import { useFrame, useThree } from "@react-three/fiber";
 import Fallback from "./Fallback";
 import ComputerMesh from "./ComputerMesh";
 import Accents from "./Accents";
+import { DigiviceMesh } from "~/jsx-models/DigiviceMesh";
+
+const capsuleGeometry = new CapsuleGeometry(1,1,4,8);
+const capsuleMaterial = new MeshStandardMaterial();
 
 const LandingExperience:FC = () => {
     
     const [orbActive, setOrbActive] = useState<boolean>(true);
+
+    //update capsule material
+    useEffect(() => {
+        capsuleMaterial.metalness = 0.9
+        capsuleMaterial.roughness = 0.05
+        capsuleMaterial.color = new Color("#3dff0d")
+        capsuleMaterial.needsUpdate = true
+    }, []);
+
+    //Accent mesh group refs
+    const digiviceRef = useRef([]);
+    const capsuleRef = useRef([]);
+
+    //mesh group animations
+    useFrame((s, delta) => {
+        let i = 1;
+        for(const digivice of digiviceRef.current) {
+            const t = s.clock.getElapsedTime() + 2 * 10000
+            digivice.rotation.y += delta * 1.2
+            digivice.rotation.z += delta * 1.4
+            digivice.position.x = Math.cos(t/ 4.5) / 2 + i/5 - 10
+            i++;
+        }
+        for(const capsule of capsuleRef.current) {
+            capsule.rotation.y += delta * 5.7;
+            capsule.rotation.z += delta * 3.2;
+        }
+    });
 
     //Light Visual Helper
     const directionalLight = useRef();
     useHelper(directionalLight, DirectionalLightHelper, 1);
 
     // Leva Controls
-    const { perfVisible } = useControls({
-        perfVisible: true
+    const { perfVisible, pillColor } = useControls({
+        perfVisible: true,
+        pillColor: "#3dff0d"
     });
 
     const { size, samples, focus } = useControls("soft shadows", {
@@ -208,8 +239,23 @@ const LandingExperience:FC = () => {
                         rotation={[0,0.75,0]}
                     />
                     <Accents
-                        scale={0.0004}
-                    />
+                        amount={75}
+                        scaleFactor={Math.pow(10, -3.2)}
+                        ref={digiviceRef}
+                    >
+                        <DigiviceMesh/>
+                    </Accents>
+                    <Accents
+                        amount={75}
+                        scaleFactor={Math.pow(10, -1.4)}
+                        ref={capsuleRef}
+                    >
+                        <mesh 
+                            receiveShadow
+                            geometry={capsuleGeometry}
+                            material={capsuleMaterial}
+                        />
+                    </Accents>
                 </Suspense>
             {/* </DragControls> */}
             <Controls active={orbActive} />

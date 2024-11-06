@@ -1,36 +1,45 @@
-import { FC } from 'react';
-import { useGLTF, Clone } from '@react-three/drei'
-import { ICloneProps, IMeshProps } from '~/utils/types';
-import { DigiviceMesh, Instances } from '~/jsx-models/DigiviceMesh';
+import { forwardRef, ReactNode } from 'react';
+import { Group } from 'three';
+import { Instances } from '~/jsx-models/DigiviceMesh';
 
-const Accents:FC<ICloneProps> = (props) => {
-    const fileUrl = "/models/digivice.glb";
-    const model = useGLTF(fileUrl);
-    
+interface IAccents {
+    amount?: number,
+    scaleFactor?: number,
+    children: ReactNode
+}
+
+const Accents = forwardRef<Group[], IAccents>(({
+    amount = 10,
+    scaleFactor = 1,
+    children
+}, ref: React.MutableRefObject<(Group | null)[]>) => {
+
     return (
         <Instances>
             {
-                [...Array(100)].map( (x,i) => (
-                    <DigiviceMesh
+                [...Array(amount)].map( (x,i) => (
+                    <group
+                        ref={(el) => {ref.current[i] = el}}
                         key={`model-${Math.random}-${i}`}
                         position={[
                             (Math.random() - 0.5) * 5,
                             (Math.random() - 0.5) * 5,
                             (Math.random() - 0.5) * 5
                         ]}
-                        scale={ 0.2 + Math.random() * 0.4 }
+                        scale={(0.2 + Math.random() * 0.2) * scaleFactor}
                         rotation={[
                             Math.random() * Math.PI,
                             Math.random() * Math.PI,
-                            0
+                            Math.random() * Math.PI
                         ]}
-                    />
+                        dispose={null}
+                    >
+                        {children}
+                    </group>
                     
                 ))
             }
         </Instances>
     );
-}
-useGLTF.preload("/models/digivice.glb");
-
+})
 export default Accents;
