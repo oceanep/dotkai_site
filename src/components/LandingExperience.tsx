@@ -150,12 +150,13 @@ const LandingExperience:FC = () => {
 
     useEffect(() => {
         scene.environmentIntensity = envMapIntensity;
-    }, [ envMapIntensity ]);
+        scene.background = new Color(backgroundColor);
+    }, [ envMapIntensity, backgroundColor ]);
 
     return (
         <>
             { perfVisible && <Perf position="top-left" /> }
-            <color args={[ backgroundColor ]} attach="background" />
+            {/* <color args={[ backgroundColor ]} attach="background" /> */}
             <Environment
                 // background
                 //add 1 to all y positions to use

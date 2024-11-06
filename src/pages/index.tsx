@@ -1,8 +1,9 @@
 import { Canvas } from '@react-three/fiber'
-import { ACESFilmicToneMapping, LinearSRGBColorSpace, SRGBColorSpace } from 'three'
+import { ACESFilmicToneMapping, SRGBColorSpace } from 'three'
 import type { GetStaticProps, InferGetStaticPropsType } from 'next'
 import { useLiveQuery } from 'next-sanity/preview'
 import { Leva } from 'leva'
+import { Bvh } from '@react-three/drei'
 
 import { readToken } from '~/lib/sanity.api'
 import { getClient } from '~/lib/sanity.client'
@@ -55,7 +56,9 @@ export default function IndexPage(
           position: [3, 2, 6]
         }}
       >
-        <LandingExperience />
+        <Bvh>
+          <LandingExperience />
+        </Bvh>
       </Canvas>
     </SceneContainer>
     // <Container>
