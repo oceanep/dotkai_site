@@ -1,7 +1,7 @@
-import { NearestFilter, TextureLoader } from 'three'
-import React, { useEffect, useRef } from 'react'
+import { Color, NearestFilter, TextureLoader } from 'three'
+import React, { useEffect, useMemo, useRef } from 'react'
 import { useGLTF } from '@react-three/drei'
-import { useControls } from 'leva'
+import { folder, useControls } from 'leva'
 import { useLoader } from '@react-three/fiber'
 import { GLTFResult } from '~/utils/types'
 
@@ -21,8 +21,14 @@ export default function OceanLogo(props: JSX.IntrinsicElements['group']) {
 
   }, [gradientTexture]);
 
-  const { color } = useControls("logo", {
-    color: "#f576f5"
+  const { color, emissionColor, emissionIntensity } = useControls("logo", {
+    color: "#f576f5",
+    emissionColor: "#f576f5",
+    emissionIntensity: {
+      min: 0,
+      max: 20,
+      value: 1
+    }
   })
 
   return (
@@ -35,6 +41,8 @@ export default function OceanLogo(props: JSX.IntrinsicElements['group']) {
         <meshToonMaterial
             attach="material"
             color={color}
+            emissive={emissionColor}
+            emissiveIntensity={emissionIntensity}
             gradientMap={gradientTexture}
             
         />
@@ -53,6 +61,8 @@ export default function OceanLogo(props: JSX.IntrinsicElements['group']) {
         <meshToonMaterial
             attach="material"
             color={color}
+            emissive={emissionColor}
+            emissiveIntensity={emissionIntensity}
             gradientMap={gradientTexture}
         />
       </mesh>
