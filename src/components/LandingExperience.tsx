@@ -26,6 +26,7 @@ import Fallback from "./Fallback";
 import ComputerMesh from "./ComputerMesh";
 import Accents from "./Accents";
 import { DigiviceMesh } from "~/jsx-models/DigiviceMesh";
+import Drunk from "~/effects/Warp";
 
 const capsuleGeometry = new CapsuleGeometry(1, 1, 4, 8);
 const capsuleMaterial = new MeshStandardMaterial();
@@ -47,6 +48,7 @@ const LandingExperience: FC = () => {
     //Accent mesh group refs
     const digiviceRef = useRef([]);
     const capsuleRef = useRef([]);
+    const drunkRef = useRef(null);
 
     //mesh group animations
     useFrame((s, delta) => {
@@ -161,14 +163,21 @@ const LandingExperience: FC = () => {
         intensity,
         focusDistance,
         focalLength,
-        bokehScale
+        bokehScale,
+        vignetteOn,
+        glitchOn,
+        noiseOn,
+        bloomOn,
+        dofOn
      } = useControls("post processing", {
         ['vignette']: folder({
+            vignetteOn: true,
             vignetteBlendingMode: {
                 options: ["NORMAL", ...Object.keys(BlendFunction).filter(k => k !== "NORMAL")]
             }
         }),
         ['glitch controls']: folder({
+            glitchOn: false,
             glitchMode: {
                 options: ["SPORADIC", ...Object.keys(GlitchMode).filter(k => k !== "SPORADIC")]
             },
@@ -183,11 +192,13 @@ const LandingExperience: FC = () => {
             }
         }),
         ['noise controls']: folder({
+            noiseOn: true,
             noiseBlendingMode: {
                 options: ["OVERLAY", ...Object.keys(BlendFunction).filter(k => k !== "OVERLAY")]
             }
         }),
         ['bloom controls']: folder({
+            bloomOn: true,
             luminanceThreshold: {
                 min: 0.0,
                 max: 2.0,
@@ -202,6 +213,7 @@ const LandingExperience: FC = () => {
             }
         }),
         ['depth of field']: folder({
+            dofOn: false,
             focusDistance: {
                 min: 0.0,
                 max: 2.0,
@@ -222,6 +234,26 @@ const LandingExperience: FC = () => {
             },
         }),
     });
+
+    //custom post processing effect controls
+    const drunkProps = useControls('Drunk Effect', {
+        frequency: {
+            value: 2, 
+            min: 1,
+            max: 20
+        },
+        amplitude: {
+            value: 0.1,
+            min: 0,
+            max: 1
+        }
+    })
+
+    const { customEffectBlendMode } = useControls('Drunk Effect Blend Mode', {
+        customEffectBlendMode: {
+            options: ["DARKEN", ...Object.keys(BlendFunction).filter(k => k !== "DARKEN")]
+        }
+    })
 
     //Scene Settings
     const scene = useThree(state => state.scene);
@@ -301,30 +333,45 @@ const LandingExperience: FC = () => {
             </AccumulativeShadows> */}
             <EffectComposer multisampling={0}>
                 <ToneMapping mode={ToneMappingMode.ACES_FILMIC} />
-                <Vignette
-                    offset={0.5}
-                    darkness={0.5}
-                    blendFunction={BlendFunction[vignetteBlendingMode]}
-                />
-                <Glitch
-                    delay={new Vector2(delay[0], delay[1])}
-                    duration={new Vector2(duration[0], duration[1])}
-                    strength={new Vector2(strength[0], strength[1])}
-                    mode={GlitchMode[glitchMode]}
-                />
-                <Noise
-                    premultiply
-                    blendFunction={BlendFunction[noiseBlendingMode]}
-                />
-                <Bloom
-                    luminanceThreshold={luminanceThreshold}
-                    intensity={intensity}
-                    mipmapBlur
-                />
-                <DepthOfField
-                    focusDistance={focusDistance}
-                    focalLength={focalLength}
-                    bokehScale={bokehScale}
+                {vignetteOn && (
+                    <Vignette
+                        offset={0.5}
+                        darkness={0.5}
+                        blendFunction={BlendFunction[vignetteBlendingMode]}
+                    />
+                )}
+                {glitchOn && (
+                    <Glitch
+                        delay={new Vector2(delay[0], delay[1])}
+                        duration={new Vector2(duration[0], duration[1])}
+                        strength={new Vector2(strength[0], strength[1])}
+                        mode={GlitchMode[glitchMode]}
+                    />
+                )}
+                {noiseOn && (
+                    <Noise
+                        premultiply
+                        blendFunction={BlendFunction[noiseBlendingMode]}
+                    />
+                )}
+                {bloomOn && (
+                    <Bloom
+                        luminanceThreshold={luminanceThreshold}
+                        intensity={intensity}
+                        mipmapBlur
+                    />
+                )}
+                {dofOn && (
+                    <DepthOfField
+                        focusDistance={focusDistance}
+                        focalLength={focalLength}
+                        bokehScale={bokehScale}
+                    />
+                )}
+                <Drunk
+                    frequency={2}
+                    blendFunction={BlendFunction[customEffectBlendMode]}
+                    {...drunkProps}
                 />
             </EffectComposer>
             {/* <DragControls
