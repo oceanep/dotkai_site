@@ -1,7 +1,6 @@
-
 import { Effect, BlendFunction } from "postprocessing";
 import { Uniform, WebGLRenderer, WebGLRenderTarget } from "three";
-import { IDrunkProps } from "~/utils/types";
+import { IWarpProps } from "~/utils/types";
 
 const fragmentShader = /* glsl */`
     uniform float frequency;
@@ -17,10 +16,10 @@ const fragmentShader = /* glsl */`
     }
 `
 
-export default class DrunkEffect extends Effect {
-    constructor({ frequency, amplitude, blendFunction = BlendFunction.DARKEN }: IDrunkProps) {
+export default class WarpEffect extends Effect {
+    constructor({ frequency, amplitude, blendFunction = BlendFunction.DARKEN }: IWarpProps) {
         super(
-            'DrunkEffect',
+            'WarpEffect',
             fragmentShader,
             {
                 uniforms: new Map([
@@ -31,10 +30,8 @@ export default class DrunkEffect extends Effect {
                 blendFunction
             }
         )
-        console.log('class constructed')
     }
     update(renderer: WebGLRenderer, inputBuffer: WebGLRenderTarget, deltaTime?: number): void {
         this.uniforms.get('time').value += deltaTime
-        console.log('update running?')
     }
 }

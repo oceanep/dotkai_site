@@ -18,7 +18,7 @@ export interface ICloneProps {
     rotation?: Euler
 }
 
-export interface IDrunkProps {
+export interface IWarpProps {
     frequency?: number,
     amplitude?: number,
     blendFunction?: BlendFunction

@@ -28,7 +28,7 @@ import Fallback from "./Fallback";
 import ComputerMesh from "./ComputerMesh";
 import Accents from "./Accents";
 import { DigiviceMesh } from "~/jsx-models/DigiviceMesh";
-import Drunk from "~/effects/Warp";
+import Warp from "~/effects/Warp";
 
 const capsuleGeometry = new CapsuleGeometry(1, 1, 4, 8);
 const capsuleMaterial = new MeshStandardMaterial();
@@ -50,7 +50,7 @@ const LandingExperience: FC = () => {
     //Accent mesh group refs
     const digiviceRef = useRef([]);
     const capsuleRef = useRef([]);
-    const drunkRef = useRef(null);
+    const warpRef = useRef(null);
 
     //mesh group animations
     useFrame((s, delta) => {
@@ -238,7 +238,7 @@ const LandingExperience: FC = () => {
     });
 
     //custom post processing effect controls
-    const drunkProps = useControls('Drunk Effect', {
+    const warpProps = useControls('Warp Effect', {
         frequency: {
             value: 2, 
             min: 1,
@@ -251,7 +251,7 @@ const LandingExperience: FC = () => {
         }
     })
 
-    const { customEffectBlendMode } = useControls('Drunk Effect Blend Mode', {
+    const { customEffectBlendMode } = useControls('Warp Effect Blend Mode', {
         customEffectBlendMode: {
             options: ["DARKEN", ...Object.keys(BlendFunction).filter(k => k !== "DARKEN")]
         }
@@ -370,10 +370,10 @@ const LandingExperience: FC = () => {
                         bokehScale={bokehScale}
                     />
                 )}
-                <Drunk
+                <Warp
                     frequency={2}
                     blendFunction={BlendFunction[customEffectBlendMode]}
-                    {...drunkProps}
+                    {...warpProps}
                 />
             </EffectComposer>
             {/* <DragControls
