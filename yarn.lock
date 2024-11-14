@@ -1219,7 +1219,7 @@
     suspend-react "^0.1.3"
     zustand "^3.7.1"
 
-"@react-three/postprocessing@^2.16.3":
+"@react-three/postprocessing@2.16":
   version "2.16.3"
   resolved "https://registry.yarnpkg.com/@react-three/postprocessing/-/postprocessing-2.16.3.tgz#91bad6a541db7573f3100f1c7edf67d22c66413e"
   integrity sha512-ftodXpUsy0/mzn0KqyV7MBau71dD9C5UOFnB3kHhCLNoxjKYQWZa9do0olJTSkl3owYXRfNHcLriK1Xn8wxZJw==
@@ -5669,11 +5669,6 @@ postcss@^8.4.23, postcss@^8.4.27:
     nanoid "^3.3.7"
     picocolors "^1.1.0"
     source-map-js "^1.2.1"
-
-postprocessing@6.35:
-  version "6.35.6"
-  resolved "https://registry.yarnpkg.com/postprocessing/-/postprocessing-6.35.6.tgz#2289dbd7757279436a34a686da72dcbc66e53b68"
-  integrity sha512-df0K1zofbBCYcHDFmJtAw9TgyPJu6eITBG0iJeUBcNLagi0EwLBVl1tib+ypYYjChojhiNaib16mRwvu9ZoJIA==
 
 postprocessing@^6.32.1:
   version "6.36.4"

@@ -1,3 +1,5 @@
+"use client"
+
 import { FC, Suspense, useEffect, useRef, useState } from "react";
 import { CapsuleGeometry, Color, DirectionalLightHelper, MathUtils, MeshStandardMaterial, Vector2 } from "three";
 import {
@@ -13,7 +15,7 @@ import {
     Environment,
     Lightformer
 } from '@react-three/drei'
-import { Bloom, DepthOfField, EffectComposer, Glitch, Noise, ToneMapping, Vignette } from "@react-three/postprocessing";
+import { EffectComposer, Bloom, DepthOfField, Glitch, Noise, ToneMapping, Vignette } from "@react-three/postprocessing";
 import { ToneMappingMode, BlendFunction, GlitchMode } from "postprocessing";
 import { Perf } from 'r3f-perf'
 import { folder, useControls } from "leva";
