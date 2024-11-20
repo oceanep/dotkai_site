@@ -1,4 +1,4 @@
-import { Euler, Vector3 } from "@react-three/fiber";
+import { Euler, Vector2, Vector3 } from "@react-three/fiber";
 import { BlendFunction } from "postprocessing";
 import { Mesh, Material } from "three";
 import { GLTF } from "three-stdlib";
@@ -19,9 +19,15 @@ export interface ICloneProps {
 }
 
 export interface IWarpProps {
+    warp?: number,
+    intensity?: number,
     frequency?: number,
-    amplitude?: number,
+    scale?: number,
     blendFunction?: BlendFunction
+}
+
+export interface IWarpClassProps extends IWarpProps {
+    resolution: Vector2,
 }
 
 export interface IMeshProps {

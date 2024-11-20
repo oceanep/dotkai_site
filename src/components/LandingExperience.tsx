@@ -15,10 +15,8 @@ import {
     Environment,
     Lightformer
 } from '@react-three/drei'
-import { EffectComposer, Bloom, DepthOfField, Glitch, Noise, ToneMapping, Vignette } from "@react-three/postprocessing";
-import { ToneMappingMode, BlendFunction, GlitchMode } from "postprocessing";
 import { Perf } from 'r3f-perf'
-import { folder, useControls } from "leva";
+import { useControls } from "leva";
 
 import Floor from '~/components/Floor'
 import LogoMesh from '~/components/Logo'
@@ -28,7 +26,7 @@ import Fallback from "./Fallback";
 import ComputerMesh from "./ComputerMesh";
 import Accents from "./Accents";
 import { DigiviceMesh } from "~/jsx-models/DigiviceMesh";
-import Warp from "~/effects/Warp";
+import EffectPass from "./EffectPass";
 
 const capsuleGeometry = new CapsuleGeometry(1, 1, 4, 8);
 const capsuleMaterial = new MeshStandardMaterial();
@@ -153,110 +151,6 @@ const LandingExperience: FC = () => {
         backgroundColor: "#f6fc8a"
     });
 
-    //Post Processing Controls
-    const {
-        vignetteBlendingMode,
-        delay,
-        duration,
-        strength,
-        glitchMode, 
-        noiseBlendingMode,
-        luminanceThreshold,
-        intensity,
-        focusDistance,
-        focalLength,
-        bokehScale,
-        vignetteOn,
-        glitchOn,
-        noiseOn,
-        bloomOn,
-        dofOn
-     } = useControls("post processing", {
-        ['vignette']: folder({
-            vignetteOn: true,
-            vignetteBlendingMode: {
-                options: ["NORMAL", ...Object.keys(BlendFunction).filter(k => k !== "NORMAL")]
-            }
-        }),
-        ['glitch controls']: folder({
-            glitchOn: false,
-            glitchMode: {
-                options: ["SPORADIC", ...Object.keys(GlitchMode).filter(k => k !== "SPORADIC")]
-            },
-            delay: {
-                value: [0.5, 1.0]
-            },
-            duration: {
-                value: [0.1, 0.3]
-            },
-            strength: {
-                value: [0.2, 0.4]
-            }
-        }),
-        ['noise controls']: folder({
-            noiseOn: true,
-            noiseBlendingMode: {
-                options: ["OVERLAY", ...Object.keys(BlendFunction).filter(k => k !== "OVERLAY")]
-            }
-        }),
-        ['bloom controls']: folder({
-            bloomOn: true,
-            luminanceThreshold: {
-                min: 0.0,
-                max: 2.0,
-                step: 0.1,
-                value: 0.7
-            },
-            intensity: {
-                min: 0.0,
-                max: 2.0,
-                step: 0.1,
-                value: 0.5
-            }
-        }),
-        ['depth of field']: folder({
-            dofOn: false,
-            focusDistance: {
-                min: 0.0,
-                max: 2.0,
-                step: 0.05,
-                value: 0.25
-            },
-            focalLength: {
-                min: 0.0,
-                max: 2.0,
-                step: 0.05,
-                value: 0.65
-            },
-            bokehScale: {
-                min: 0,
-                max: 10,
-                step: 1,
-                value: 5
-            },
-        }),
-    });
-
-    //custom post processing effect controls
-    const warpProps = useControls('Warp Effect', {
-        frequency: {
-            value: 2, 
-            min: 1,
-            max: 20
-        },
-        amplitude: {
-            value: 0.1,
-            min: 0,
-            max: 1
-        }
-    })
-
-    const { customEffectBlendMode } = useControls('Warp Effect Blend Mode', {
-        customEffectBlendMode: {
-            options: ["DARKEN", ...Object.keys(BlendFunction).filter(k => k !== "DARKEN")]
-        }
-    })
-
     //Scene Settings
     const scene = useThree(state => state.scene);
 
@@ -333,49 +227,7 @@ const LandingExperience: FC = () => {
                     bias={0.001}
                 />
             </AccumulativeShadows> */}
-            <EffectComposer multisampling={0}>
-                <ToneMapping mode={ToneMappingMode.ACES_FILMIC} />
-                {vignetteOn && (
-                    <Vignette
-                        offset={0.5}
-                        darkness={0.5}
-                        blendFunction={BlendFunction[vignetteBlendingMode]}
-                    />
-                )}
-                {glitchOn && (
-                    <Glitch
-                        delay={new Vector2(delay[0], delay[1])}
-                        duration={new Vector2(duration[0], duration[1])}
-                        strength={new Vector2(strength[0], strength[1])}
-                        mode={GlitchMode[glitchMode]}
-                    />
-                )}
-                {noiseOn && (
-                    <Noise
-                        premultiply
-                        blendFunction={BlendFunction[noiseBlendingMode]}
-                    />
-                )}
-                {bloomOn && (
-                    <Bloom
-                        luminanceThreshold={luminanceThreshold}
-                        intensity={intensity}
-                        mipmapBlur
-                    />
-                )}
-                {dofOn && (
-                    <DepthOfField
-                        focusDistance={focusDistance}
-                        focalLength={focalLength}
-                        bokehScale={bokehScale}
-                    />
-                )}
-                <Warp
-                    frequency={2}
-                    blendFunction={BlendFunction[customEffectBlendMode]}
-                    {...warpProps}
-                />
-            </EffectComposer>
+            <EffectPass />
             {/* <DragControls
                 onDragStart={() => setOrbActive(false)}
                 onDragEnd={() => setOrbActive(true)}
