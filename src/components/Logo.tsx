@@ -3,7 +3,6 @@
 import { FC, useRef } from "react";
 import { useFrame, useLoader } from "@react-three/fiber";
 import { Html, PivotControls, useGLTF } from "@react-three/drei";
-import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import { Group, Mesh } from "three";
 import { useControls } from "leva";
 
@@ -26,9 +25,9 @@ const LogoMesh:FC = () => {
         rotate: true
     });
 
-    useFrame((state, delta) => {
-        if (rotate) group.current.rotation.y += delta;
-    });
+    // useFrame((state, delta) => {
+    //     if (rotate) group.current.rotation.y += delta;
+    // });
 
     return (
         <group ref={group}>

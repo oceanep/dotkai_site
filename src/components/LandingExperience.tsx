@@ -1,7 +1,7 @@
 "use client"
 
 import { FC, Suspense, useEffect, useRef, useState } from "react";
-import { CapsuleGeometry, Color, DirectionalLightHelper, MathUtils, MeshStandardMaterial, Vector2 } from "three";
+import { CapsuleGeometry, Color, DirectionalLightHelper, MathUtils, MeshStandardMaterial, Vector2, Vector3 } from "three";
 import {
     DragControls,
     Float,
@@ -13,7 +13,9 @@ import {
     ContactShadows,
     Sky,
     Environment,
-    Lightformer
+    Lightformer,
+    PerspectiveCamera,
+    CameraControls
 } from '@react-three/drei'
 import { Perf } from 'r3f-perf'
 import { useControls } from "leva";
@@ -27,6 +29,7 @@ import ComputerMesh from "./ComputerMesh";
 import Accents from "./Accents";
 import { DigiviceMesh } from "~/jsx-models/DigiviceMesh";
 import EffectPass from "./EffectPass";
+import Parallax from "./Parallax";
 
 const capsuleGeometry = new CapsuleGeometry(1, 1, 4, 8);
 const capsuleMaterial = new MeshStandardMaterial();
@@ -70,7 +73,34 @@ const LandingExperience: FC = () => {
     const directionalLight = useRef();
     useHelper(directionalLight, DirectionalLightHelper, 1);
 
+    //Camera
+    const { camera, invalidate } = useThree();
+
     // Leva Controls
+    const { fov, near, far, position } = useControls('camera controls', {
+        fov: {
+            value: 45,
+            min: -10,
+            max: 100,
+            step: 1
+        },
+        near: {
+            value: 0.1,
+            min: -1,
+            max: 5,
+            step: 0.1
+        },
+        far: {
+            value: 200,
+            min: -50,
+            max: 300,
+            step: 1
+        },
+        position: {
+            value: [3, 2, 6]
+        }
+    });
+    
     const { perfVisible, pillColor } = useControls({
         perfVisible: true,
         pillColor: "#3dff0d"
@@ -153,6 +183,7 @@ const LandingExperience: FC = () => {
 
     //Scene Settings
     const scene = useThree(state => state.scene);
+
 
     useEffect(() => {
         scene.environmentIntensity = envMapIntensity;
@@ -241,11 +272,12 @@ const LandingExperience: FC = () => {
                     />
                 }>
                 <LogoMesh />
-                <ComputerMesh
+                {/* <ComputerMesh
                     scale={0.2}
                     position={[0, -0.94, 0]}
                     rotation={[0, 0.75, 0]}
-                />
+                /> */}
+                <Parallax/>
                 <Accents
                     amount={75}
                     scaleFactor={Math.pow(10, -3.2)}
@@ -266,8 +298,8 @@ const LandingExperience: FC = () => {
                 </Accents>
             </Suspense>
             {/* </DragControls> */}
-            <Controls active={orbActive} />
-            <Floor position={[0, -1, 0]} />
+            {/* <Controls active={orbActive} />
+            <Floor position={[0, -1, 0]} /> */}
         </>
     )
 };

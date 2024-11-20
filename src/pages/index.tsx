@@ -1,8 +1,8 @@
-import { Canvas } from '@react-three/fiber'
+import { Canvas, useThree } from '@react-three/fiber'
 import { ACESFilmicToneMapping, SRGBColorSpace } from 'three'
 import type { GetStaticProps, InferGetStaticPropsType } from 'next'
 import { useLiveQuery } from 'next-sanity/preview'
-import { Leva } from 'leva'
+import { Leva, useControls } from 'leva'
 import { Bvh } from '@react-three/drei'
 
 import { readToken } from '~/lib/sanity.api'
@@ -34,7 +34,6 @@ export default function IndexPage(
   props: InferGetStaticPropsType<typeof getStaticProps>,
 ) {
   const [posts] = useLiveQuery<Post[]>(props.posts, postsQuery)
-  
 
   return (
     <SceneContainer>
@@ -52,8 +51,8 @@ export default function IndexPage(
         camera={{
           fov: 45,
           near: 0.1,
-          far: 200,
-          position: [3, 2, 6]
+          far: 100,
+          position: [0, 0, 4]
         }}
       >
         <Bvh>
