@@ -1,4 +1,4 @@
-import { forwardRef, ReactNode } from 'react';
+import { forwardRef, memo, ReactNode } from 'react';
 import { Group } from 'three';
 import { Instances } from '~/jsx-models/DigiviceMesh';
 
@@ -42,4 +42,6 @@ const Accents = forwardRef<Group[], IAccents>(({
         </Instances>
     );
 })
-export default Accents;
+//Forcing a true state here is bad but will probably
+//need some sort of custom check to prevent rerenders
+export default memo(Accents, () => true);

@@ -72,34 +72,6 @@ const LandingExperience: FC = () => {
     //Light Visual Helper
     const directionalLight = useRef();
     useHelper(directionalLight, DirectionalLightHelper, 1);
-
-    //Camera
-    const { camera, invalidate } = useThree();
-
-    // Leva Controls
-    const { fov, near, far, position } = useControls('camera controls', {
-        fov: {
-            value: 45,
-            min: -10,
-            max: 100,
-            step: 1
-        },
-        near: {
-            value: 0.1,
-            min: -1,
-            max: 5,
-            step: 0.1
-        },
-        far: {
-            value: 200,
-            min: -50,
-            max: 300,
-            step: 1
-        },
-        position: {
-            value: [3, 2, 6]
-        }
-    });
     
     const { perfVisible, pillColor } = useControls({
         perfVisible: true,
