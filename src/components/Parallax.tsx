@@ -1,11 +1,18 @@
 import { useThree, useFrame } from "@react-three/fiber";
-import { useState, useEffect } from "react";
-import { Color, Vector3 } from "three";
+import { useState, useEffect, useRef, useMemo } from "react";
+import { Mesh, Vector3 } from "three";
 
 const Parallax = () => {
     const camera = useThree(state => state.camera);
+    const foci = useRef<Mesh>(null!);
 
     const [cursor, setCursor] = useState({x: 0, y: 0})
+    
+    const initCamPos = useMemo(() => ({
+        x: camera.position.x || 0, 
+        y: camera.position.y || 0, 
+        z: camera.position.z || 0
+    }), [])
 
     const handleCursor = (e) => 
         setCursor({
@@ -19,12 +26,29 @@ const Parallax = () => {
     }, []);
 
     useFrame((s, delta) => {
-        const parallaxX = cursor.x
-        const parallaxY = cursor.y
-        const camPos = new Vector3(parallaxX, - parallaxY, s.camera.position.z)
-        s.camera.position.copy(camPos)
+        const amplitude = 1.2
+        //add starting position of camera to compensate for none 0,0 origin
+        const parallaxX = (cursor.x + initCamPos.x) * amplitude
+        const parallaxY = - (cursor.y - initCamPos.y) * amplitude
+
+        const easing = 3 * delta
+
+        s.camera.position.x += (parallaxX - s.camera.position.x) * easing
+        s.camera.position.y += (parallaxY - s.camera.position.y) * easing
+
+        s.camera.lookAt(foci.current.position)
     });
 
-    return <></>
+    return (
+        <mesh
+            position={[0, 0.5, -0.1]}
+            scale={0.05}
+            ref={foci}
+            visible={false}
+        >
+            <boxGeometry />
+            <meshBasicMaterial/>
+        </mesh>
+    )
 }
 export default Parallax;

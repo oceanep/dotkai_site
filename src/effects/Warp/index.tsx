@@ -5,7 +5,8 @@ import { useDebouncedResize } from "~/utils/hooks";
 
 const Warp = forwardRef<React.RefObject<FC>, IWarpProps>((props, ref) => {
     const resolution = useDebouncedResize();
-    const effect = useMemo(() => new WarpEffect({ resolution, ...props}), []);
+    console.log(props)
+    const effect = useMemo(() => new WarpEffect({ resolution, ...props}), [props]);
     
     return <primitive ref={ref} object={effect} />
 })

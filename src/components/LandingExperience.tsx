@@ -21,7 +21,7 @@ import { Perf } from 'r3f-perf'
 import { useControls } from "leva";
 
 import Floor from '~/components/Floor'
-import LogoMesh from '~/components/Logo'
+import Logo from '~/components/Logo'
 import Controls from '~/components/Controls'
 import { useFrame, useThree } from "@react-three/fiber";
 import Fallback from "./Fallback";
@@ -271,7 +271,7 @@ const LandingExperience: FC = () => {
                         position={[0.5, 0.5, 0]}
                     />
                 }>
-                <LogoMesh />
+                <Logo />
                 {/* <ComputerMesh
                     scale={0.2}
                     position={[0, -0.94, 0]}
@@ -298,8 +298,8 @@ const LandingExperience: FC = () => {
                 </Accents>
             </Suspense>
             {/* </DragControls> */}
-            {/* <Controls active={orbActive} />
-            <Floor position={[0, -1, 0]} /> */}
+            {/* <Controls active={orbActive} /> */}
+            {/* <Floor position={[0, -1, 0]} /> */}
         </>
     )
 };

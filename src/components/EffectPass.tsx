@@ -123,20 +123,13 @@ const EffectPass:FC = () => {
 
     const { customEffectBlendMode } = useControls('Warp Effect Blend Mode', {
         customEffectBlendMode: {
-            options: ["DARKEN", ...Object.keys(BlendFunction).filter(k => k !== "DARKEN")]
+            options: ["NORMAL", ...Object.keys(BlendFunction).filter(k => k !== "NORMAL")]
         }
     })
     
     return (
         <EffectComposer multisampling={0}>
-            <ToneMapping mode={ToneMappingMode.ACES_FILMIC} />
-            {vignetteOn && (
-                <Vignette
-                    offset={0.5}
-                    darkness={0.5}
-                    blendFunction={BlendFunction[vignetteBlendingMode]}
-                />
-            )}
+            <ToneMapping mode={ToneMappingMode.ACES_FILMIC} /> 
             {glitchOn && (
                 <Glitch
                     delay={new Vector2(delay[0], delay[1])}
@@ -145,19 +138,7 @@ const EffectPass:FC = () => {
                     mode={GlitchMode[glitchMode]}
                 />
             )}
-            {noiseOn && (
-                <Noise
-                    premultiply
-                    blendFunction={BlendFunction[noiseBlendingMode]}
-                />
-            )}
-            {bloomOn && (
-                <Bloom
-                    luminanceThreshold={luminanceThreshold}
-                    intensity={intensity}
-                    mipmapBlur
-                />
-            )}
+            
             {dofOn && (
                 <DepthOfField
                     focusDistance={focusDistance}
@@ -165,10 +146,31 @@ const EffectPass:FC = () => {
                     bokehScale={bokehScale}
                 />
             )}
+            {bloomOn && (
+                <Bloom
+                    luminanceThreshold={luminanceThreshold}
+                    intensity={intensity}
+                    mipmapBlur
+                    blendFunction={BlendFunction.LUMINOSITY}
+                />
+            )}
             <Warp
-                blendFunction={BlendFunction[customEffectBlendMode]}
                 {...warpProps}
+                blendFunction={BlendFunction[customEffectBlendMode]}
             />
+            {noiseOn && (
+                <Noise
+                    premultiply
+                    blendFunction={BlendFunction[noiseBlendingMode]}
+                />
+            )}
+            {vignetteOn && (
+                <Vignette
+                    offset={0.5}
+                    darkness={0.5}
+                    blendFunction={BlendFunction[vignetteBlendingMode]}
+                />
+            )}
         </EffectComposer>
     )
 }

@@ -1,17 +1,20 @@
-import { Color, NearestFilter, TextureLoader } from 'three'
-import React, { useEffect, useMemo, useRef } from 'react'
+import { Color, Group, NearestFilter, TextureLoader } from 'three'
+import React, { forwardRef, useEffect } from 'react'
 import { useGLTF } from '@react-three/drei'
-import { folder, useControls } from 'leva'
-import { useLoader } from '@react-three/fiber'
+import { useControls } from 'leva'
+import { GroupProps, useLoader } from '@react-three/fiber'
 import { GLTFResult } from '~/utils/types'
 
-export default function OceanLogo(props: JSX.IntrinsicElements['group']) {
+type LogoMeshProps = JSX.IntrinsicElements['group'] & GroupProps;
+
+const LogoMesh = forwardRef<Group, LogoMeshProps>((props, ref: React.MutableRefObject<Group | null>) => {
   const fileUrl = "/models/Logo Model/ocean_logo.glb";
   const textureUrl = "/textures/gradients/3.jpg";
   const { nodes, materials } = useGLTF(fileUrl) as GLTFResult
 
   const gradientTexture = useLoader(TextureLoader, textureUrl);
 
+  //For Toon shader
   useEffect(() => {
     if (gradientTexture.minFilter && gradientTexture.magFilter) {
         gradientTexture.magFilter = NearestFilter
@@ -32,7 +35,7 @@ export default function OceanLogo(props: JSX.IntrinsicElements['group']) {
   })
 
   return (
-    <group {...props} dispose={null}>
+    <group {...props} dispose={null} ref={ref}>
       <mesh
         castShadow
         receiveShadow
@@ -68,6 +71,8 @@ export default function OceanLogo(props: JSX.IntrinsicElements['group']) {
       </mesh>
     </group>
   )
-}
+});
+LogoMesh.displayName = "Logo Mesh";
+useGLTF.preload('/models/Logo Model/ocean_logo.glb');
 
-useGLTF.preload('/models/Logo Model/ocean_logo.glb')
+export default LogoMesh;

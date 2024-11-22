@@ -7,11 +7,11 @@ import { Group, Mesh } from "three";
 import { useControls } from "leva";
 
 import { Inner3dPill } from "~/styles/styled";
-import OceanLogo from "../jsx-models/LogoMesh";
+import LogoMesh from "../jsx-models/LogoMesh";
 
-const LogoMesh:FC = () => {    
+const Logo:FC = () => {    
     const group = useRef<Group>(null!);
-    const logoRef = useRef<Mesh>(null!);
+    const logo = useRef<Group>(null!);
     const boxRef = useRef<Mesh>(null!);
     
     const { position, color, visible, rotate } = useControls({
@@ -22,16 +22,17 @@ const LogoMesh:FC = () => {
         },
         color: "#b383ff",
         visible: true,
-        rotate: true
+        rotate: false
     });
 
-    // useFrame((state, delta) => {
-    //     if (rotate) group.current.rotation.y += delta;
-    // });
+    useFrame((s, delta) => {
+        if (rotate) group.current.rotation.y += delta;
+        // console.log('logo position: ', logo.current.position)
+    });
 
     return (
         <group ref={group}>
-            <OceanLogo />
+            <LogoMesh ref={logo} />
             {/* <PivotControls
                 depthTest={false}
                 offset={[ 0, 0, 0]}
@@ -65,4 +66,4 @@ const LogoMesh:FC = () => {
     );
 }
 
-export default LogoMesh;
+export default Logo;
