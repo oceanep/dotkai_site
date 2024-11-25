@@ -149,8 +149,8 @@ const LandingExperience: FC = () => {
             min: 10,
             max: 1000
         },
-        envColor: "red",
-        backgroundColor: "#f6fc8a"
+        envColor: "#0087d8",
+        backgroundColor: "#dffaff"
     });
 
     //Scene Settings

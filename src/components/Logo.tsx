@@ -2,17 +2,20 @@
 
 import { FC, useRef } from "react";
 import { useFrame, useLoader } from "@react-three/fiber";
-import { Html, PivotControls, useGLTF } from "@react-three/drei";
+import { Html, PivotControls, useGLTF, useTexture } from "@react-three/drei";
 import { Group, Mesh } from "three";
 import { useControls } from "leva";
 
-import { Inner3dPill } from "~/styles/styled";
+import { CyberButton, Inner3dPill } from "~/styles/styled";
 import LogoMesh from "../jsx-models/LogoMesh";
 
 const Logo:FC = () => {    
     const group = useRef<Group>(null!);
     const logo = useRef<Group>(null!);
     const boxRef = useRef<Mesh>(null!);
+
+    const bgTexture = useTexture('/images/bg_shape.png');
+    const subTexture = useTexture('/images/sub_name.png');
     
     const { position, color, visible, rotate } = useControls({
         position: {
@@ -33,35 +36,32 @@ const Logo:FC = () => {
     return (
         <group ref={group}>
             <LogoMesh ref={logo} />
-            {/* <PivotControls
-                depthTest={false}
-                offset={[ 0, 0, 0]}
-                lineWidth={4}
-                axisColors={[ '#9381ff', '#ff4d6d', '#7ae582' ]}
-                scale={100}
-                fixed={true}
+            <mesh
+                position={[-0.7, 0.5, -0.15]}
+                scale={1.4}
+            >
+                <boxGeometry args={[0.5,0.11,0]} />
+                <meshBasicMaterial transparent map={subTexture} />
+            </mesh>
+            <mesh
+                ref={boxRef}
+                position-y={0.5}
+                position-z={-0.8}
+                scale={0.8}
                 visible={visible}
-            > */}
-                <mesh
-                    ref={boxRef}
-                    position-y={0.5}
-                    position-z={-0.2}
-                    scale={0.75}
-                    visible={visible}
+            >
+                <boxGeometry args={[4,2,0]}/>
+                <meshBasicMaterial transparent map={bgTexture}/>
+            </mesh>
+            <mesh>
+                <Html
+                    occlude
+                    transform
+                    distanceFactor={1}
                 >
-                    <boxGeometry args={[4,2,0,9,9,0]}/>
-                    <meshBasicMaterial color={color} wireframe />
-                    {/* <Html
-                        position={[0.5,0.5,0.5]}
-                        center
-                        distanceFactor={4}
-                        occlude={[boxRef]}
-                    >
-                        <Inner3dPill>This is a pill</Inner3dPill>
-                    </Html> */}
-                </mesh>
-            {/* </PivotControls> */}
-            {/* <TransformControls object={boxRef} /> */}
+                    <CyberButton>ENTER</CyberButton>
+                </Html>
+            </mesh>
         </group>
     );
 }

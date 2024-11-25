@@ -51,6 +51,14 @@
   --max-width-1: 768px;
 }
 
+@font-face {
+  font-family: Crude;
+  src: url("/fonts/Crude.otf") format("opentype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
 html {
   background-color: var(--white);
   font-family: var(--font-family-sans), var(--font-family-serif), sans-serif;
