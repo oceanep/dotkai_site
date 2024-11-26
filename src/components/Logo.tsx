@@ -3,7 +3,7 @@
 import { FC, useRef } from "react";
 import { useFrame, useLoader } from "@react-three/fiber";
 import { Html, PivotControls, useGLTF, useTexture } from "@react-three/drei";
-import { Group, Mesh } from "three";
+import { DoubleSide, Group, Mesh } from "three";
 import { useControls } from "leva";
 
 import { CyberButton, Inner3dPill } from "~/styles/styled";
@@ -51,13 +51,19 @@ const Logo:FC = () => {
                 visible={visible}
             >
                 <boxGeometry args={[4,2,0]}/>
-                <meshBasicMaterial transparent map={bgTexture}/>
+                <meshBasicMaterial
+                    transparent 
+                    map={bgTexture}
+                    depthWrite={false}
+                />
             </mesh>
             <mesh>
                 <Html
-                    occlude
+                    occlude="blending"
+                    receiveShadow // Make HTML receive shadows
                     transform
                     distanceFactor={1}
+                    zIndexRange={[1, 0]}
                 >
                     <CyberButton>ENTER</CyberButton>
                 </Html>
