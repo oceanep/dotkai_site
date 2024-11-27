@@ -15,7 +15,8 @@ import {
     Environment,
     Lightformer,
     PerspectiveCamera,
-    CameraControls
+    CameraControls,
+    Bounds
 } from '@react-three/drei'
 import { Perf } from 'r3f-perf'
 import { useControls } from "leva";
@@ -185,11 +186,11 @@ const LandingExperience: FC = () => {
                     form="ring"
                 />
             </Environment>
-            <SoftShadows
+            {/* <SoftShadows
                 size={size}
                 samples={samples}
                 focus={focus}
-            />
+            /> */}
             {/* <ambientLight color={"white"} intensity={0.3} /> */}
             <directionalLight
                 ref={directionalLight}
@@ -243,7 +244,9 @@ const LandingExperience: FC = () => {
                         position={[0.5, 0.5, 0]}
                     />
                 }>
-                <Logo />
+                <Bounds fit clip observe margin={0.9}>
+                    <Logo />
+                </Bounds>
                 {/* <ComputerMesh
                     scale={0.2}
                     position={[0, -0.94, 0]}

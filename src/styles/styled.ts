@@ -8,7 +8,7 @@ export const SceneContainer = styled.div`
     left: 0;
     overflow: hidden;
 
-    > canvas: {
+    & > canvas {
     }
     
 `;

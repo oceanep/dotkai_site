@@ -146,14 +146,14 @@ const EffectPass:FC = () => {
                     bokehScale={bokehScale}
                 />
             )}
-            {bloomOn && (
+            {/* {bloomOn && (
                 <Bloom
                     luminanceThreshold={luminanceThreshold}
                     intensity={intensity}
                     mipmapBlur
                     blendFunction={BlendFunction.LUMINOSITY}
                 />
-            )}
+            )} */}
             <Warp
                 {...warpProps}
                 blendFunction={BlendFunction[customEffectBlendMode]}
