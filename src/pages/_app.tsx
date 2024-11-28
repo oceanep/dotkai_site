@@ -1,15 +1,23 @@
-import '~/styles/global.css'
-
 import type { AppProps } from 'next/app'
+
+import React, { lazy, StrictMode, useMemo } from 'react'
+import dynamic from 'next/dynamic'
 import { IBM_Plex_Mono, Inter, PT_Serif } from 'next/font/google'
-import { lazy, StrictMode } from 'react'
+
+import '~/styles/global.css'
+import Dom from '~/components/layout/DomWrapper'
+
 
 export interface SharedPageProps {
   draftMode: boolean
   token: string
 }
 
-const PreviewProvider = lazy(() => import('~/components/PreviewProvider'))
+const PreviewProvider = lazy(() => import('~/components/PreviewProvider'));
+
+const Canvas = dynamic(() => import("@/components/layout/CanvasWrapper"), {
+  ssr: false,
+});
 
 const mono = IBM_Plex_Mono({
   variable: '--font-family-mono',
@@ -30,11 +38,25 @@ const serif = PT_Serif({
   weight: ['400', '700'],
 })
 
+const AppLayout = ({ children }) => {
+  //Follow convention of declaring DOM then CANVAS on new pages
+  const newChildren = React.Children.map(children, (child, index) => 
+    index % 2 === 0 ? <Dom>{child}</Dom> : <Canvas>{child}</Canvas>
+  );
+
+  return newChildren
+}
+
 export default function App({
   Component,
   pageProps,
 }: AppProps<SharedPageProps>) {
   const { draftMode, token } = pageProps
+
+  // Get the children from each page so we can split them
+  //@ts-ignore
+  const children = Component(pageProps).props.children;
+
   return (
     <>
       <StrictMode>
@@ -49,10 +71,14 @@ export default function App({
         </style>
         {draftMode ? (
           <PreviewProvider token={token}>
-            <Component {...pageProps} />
+            <AppLayout>
+              {children}
+            </AppLayout>
           </PreviewProvider>
         ) : (
-          <Component {...pageProps} />
+          <AppLayout>
+              {children}
+            </AppLayout>
         )}
       </StrictMode>
     </>

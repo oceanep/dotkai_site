@@ -1,10 +1,9 @@
-"use client";
-
 import { FC, useRef } from "react";
 import { useFrame, useLoader } from "@react-three/fiber";
 import { Html, PivotControls, useGLTF, useTexture } from "@react-three/drei";
 import { DoubleSide, Group, Mesh, MeshBasicMaterial } from "three";
 import { useControls } from "leva";
+import { useRouter } from "next/navigation";
 
 import { CyberButton, Inner3dPill } from "~/styles/styled";
 import LogoMesh from "../jsx-models/LogoMesh";
@@ -16,6 +15,8 @@ const Logo:FC = () => {
 
     const bgTexture = useTexture('/images/bg_shape.png');
     const subTexture = useTexture('/images/sub_name.png');
+
+    const router = useRouter();
     
     const { position, color, visible, rotate } = useControls({
         position: {
@@ -63,7 +64,7 @@ const Logo:FC = () => {
                 transform
                 distanceFactor={1}
             >
-                <CyberButton>ENTER</CyberButton>
+                <CyberButton onClick={() => router.push('/projects')} >ENTER</CyberButton>
             </Html>
         </group>
     );
