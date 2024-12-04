@@ -8,6 +8,7 @@ const Dom = ({ children }) => {
       className="dom"
       style={{
         position: "absolute",
+        width: "100vw",
         top: 0,
         left: 0,
         zIndex: 10,
