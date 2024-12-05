@@ -1,11 +1,12 @@
 import type { AppProps } from 'next/app'
 
-import React, { lazy, StrictMode, useMemo } from 'react'
+import React, { createElement, lazy, StrictMode, useMemo } from 'react'
 import dynamic from 'next/dynamic'
 import { IBM_Plex_Mono, Inter, PT_Serif } from 'next/font/google'
 
 import '~/styles/global.css'
-import Dom from '~/components/layout/DomWrapper'
+import DomWrapper from '~/components/layout/DomWrapper'
+import { NextPage } from 'next'
 
 
 export interface SharedPageProps {
@@ -13,9 +14,18 @@ export interface SharedPageProps {
   token: string
 }
 
+export interface CustomNextPage {
+  (props: any): JSX.Element;
+  canvas?: React.ComponentType<any>;
+}
+
+interface CustomAppProps<P = any> extends AppProps {
+  Component: CustomNextPage;
+}
+
 const PreviewProvider = lazy(() => import('~/components/PreviewProvider'));
 
-const Canvas = dynamic(() => import("@/components/layout/CanvasWrapper"), {
+const CanvasWrapper = dynamic(() => import("@/components/layout/CanvasWrapper"), {
   ssr: false,
 });
 
@@ -38,24 +48,11 @@ const serif = PT_Serif({
   weight: ['400', '700'],
 })
 
-const AppLayout = ({ children }) => {
-  //Follow convention of declaring DOM then CANVAS on new pages
-  const newChildren = React.Children.map(children, (child, index) => 
-    index % 2 === 0 ? <Dom>{child}</Dom> : <Canvas>{child}</Canvas>
-  );
-
-  return newChildren
-}
-
 export default function App({
   Component,
   pageProps,
-}: AppProps<SharedPageProps>) {
+}: CustomAppProps<SharedPageProps>) {
   const { draftMode, token } = pageProps
-
-  // Get the children from each page so we can split them
-  //@ts-ignore
-  const children = Component(pageProps).props.children;
 
   return (
     <>
@@ -71,14 +68,36 @@ export default function App({
         </style>
         {draftMode ? (
           <PreviewProvider token={token}>
-            <AppLayout>
-              {children}
-            </AppLayout>
+            <DomWrapper>
+              <Component {...pageProps} />
+            </DomWrapper>
+            {
+              /**
+               * Assign canvas items to canvas property of components
+               * Check if property exist here and render conditionally
+               * This assures a persistent 3d canvas that doesn't rerender every
+               * Page load
+               */
+              Component?.canvas && (
+                <CanvasWrapper>
+                  <Component.canvas {...pageProps} />
+                </CanvasWrapper>
+              )
+            }
           </PreviewProvider>
         ) : (
-          <AppLayout>
-              {children}
-            </AppLayout>
+          <>
+            <DomWrapper>
+              <Component {...pageProps} />
+            </DomWrapper>
+            {
+              Component?.canvas && (
+                <CanvasWrapper>
+                  <Component.canvas {...pageProps} /> 
+                </CanvasWrapper>
+              )
+            }
+          </>
         )}
       </StrictMode>
     </>

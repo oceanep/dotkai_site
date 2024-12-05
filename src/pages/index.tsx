@@ -8,6 +8,7 @@ import { getPosts, type Post, postsQuery } from '~/lib/sanity.queries'
 
 import type { SharedPageProps } from '~/pages/_app'
 import LandingExperience from '~/components/LandingExperience'
+import dynamic from 'next/dynamic'
 
 export const getStaticProps: GetStaticProps<SharedPageProps> = async ({ draftMode = false }) => {
 
@@ -20,28 +21,32 @@ export const getStaticProps: GetStaticProps<SharedPageProps> = async ({ draftMod
   }
 }
 
-export default function IndexPage(
-  props: InferGetStaticPropsType<typeof getStaticProps>,
-) {
-  // DOM elements here
-  const DOM = () => {
-    return <></>;
-  };
+const Canvas = dynamic(() => import("@/components/layout/CanvasWrapper"), {
+  ssr: false,
+});
 
-  // Canvas/R3F components here
-  const R3F = () => {
+// DOM elements here
+const DOM = () => {
+  return <></>;
+};
 
-    return (
+// Canvas/R3F components here
+const R3F = () => {
+
+  return (
       <Bvh>
         <LandingExperience />
       </Bvh>
-    );
-  };
+  );
+};
+
+export default function IndexPage(
+  props: InferGetStaticPropsType<typeof getStaticProps>,
+) {
 
   return (
-    <>
       <DOM/>
-      <R3F/>
-    </>
   )
 }
+
+IndexPage.canvas = (props) => <R3F/>;

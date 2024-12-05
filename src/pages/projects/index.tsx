@@ -31,32 +31,31 @@ export const getStaticProps: GetStaticProps<
   }
 }
 
+// DOM elements here
+const DOM = () => {
+    return <></>;
+};
+// Canvas/R3F components here
+const R3F = ({posts}) => {
+    return (
+        <Bvh>
+            {posts.length ? (
+                posts.map((post) => <ComputerMesh />)
+            ) : (
+                <ComputerMesh />
+            )}
+        </Bvh>
+    );
+};
+
 export default function IndexPage(
   props: InferGetStaticPropsType<typeof getStaticProps>,
 ) {
     const [posts] = useLiveQuery<Post[]>(props.posts, postsQuery)
 
-    // DOM elements here
-    const DOM = () => {
-    return <></>;
-    };
-    // Canvas/R3F components here
-    const R3F = useCallback((posts) => {
-        return (
-            <Bvh>
-                {posts.length ? (
-                    posts.map((post) => <ComputerMesh />)
-                ) : (
-                    <ComputerMesh />
-                )}
-            </Bvh>
-        );
-    }, [posts]);
-
   return (
-    <>
-      <DOM/>
-      <R3F/>
-    </>
+    <DOM/>
   )
 }
+
+IndexPage.canvas = (posts) => <R3F posts={posts} />
