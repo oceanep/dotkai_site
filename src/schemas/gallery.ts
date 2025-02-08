@@ -36,6 +36,32 @@ export default defineType({
             },
         }),
         defineField({
+            name: 'videos',
+            type: 'array',
+            title: 'Videos',
+            /*@ts-ignore*/
+            of: [
+                defineArrayMember({
+                    name: 'video',
+                    type: 'file',
+                    title: 'Video',
+                    options: {
+                        accept: 'video/mp4',
+                    },
+                    fields: [
+                        defineField({
+                            name: 'alt',
+                            type: 'string',
+                            title: 'Alternative text',
+                        })
+                    ]
+                })
+            ],
+            options: {
+                layout: 'grid',
+            },
+        }),
+        defineField({
             name: 'display',
             type: 'string',
             title: 'Display Style',
@@ -61,14 +87,16 @@ export default defineType({
         select: {
             images: 'images',
             image: 'images.0',
+            videos: 'video',
+            video: 'video.0',
         },
         prepare(selection) {
-            const { images, image } = selection;
+            const { images, image, videos, video } = selection;
 
             return {
-                title: `Gallery of ${Object.keys(images).length} project images`,
-                subtitle: `Alt text: ${image.alt}`,
-                media: image,
+                title: `Gallery of ${Object.keys(images).length + Object.keys(videos).length } project images/videos`,
+                subtitle: `Alt text: ${image.alt || video.alt}`,
+                media: image || video,
             }
         }
     }

@@ -160,6 +160,7 @@ const EffectPass:FC = () => {
             />
             {noiseOn && (
                 <Noise
+                    opacity={0.2}
                     premultiply
                     blendFunction={BlendFunction[noiseBlendingMode]}
                 />

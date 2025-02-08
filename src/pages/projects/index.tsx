@@ -36,7 +36,9 @@ const DOM = () => {
     return <></>;
 };
 // Canvas/R3F components here
-const R3F = ({posts}) => {
+const R3F = (props) => {
+    const [posts] = useLiveQuery<Post[]>(props.posts, postsQuery)
+    
     return (
         <Bvh>
             {posts.length ? (
