@@ -11,6 +11,16 @@ export default defineType({
             type: 'string'
         }),
         defineField({
+            name: 'slug',
+            title: 'Slug',
+            type: 'slug',
+            validation: (Rule) => Rule.required(),
+            options: {
+                source: 'title',
+                maxLength: 96,
+            },
+        }),
+        defineField({
             name: 'mainImage',
             title: 'Main Image',
             type: 'image',
@@ -25,7 +35,7 @@ export default defineType({
         }),
         defineField({
             name: 'gallery',
-            title: 'Image Gallery',
+            title: 'Image & Video Gallery',
             type: 'gallery',
         }),
     ],

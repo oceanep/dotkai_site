@@ -4,28 +4,24 @@ import { Bvh } from '@react-three/drei'
 
 import { readToken } from '~/lib/sanity.api'
 import { getClient } from '~/lib/sanity.client'
-import { getPosts, type Post, postsQuery } from '~/lib/sanity.queries'
+import { getProjects, type Project, projectsQuery } from '~/lib/sanity.queries'
 
 import type { SharedPageProps } from '~/pages/_app'
-import LandingExperience from '~/components/LandingExperience'
 import ComputerMesh from '~/components/ComputerMesh'
-import Box from '~/components/Box'
-import { useCallback } from 'react'
-import CustomObject from '~/components/CustomObject'
 
 export const getStaticProps: GetStaticProps<
   SharedPageProps & {
-    posts: Post[]
+    projects: Project[]
   }
 > = async ({ draftMode = false }) => {
   const client = getClient(draftMode ? { token: readToken } : undefined)
-  const posts = await getPosts(client)
+  const projects = await getProjects(client)
 
   return {
     props: {
       draftMode,
       token: draftMode ? readToken : '',
-      posts,
+      projects,
       title: 'Projects'
     },
   }
@@ -36,15 +32,16 @@ const DOM = () => {
     return <></>;
 };
 // Canvas/R3F components here
-const R3F = (props) => {
-    const [posts] = useLiveQuery<Post[]>(props.posts, postsQuery)
+const R3F = ({projects}) => {
+    // const [projects] = useLiveQuery<Project[]>(props.projects, projectsQuery)
+    console.log('projects: ', projects)
     
     return (
         <Bvh>
-            {posts.length ? (
-                posts.map((post) => <ComputerMesh />)
+            {projects.length ? (
+                projects.map((post) => <ComputerMesh />)
             ) : (
-                <ComputerMesh />
+              <ComputerMesh scale={0.2} />
             )}
         </Bvh>
     );
@@ -53,11 +50,11 @@ const R3F = (props) => {
 export default function IndexPage(
   props: InferGetStaticPropsType<typeof getStaticProps>,
 ) {
-    const [posts] = useLiveQuery<Post[]>(props.posts, postsQuery)
+    const [projects] = useLiveQuery<Project[]>(props.projects, projectsQuery)
 
   return (
     <DOM/>
   )
 }
 
-IndexPage.canvas = (posts) => <R3F posts={posts} />
+IndexPage.canvas = (projects) => <R3F projects={projects} />
