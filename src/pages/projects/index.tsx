@@ -1,6 +1,6 @@
 import type { GetStaticProps, InferGetStaticPropsType } from 'next'
 import { useLiveQuery } from 'next-sanity/preview'
-import { Bvh } from '@react-three/drei'
+import { Bvh, Plane } from '@react-three/drei'
 
 import { readToken } from '~/lib/sanity.api'
 import { getClient } from '~/lib/sanity.client'
@@ -34,12 +34,24 @@ const DOM = () => {
 // Canvas/R3F components here
 const R3F = ({projects}) => {
     // const [projects] = useLiveQuery<Project[]>(props.projects, projectsQuery)
-    console.log('projects: ', projects)
+    console.log('projects: ', projects.projects)
     
     return (
         <Bvh>
-            {projects.length ? (
-                projects.map((post) => <ComputerMesh />)
+            {projects.projects.length > 0 ? (
+                projects.projects.map((project, i) => 
+                    <Plane 
+                      args={[.25, .25]}
+                      rotation={[0, Math.PI / 6, 0]}
+                      position={[
+                        i === 0 ? i : i / 3,
+                        -0.5,
+                        i === 0 ? i : -i / 5
+                      ]}
+                      key={`${project.slug}-${i}`}
+                    >
+                      <meshBasicMaterial attach="material" color="blue" />
+                    </Plane>)
             ) : (
               <ComputerMesh scale={0.2} />
             )}
