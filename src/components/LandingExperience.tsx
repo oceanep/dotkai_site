@@ -1,8 +1,11 @@
+"use client"
+
 import { FC, Suspense, useEffect, useRef, useState } from "react";
-import { 
-    DragControls, 
-    Float, 
-    useHelper, 
+import { CapsuleGeometry, Color, DirectionalLightHelper, MathUtils, MeshStandardMaterial, Vector2, Vector3 } from "three";
+import {
+    DragControls,
+    Float,
+    useHelper,
     BakeShadows,
     SoftShadows,
     AccumulativeShadows,
@@ -10,31 +13,70 @@ import {
     ContactShadows,
     Sky,
     Environment,
-    Lightformer
+    Lightformer,
+    PerspectiveCamera,
+    CameraControls,
+    Bounds
 } from '@react-three/drei'
 import { Perf } from 'r3f-perf'
 import { useControls } from "leva";
-import { DirectionalLightHelper, Vector3 } from "three";
-
 
 import Floor from '~/components/Floor'
-import LogoMesh from '~/components/Logo'
+import Logo from '~/components/Logo'
 import Controls from '~/components/Controls'
-import CustomObject from "./CustomObject";
-import { useThree } from "@react-three/fiber";
+import { useFrame, useThree } from "@react-three/fiber";
 import Fallback from "./Fallback";
+import ComputerMesh from "./ComputerMesh";
+import Accents from "./Accents";
+import { DigiviceMesh } from "~/jsx-models/DigiviceMesh";
+import EffectPass from "./EffectPass";
+import Parallax from "./Parallax";
 
-const LandingExperience:FC = () => {
-    
+const capsuleGeometry = new CapsuleGeometry(1, 1, 4, 8);
+const capsuleMaterial = new MeshStandardMaterial();
+
+const LandingExperience: FC = () => {
+
     const [orbActive, setOrbActive] = useState<boolean>(true);
+
+    //update capsule material
+    useEffect(() => {
+        capsuleMaterial.metalness = 0.9
+        capsuleMaterial.roughness = 0.05
+        capsuleMaterial.color = new Color(0.34, 1, 0.05)
+        capsuleMaterial.emissive = new Color(0.34, 1, 0.05)
+        capsuleMaterial.emissiveIntensity = 2
+        capsuleMaterial.needsUpdate = true
+    }, []);
+
+    //Accent mesh group refs
+    const digiviceRef = useRef([]);
+    const capsuleRef = useRef([]);
+    const warpRef = useRef(null);
+
+    //mesh group animations
+    useFrame((s, delta) => {
+        let i = 1;
+        for (const digivice of digiviceRef.current) {
+            const t = s.clock.getElapsedTime() + 2 * 10000
+            digivice.rotation.y += delta * 1.2
+            digivice.rotation.z += delta * 1.4
+            digivice.position.x = Math.cos(t / 4.5) / 2 + i / 5 - 10
+            i++;
+        }
+        for (const capsule of capsuleRef.current) {
+            capsule.rotation.y += delta * 5.7;
+            capsule.rotation.z += delta * 3.2;
+        }
+    });
 
     //Light Visual Helper
     const directionalLight = useRef();
     useHelper(directionalLight, DirectionalLightHelper, 1);
-
-    // Leva Controls
-    const { perfVisible } = useControls({
-        perfVisible: true
+    
+    const { perfVisible, pillColor } = useControls({
+        perfVisible: true,
+        pillColor: "#3dff0d"
     });
 
     const { size, samples, focus } = useControls("soft shadows", {
@@ -57,7 +99,7 @@ const LandingExperience:FC = () => {
 
     const { sunPosition } = useControls("sky", {
         sunPosition: {
-            value: [1,2,3]
+            value: [1, 2, 3]
         }
     });
 
@@ -80,13 +122,13 @@ const LandingExperience:FC = () => {
     //     }
     // });
 
-    const { 
-        envMapIntensity, 
-        envMapHeight, 
-        envMapRadius, 
-        envMapScale, 
-        envColor, 
-        backgroundColor 
+    const {
+        envMapIntensity,
+        envMapHeight,
+        envMapRadius,
+        envMapScale,
+        envColor,
+        backgroundColor
     } = useControls("environment map", {
         envMapIntensity: {
             value: 1,
@@ -108,21 +150,23 @@ const LandingExperience:FC = () => {
             min: 10,
             max: 1000
         },
-        envColor: "red",
-        backgroundColor: "#fedbfd"
+        envColor: "#0087d8",
+        backgroundColor: "#dffaff"
     });
 
     //Scene Settings
     const scene = useThree(state => state.scene);
 
+
     useEffect(() => {
         scene.environmentIntensity = envMapIntensity;
-    }, [ envMapIntensity ]);
+        scene.background = new Color(backgroundColor);
+    }, [envMapIntensity, backgroundColor]);
 
     return (
         <>
-            { perfVisible && <Perf position="top-left" /> }
-            <color args={[ backgroundColor ]} attach="background" />
+            {perfVisible && <Perf position="top-left" />}
+            {/* <color args={[ backgroundColor ]} attach="background" /> */}
             <Environment
                 // background
                 //add 1 to all y positions to use
@@ -132,29 +176,30 @@ const LandingExperience:FC = () => {
                 //     scale: envMapScale
                 // }}
                 files="/environmentMaps/beautiful_sunrise_at_coast_2k.hdr"
-                // resolution={32}
+            // resolution={32}
             >
                 <Lightformer
-                    position={[0,0,-3]}
+                    position={[0, 0, -3]}
                     scale={5}
                     color={envColor}
                     intensity={10}
                     form="ring"
                 />
             </Environment>
-            <SoftShadows
+            {/* <SoftShadows
                 size={size}
                 samples={samples}
-                focus={focus} 
-            /> 
+                focus={focus}
+            /> */}
             {/* <ambientLight color={"white"} intensity={0.3} /> */}
             <directionalLight
-                ref={ directionalLight }
+                ref={directionalLight}
                 position={sunPosition}
-                intensity={2.5}
+                intensity={3.5}
                 castShadow
-                shadow-mapSize={[1024,1024]}
-                />
+                shadow-mapSize={[1024, 1024]}
+                shadow-normalBias={0.04}
+            />
             {/* <Sky sunPosition={sunPosition} /> */}
             {/* <BakeShadows />  */}
             {/*Use one of the below prerendered shadows if no lights*/}
@@ -186,23 +231,50 @@ const LandingExperience:FC = () => {
                     bias={0.001}
                 />
             </AccumulativeShadows> */}
+            <EffectPass />
             {/* <DragControls
                 onDragStart={() => setOrbActive(false)}
                 onDragEnd={() => setOrbActive(true)}
             > */}
-                <Suspense 
-                    fallback={
-                        <Fallback 
-                            fontSize={.5} 
-                            color="#9ce928" 
-                            position={new Vector3( 0.5, 0.5, 0)} 
-                        />
-                    }>
-                    <LogoMesh />
-                </Suspense>
+            <Suspense
+                fallback={
+                    <Fallback
+                        fontSize={.5}
+                        color="#9ce928"
+                        position={[0.5, 0.5, 0]}
+                    />
+                }>
+                <Bounds fit clip observe margin={0.9}>
+                    <Logo />
+                </Bounds>
+                {/* <ComputerMesh
+                    scale={0.2}
+                    position={[0, -0.94, 0]}
+                    rotation={[0, 0.75, 0]}
+                /> */}
+                <Parallax/>
+                <Accents
+                    amount={75}
+                    scaleFactor={Math.pow(10, -3.2)}
+                    ref={digiviceRef}
+                >
+                    <DigiviceMesh />
+                </Accents>
+                <Accents
+                    amount={75}
+                    scaleFactor={Math.pow(10, -1.4)}
+                    ref={capsuleRef}
+                >
+                    <mesh
+                        receiveShadow
+                        geometry={capsuleGeometry}
+                        material={capsuleMaterial}
+                    />
+                </Accents>
+            </Suspense>
             {/* </DragControls> */}
-            <Controls active={orbActive} />
-            <Floor position={[0, -1, 0]}/>
+            {/* <Controls active={orbActive} /> */}
+            {/* <Floor position={[0, -1, 0]} /> */}
         </>
     )
 };

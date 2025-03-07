@@ -11,6 +11,7 @@ import {
   IframeOptions,
 } from 'sanity-plugin-iframe-pane'
 import { previewUrl } from 'sanity-plugin-iframe-pane/preview-url'
+import {media} from 'sanity-plugin-media'
 
 // see https://www.sanity.io/docs/api-versioning for how versioning works
 import {
@@ -32,13 +33,14 @@ const iframeOptions = {
 
 export default defineConfig({
   basePath: '/studio',
-  name: 'project-name',
-  title: 'Project Name',
+  name: 'portfolio-site',
+  title: 'Portfolio Site',
   projectId,
   dataset,
   //edit schemas in './src/schemas'
   schema,
   plugins: [
+    media(),
     structureTool({
       // `defaultDocumentNode` is responsible for adding a “Preview” tab to the document pane
       // You can add any React component to `S.view.component` and it will be rendered in the pane

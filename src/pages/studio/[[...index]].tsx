@@ -4,6 +4,7 @@ import { metadata } from 'next-sanity/studio/metadata'
 import config from 'sanity.config'
 
 export default function StudioPage() {
+
   return (
     <>
       <Head>
@@ -12,6 +13,6 @@ export default function StudioPage() {
         ))}
       </Head>
       <NextStudio config={config} unstable_globalStyles />
-    </>
+    </> 
   )
 }
