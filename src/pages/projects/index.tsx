@@ -8,6 +8,9 @@ import { getProjects, type Project, projectsQuery } from '~/lib/sanity.queries'
 
 import type { SharedPageProps } from '~/pages/_app'
 import ComputerMesh from '~/components/ComputerMesh'
+import { Box, Flex } from '@react-three/flex'
+import { useThree } from '@react-three/fiber'
+import styles from './index.module.css'
 
 export const getStaticProps: GetStaticProps<
   SharedPageProps & {
@@ -34,46 +37,77 @@ const DOM = () => {
 // Canvas/R3F components here
 const R3F = ({projects}) => {
     // const [projects] = useLiveQuery<Project[]>(props.projects, projectsQuery)
+    const { height, width } = useThree((state) => state.viewport)
     console.log('projects: ', projects.projects)
+    console.log('height: ', height)
+    console.log('width: ', width)
     
     return (
         // <Bvh>
             <>
-              <group
-                position={[-1.5, 1.5, 0]}
-                rotation={[0, Math.PI / 4, 0]}
-              >
+            <Plane
+              args={[width * 0.4, height * 0.8]}
+              position={[-width / 4, height / 4 - 0.25, 0]}
+              rotation={[0, Math.PI / 4, 0]}
+            >
+              <meshBasicMaterial attach="material" transparent wireframe />
+            </Plane>
+            
+                <Flex
+                  size={[width * 0.4, height * 0.8, 0]}
+                  position={[-width / 2 + 0.2, height / 2 + 0.25, 0]}
+                  rotation={[0, Math.PI / 4, 0]}
+                  plane='xy'
+                  justifyContent='flex-start'
+                  alignContent='flex-start'
+                  alignItems='center'
+                  flexDir='row'
+                  flexWrap='wrap'
+                >
                 {projects.projects.length > 0 ? (
                   projects.projects.map((project, i) => 
-                    <mesh
-                      rotation={[0, 0, 0]}
-                      position={[
-                        i === 0 ? i : i / 3,
-                        0,
-                        0
-                      ]}
+                    <Box 
+                      margin={0.05}
+                      centerAnchor
                       key={`${project.slug}-${i}`}
                     >
-                      <Plane 
-                        args={[.25, .25]}
-                      >
-                        <meshBasicMaterial attach="material" color="blue" />
-                      </Plane>    
-                    </mesh>)
+                      <mesh>
+                        <Plane 
+                          args={[.35, .35]}
+                        >
+                          <meshBasicMaterial attach="material" color="blue" />
+                        </Plane>    
+                      </mesh>
+                    </Box>)
                 ) : (
                   <ComputerMesh scale={0.2} />
                 )}
-              </group>
-              <group position={[0.9, .5, 0]}>
-                <Plane args={[2, 2.5]}>
-                  <meshBasicMaterial attach="material" color="blue" />
-                  {/* <Html position={[0, 0, 0]} transform>
-                    <div style={{ margin: '5%', backgroundColor: 'rgba(255, 255, 255, 0.8)' }}>
-                      <h1>HTML Content</h1>
-                      <p>This is some HTML content inside a 3D plane.</p>
+              </Flex>
+              <group>
+                <mesh
+                  position={[0.9, .5, 0]}
+                >
+                  <planeGeometry
+                    args={[width * 0.5, height * 0.9]}
+                  />
+                  <meshBasicMaterial attach="material" transparent wireframe />
+                    <Html
+                      // position={[- (width * 0.5) / 2, (height * 0.9) / 2, 0]}
+                      wrapperClass={styles['html-content']}
+                      transform
+                      distanceFactor={1}
+                    >
+                    <div className={styles['preview-wrapper']}>
+                      <div className={styles['grid']}>
+                        <img
+                          className={styles['main-image']}
+                          src={`${projects.projects[0].mainImage}?h=200`} 
+                          alt="main image" 
+                        />
+                      </div>
                     </div>
-                  </Html> */}
-                </Plane>
+                    </Html>
+                </mesh>
               </group>
             </>
         // </Bvh> 
@@ -91,3 +125,4 @@ export default function IndexPage(
 }
 
 IndexPage.canvas = (projects) => <R3F projects={projects} />
+
