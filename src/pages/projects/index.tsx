@@ -1,5 +1,9 @@
 import type { GetStaticProps, InferGetStaticPropsType } from 'next'
+import Image from 'next/image'
+
 import { useLiveQuery } from 'next-sanity/preview'
+import {getImageDimensions} from '@sanity/asset-utils'
+
 import { Bvh, Html, Plane, useTexture } from '@react-three/drei'
 
 import { readToken } from '~/lib/sanity.api'
@@ -11,6 +15,8 @@ import ComputerMesh from '~/components/ComputerMesh'
 import { Box, Flex } from '@react-three/flex'
 import { useThree } from '@react-three/fiber'
 import styles from './index.module.css'
+import { urlForImage } from '~/lib/sanity.image'
+import { Texture } from 'three'
 
 export const getStaticProps: GetStaticProps<
   SharedPageProps & {
@@ -38,10 +44,17 @@ const DOM = () => {
 const R3F = ({projects}) => {
     // const [projects] = useLiveQuery<Project[]>(props.projects, projectsQuery)
     const { height, width } = useThree((state) => state.viewport)
-    const texture = useTexture(`${projects.projects[0].mainImage}?w=75&fm=webp`)
+    const textures: Texture[] = projects.projects.map((project) => useTexture(`${project.mainImageUrl}?w750&fm=webp&q=50`) )
     console.log('projects: ', projects.projects)
     console.log('height: ', height)
     console.log('width: ', width)
+    
+    const imgWidth = 200
+    const imageUrl = urlForImage(projects.projects[0].mainImage).width(imgWidth).quality(70).url()
+    const blurImageUrl = urlForImage(projects.projects[0].mainImage).width(20).format('webp').quality(20).url()
+    
+    const { aspectRatio} = getImageDimensions(imageUrl)
+    const imgHeight = imgWidth / aspectRatio
     
     return (
         // <Bvh>
@@ -76,7 +89,7 @@ const R3F = ({projects}) => {
                         <Plane 
                           args={[.35, .35]}
                         >
-                          <meshBasicMaterial attach="material" map={texture} />
+                          <meshBasicMaterial attach="material" map={textures[i]} />
                         </Plane>    
                       </mesh>
                     </Box>)
@@ -100,10 +113,14 @@ const R3F = ({projects}) => {
                     >
                     <div className={styles['preview-wrapper']}>
                       <div className={styles['grid']}>
-                        <img
+                        <Image
                           className={styles['main-image']}
-                          src={`${projects.projects[0].mainImage}?w=200&fm=webp`} 
-                          alt="main image" 
+                          width={imgWidth}
+                          height={imgHeight}
+                          src={imageUrl}
+                          blurDataURL={blurImageUrl}
+                          alt={projects.projects[0].title} 
+                          loader={() => urlForImage(projects.projects[0].mainImage).width(200).format('webp').quality(70).url()}
                         />
                       </div>
                     </div>

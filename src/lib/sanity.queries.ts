@@ -30,7 +30,8 @@ export const projectsQuery = groq`
       "desc": desc[].children[].text,
       "title": title,
       "slug": slug.current,
-      "mainImage": mainImage.asset->url,
+      "mainImage": mainImage,
+      "mainImageUrl": mainImage.asset->url,
       "gallery": {
         "images": gallery.images[]{
           "_type": _type,
