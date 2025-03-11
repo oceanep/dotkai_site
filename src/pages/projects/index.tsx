@@ -119,7 +119,8 @@ const R3F = ({projects}) => {
                           height={imgHeight}
                           src={imageUrl}
                           blurDataURL={blurImageUrl}
-                          alt={projects.projects[0].title} 
+                          alt={projects.projects[0].title}
+                          priority
                           loader={() => urlForImage(projects.projects[0].mainImage).width(200).format('webp').quality(70).url()}
                         />
                       </div>
