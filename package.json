@@ -21,6 +21,7 @@
     "@react-three/postprocessing": "2.16",
     "@sanity/client": "6.12.3",
     "@sanity/demo": "1.0.2",
+    "@sanity/image-url": "^1.1.0",
     "@sanity/vision": "3.28.0",
     "@tailwindcss/typography": "0.5.10",
     "leva": "0.9.34",

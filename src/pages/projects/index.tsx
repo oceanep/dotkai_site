@@ -1,6 +1,6 @@
 import type { GetStaticProps, InferGetStaticPropsType } from 'next'
 import { useLiveQuery } from 'next-sanity/preview'
-import { Bvh, Html, Plane } from '@react-three/drei'
+import { Bvh, Html, Plane, useTexture } from '@react-three/drei'
 
 import { readToken } from '~/lib/sanity.api'
 import { getClient } from '~/lib/sanity.client'
@@ -38,6 +38,7 @@ const DOM = () => {
 const R3F = ({projects}) => {
     // const [projects] = useLiveQuery<Project[]>(props.projects, projectsQuery)
     const { height, width } = useThree((state) => state.viewport)
+    const texture = useTexture(`${projects.projects[0].mainImage}?w=75&fm=webp`)
     console.log('projects: ', projects.projects)
     console.log('height: ', height)
     console.log('width: ', width)
@@ -75,7 +76,7 @@ const R3F = ({projects}) => {
                         <Plane 
                           args={[.35, .35]}
                         >
-                          <meshBasicMaterial attach="material" color="blue" />
+                          <meshBasicMaterial attach="material" map={texture} />
                         </Plane>    
                       </mesh>
                     </Box>)
@@ -101,7 +102,7 @@ const R3F = ({projects}) => {
                       <div className={styles['grid']}>
                         <img
                           className={styles['main-image']}
-                          src={`${projects.projects[0].mainImage}?h=200`} 
+                          src={`${projects.projects[0].mainImage}?w=200&fm=webp`} 
                           alt="main image" 
                         />
                       </div>
