@@ -52,12 +52,14 @@ const R3F = ({projects}) => {
     console.log('height: ', height)
     console.log('width: ', width)
     
-    const imgWidth = 200
+    const imgWidth = 250
     const imageUrl = urlForImage(projects.projects[0].mainImage).width(imgWidth).quality(70).url()
     const blurImageUrl = urlForImage(projects.projects[0].mainImage).width(20).format('webp').quality(20).url()
     
     const { aspectRatio} = getImageDimensions(imageUrl)
     const imgHeight = Math.round(imgWidth / aspectRatio)
+
+    const display = projects.projects[0].gallery.display
     
     return (
         // <Bvh>
@@ -140,15 +142,15 @@ const R3F = ({projects}) => {
                             />
                           </div>
                         </div>
-                        {projects.projects[0].gallery.images.length > 0 &&
-                          projects.projects[0].gallery.images.map((image, i) => {
+                        {projects.projects[1].gallery.images.length > 0 &&
+                          projects.projects[1].gallery.images.map((image, i) => {
                             const width = 200
                             const url = urlForImage(image).width(width).quality(70).url()
                             const blurUrl = urlForImage(image).width(20).format('webp').quality(20).url()
                             const { aspectRatio } = getImageDimensions(url)
                             const height = Math.round(width / aspectRatio)
                             return (
-                              <div className={`${styles['image-wrapper']} ${styles[`item-${i + 1}`]}`} key={`${image._key}-${i}`}>
+                              <div className={`${styles['image-wrapper']} ${styles[`item-${i + 1}`]} ${styles[display]}`} key={`${image._key}-${i}`}>
                                 <Image
                                   width={width}
                                   height={height}
@@ -162,13 +164,13 @@ const R3F = ({projects}) => {
                             )
                           })
                         }
-                        {projects.projects[0].gallery.videos.length > 0 &&
-                          projects.projects[0].gallery.videos.map((video, i) => {
+                        {projects.projects[1].gallery.videos.length > 0 &&
+                          projects.projects[1].gallery.videos.map((video, i) => {
                             const vidAspectRatio = video.width / video.height
-                            const vidWidth = 400 * vidAspectRatio
-                            const imgLength = projects.projects[0].gallery.images.length
+                            const vidWidth = 450 * vidAspectRatio
+                            const imgLength = projects.projects[1].gallery.images.length
                             return (
-                              <div className={`${styles['video-wrapper']} ${styles[`item-${imgLength + i + 1}`]}`} key={`${video._key}-${i}`}>
+                              <div className={`${styles['video-wrapper']} ${styles[`item-${imgLength + i + 1}`]} ${styles[display]}`} key={`${video._key}-${i}`}>
                                 <Suspense fallback={<div>Loading...</div>}>
                                   <video
                                     muted

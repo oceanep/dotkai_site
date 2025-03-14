@@ -33,6 +33,7 @@ export const projectsQuery = groq`
       "mainImage": mainImage,
       "mainImageUrl": mainImage.asset->url,
       "gallery": {
+        "display": gallery.display,
         "images": gallery.images[]{
           ...,
           "metadata": asset->metadata
