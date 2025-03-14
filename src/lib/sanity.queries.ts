@@ -27,20 +27,21 @@ export const postSlugsQuery = groq`
 // Projects queries
 export const projectsQuery = groq`
   *[_type == "project" && defined(slug.current)] | order(_createdAt) {
-      "desc": desc[].children[].text,
+      "desc": desc,
       "title": title,
       "slug": slug.current,
       "mainImage": mainImage,
       "mainImageUrl": mainImage.asset->url,
       "gallery": {
         "images": gallery.images[]{
-          "_type": _type,
-          "alt": alt,
-          "url": asset->url
+          ...,
+          "metadata": asset->metadata
         },
         "videos": gallery.videos[]{
           "type": _type,
           "alt": alt,
+          "width": width,
+          "height": height,
           "url": asset->url
         }
       }

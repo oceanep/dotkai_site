@@ -14,9 +14,12 @@ import type { SharedPageProps } from '~/pages/_app'
 import ComputerMesh from '~/components/ComputerMesh'
 import { Box, Flex } from '@react-three/flex'
 import { useThree } from '@react-three/fiber'
-import styles from './index.module.css'
+import styles from './index.module.scss'
 import { urlForImage } from '~/lib/sanity.image'
 import { Texture } from 'three'
+import { PortableText } from '@portabletext/react'
+import { customMarks } from '~/components/portableText/CustomMarks'
+import { Suspense } from 'react'
 
 export const getStaticProps: GetStaticProps<
   SharedPageProps & {
@@ -54,7 +57,7 @@ const R3F = ({projects}) => {
     const blurImageUrl = urlForImage(projects.projects[0].mainImage).width(20).format('webp').quality(20).url()
     
     const { aspectRatio} = getImageDimensions(imageUrl)
-    const imgHeight = imgWidth / aspectRatio
+    const imgHeight = Math.round(imgWidth / aspectRatio)
     
     return (
         // <Bvh>
@@ -113,16 +116,75 @@ const R3F = ({projects}) => {
                     >
                     <div className={styles['preview-wrapper']}>
                       <div className={styles['grid']}>
-                        <Image
-                          className={styles['main-image']}
-                          width={imgWidth}
-                          height={imgHeight}
-                          src={imageUrl}
-                          blurDataURL={blurImageUrl}
-                          alt={projects.projects[0].title}
-                          priority
-                          loader={() => urlForImage(projects.projects[0].mainImage).width(200).format('webp').quality(70).url()}
-                        />
+                        <div className={styles['title-wrapper']}>
+                          <div className={styles['title-card']}>
+                            <h1>{projects.projects[0].title.toUpperCase()}</h1>
+                          </div>
+                        </div>
+                        <div className={`${styles['image-wrapper']} ${styles['main-image']}`}>
+                          <Image
+                            width={imgWidth}
+                            height={imgHeight}
+                            src={imageUrl}
+                            blurDataURL={blurImageUrl}
+                            alt={projects.projects[0].title}
+                            priority
+                            loader={() => urlForImage(projects.projects[0].mainImage).width(200).format('webp').quality(70).url()}
+                          />
+                        </div>
+                        <div className={styles['description-wrapper']}>
+                          <div className={styles['description-card']}>
+                            <PortableText
+                              value={projects.projects[0].desc}
+                              components={customMarks}
+                            />
+                          </div>
+                        </div>
+                        {projects.projects[0].gallery.images.length > 0 &&
+                          projects.projects[0].gallery.images.map((image, i) => {
+                            const width = 200
+                            const url = urlForImage(image).width(width).quality(70).url()
+                            const blurUrl = urlForImage(image).width(20).format('webp').quality(20).url()
+                            const { aspectRatio } = getImageDimensions(url)
+                            const height = Math.round(width / aspectRatio)
+                            return (
+                              <div className={`${styles['image-wrapper']} ${styles[`item-${i + 1}`]}`} key={`${image._key}-${i}`}>
+                                <Image
+                                  width={width}
+                                  height={height}
+                                  src={url}
+                                  blurDataURL={blurUrl}
+                                  alt={projects.projects[0].title}
+                                  priority
+                                  loader={() => urlForImage(image).width(width).format('webp').quality(70).url()}
+                                />
+                              </div>
+                            )
+                          })
+                        }
+                        {projects.projects[0].gallery.videos.length > 0 &&
+                          projects.projects[0].gallery.videos.map((video, i) => {
+                            const vidAspectRatio = video.width / video.height
+                            const vidWidth = 400 * vidAspectRatio
+                            const imgLength = projects.projects[0].gallery.images.length
+                            return (
+                              <div className={`${styles['video-wrapper']} ${styles[`item-${imgLength + i + 1}`]}`} key={`${video._key}-${i}`}>
+                                <Suspense fallback={<div>Loading...</div>}>
+                                  <video
+                                    muted
+                                    autoPlay
+                                    loop
+                                    preload='auto'
+                                    playsInline
+                                    poster={blurImageUrl}
+                                    width={vidWidth}
+                                    src={video.url}
+                                  />
+                                </Suspense>
+                              </div>
+                            )
+                          }
+                        )}
                       </div>
                     </div>
                     </Html>

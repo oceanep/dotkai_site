@@ -1,0 +1,12 @@
+.italic {
+    font-style: italic;
+}
+
+.bold {
+    font-style: bold;
+}
+
+.link {
+    text-decoration: none;
+    color: #3987da;
+}

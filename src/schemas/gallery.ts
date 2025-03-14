@@ -53,6 +53,18 @@ export default defineType({
                             name: 'alt',
                             type: 'string',
                             title: 'Alternative text',
+                        }),
+                        defineField({
+                            name:'width',
+                            type: 'number',
+                            title: 'Width',
+                            description: 'Width of the video in pixels',
+                        }),
+                        defineField({
+                            name:'height',
+                            type: 'number',
+                            title: 'Height',
+                            description: 'Height of the video in pixels',
                         })
                     ]
                 })
