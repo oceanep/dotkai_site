@@ -19,7 +19,8 @@ import { urlForImage } from '~/lib/sanity.image'
 import { Texture } from 'three'
 import { PortableText } from '@portabletext/react'
 import { customMarks } from '~/components/portableText/CustomMarks'
-import { Suspense } from 'react'
+import { Suspense, useMemo, useState } from 'react'
+import ProjectsMenu from '~/components/projectsPage/projectsMenu/ProjectsMenu'
 
 export const getStaticProps: GetStaticProps<
   SharedPageProps & {
@@ -46,62 +47,40 @@ const DOM = () => {
 // Canvas/R3F components here
 const R3F = ({projects}) => {
     // const [projects] = useLiveQuery<Project[]>(props.projects, projectsQuery)
+    const [ selectedProject, setSelectedProject ] = useState<Project>(projects.projects[0])
+
+    //Prepare three variables like diimension, textures, etc
     const { height, width } = useThree((state) => state.viewport)
     const textures: Texture[] = projects.projects.map((project) => useTexture(`${project.mainImageUrl}?w750&fm=webp&q=50`) )
-    console.log('projects: ', projects.projects)
-    console.log('height: ', height)
-    console.log('width: ', width)
+    // console.log('projects: ', projects.projects)
     
+    //Prepare image variables
     const imgWidth = 250
-    const imageUrl = urlForImage(projects.projects[0].mainImage).width(imgWidth).quality(70).url()
-    const blurImageUrl = urlForImage(projects.projects[0].mainImage).width(20).format('webp').quality(20).url()
+    const imageUrl = useMemo(() => urlForImage(selectedProject.mainImage).width(imgWidth).quality(70).url(), [selectedProject])
+    const blurImageUrl = useMemo(() => urlForImage(selectedProject.mainImage).width(20).format('webp').quality(20).url(), [selectedProject])
     
     const { aspectRatio} = getImageDimensions(imageUrl)
     const imgHeight = Math.round(imgWidth / aspectRatio)
 
-    const display = projects.projects[0].gallery.display
+    const displayType = useMemo(() => selectedProject.gallery.display, [selectedProject])
+
+    //State management callbacks
+    const handleProjectSelect = (projectIndex: number) => {
+        setSelectedProject(projects.projects[projectIndex])
+    }
     
     return (
         // <Bvh>
             <>
-            <Plane
-              args={[width * 0.4, height * 0.8]}
-              position={[-width / 4, height / 4 - 0.25, 0]}
-              rotation={[0, Math.PI / 4, 0]}
-            >
-              <meshBasicMaterial attach="material" transparent wireframe />
-            </Plane>
-            
-                <Flex
-                  size={[width * 0.4, height * 0.8, 0]}
-                  position={[-width / 2 + 0.2, height / 2 + 0.25, 0]}
-                  rotation={[0, Math.PI / 4, 0]}
-                  plane='xy'
-                  justifyContent='flex-start'
-                  alignContent='flex-start'
-                  alignItems='center'
-                  flexDir='row'
-                  flexWrap='wrap'
-                >
-                {projects.projects.length > 0 ? (
-                  projects.projects.map((project, i) => 
-                    <Box 
-                      margin={0.05}
-                      centerAnchor
-                      key={`${project.slug}-${i}`}
-                    >
-                      <mesh>
-                        <Plane 
-                          args={[.35, .35]}
-                        >
-                          <meshBasicMaterial attach="material" map={textures[i]} />
-                        </Plane>    
-                      </mesh>
-                    </Box>)
-                ) : (
-                  <ComputerMesh scale={0.2} />
-                )}
-              </Flex>
+              <Suspense fallback={null}>
+                <ProjectsMenu 
+                  width={width} 
+                  height={height} 
+                  projects={projects.projects} 
+                  textures={textures}
+                  clickHandler={handleProjectSelect}
+                />
+              </Suspense>
               <group>
                 <mesh
                   position={[0.9, .5, 0]}
@@ -120,7 +99,7 @@ const R3F = ({projects}) => {
                       <div className={styles['grid']}>
                         <div className={styles['title-wrapper']}>
                           <div className={styles['title-card']}>
-                            <h1>{projects.projects[0].title.toUpperCase()}</h1>
+                            <h1>{selectedProject.title.toUpperCase()}</h1>
                           </div>
                         </div>
                         <div className={`${styles['image-wrapper']} ${styles['main-image']}`}>
@@ -131,32 +110,32 @@ const R3F = ({projects}) => {
                             blurDataURL={blurImageUrl}
                             alt={projects.projects[0].title}
                             priority
-                            loader={() => urlForImage(projects.projects[0].mainImage).width(200).format('webp').quality(70).url()}
+                            loader={() => urlForImage(selectedProject.mainImage).width(200).format('webp').quality(70).url()}
                           />
                         </div>
                         <div className={styles['description-wrapper']}>
                           <div className={styles['description-card']}>
                             <PortableText
-                              value={projects.projects[0].desc}
+                              value={selectedProject.desc}
                               components={customMarks}
                             />
                           </div>
                         </div>
-                        {projects.projects[1].gallery.images.length > 0 &&
-                          projects.projects[1].gallery.images.map((image, i) => {
+                        {selectedProject.gallery.images?.length > 0 &&
+                          selectedProject.gallery.images.map((image, i) => {
                             const width = 200
                             const url = urlForImage(image).width(width).quality(70).url()
                             const blurUrl = urlForImage(image).width(20).format('webp').quality(20).url()
                             const { aspectRatio } = getImageDimensions(url)
                             const height = Math.round(width / aspectRatio)
                             return (
-                              <div className={`${styles['image-wrapper']} ${styles[`item-${i + 1}`]} ${styles[display]}`} key={`${image._key}-${i}`}>
+                              <div className={`${styles['image-wrapper']} ${styles[`item-${i + 1}`]} ${styles[displayType]}`} key={`${image._key}-${i}`}>
                                 <Image
                                   width={width}
                                   height={height}
                                   src={url}
                                   blurDataURL={blurUrl}
-                                  alt={projects.projects[0].title}
+                                  alt={selectedProject.title}
                                   priority
                                   loader={() => urlForImage(image).width(width).format('webp').quality(70).url()}
                                 />
@@ -164,13 +143,13 @@ const R3F = ({projects}) => {
                             )
                           })
                         }
-                        {projects.projects[1].gallery.videos.length > 0 &&
-                          projects.projects[1].gallery.videos.map((video, i) => {
-                            const vidAspectRatio = video.width / video.height
+                        {selectedProject.gallery.videos?.length > 0 &&
+                          selectedProject.gallery.videos.map((video, i) => {
+                            const vidAspectRatio = Number(video.width) / Number(video.height)
                             const vidWidth = 450 * vidAspectRatio
-                            const imgLength = projects.projects[1].gallery.images.length
+                            const imgArrLength = selectedProject.gallery.images.length
                             return (
-                              <div className={`${styles['video-wrapper']} ${styles[`item-${imgLength + i + 1}`]} ${styles[display]}`} key={`${video._key}-${i}`}>
+                              <div className={`${styles['video-wrapper']} ${styles[`item-${imgArrLength + i + 1}`]} ${styles[displayType]}`} key={`${video._key}-${i}`}>
                                 <Suspense fallback={<div>Loading...</div>}>
                                   <video
                                     muted

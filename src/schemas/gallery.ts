@@ -59,12 +59,14 @@ export default defineType({
                             type: 'number',
                             title: 'Width',
                             description: 'Width of the video in pixels',
+                            validation: Rule => Rule.required(),
                         }),
                         defineField({
                             name:'height',
                             type: 'number',
                             title: 'Height',
                             description: 'Height of the video in pixels',
+                            validation: Rule => Rule.required(),
                         })
                     ]
                 })

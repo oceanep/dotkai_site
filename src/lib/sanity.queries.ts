@@ -86,5 +86,21 @@ export interface Project {
   slug: Slug
   desc?: PortableTextBlock[]
   mainImage?: ImageAsset
-  gallery?: (ImageAsset | FileAsset)[]
+  mainImageUrl?: string
+  gallery?: Gallery
+}
+
+export enum GalleryDisplay {
+  Tri = 'tri',
+  InlineLeft = 'inline-left',
+  InlineRight = 'inline-right',
+  InlineBottom = 'inline-bottom',
+}
+
+interface Gallery {
+  _type: 'gallery'
+  images: ImageAsset[]
+  videos: FileAsset[]
+  display: GalleryDisplay
+  zoom?: boolean
 }
