@@ -25,6 +25,7 @@ const CanvasWrapper = ({ children }) => {
                 position: [0, 0.5, 3.5],
                 rotation: [0, 0, 0]
                 }}
+                eventSource={document.getElementById('root')} eventPrefix="client"
             >
                 <Preload all />
                 {children}

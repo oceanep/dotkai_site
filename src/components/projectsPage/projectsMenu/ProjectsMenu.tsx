@@ -43,17 +43,17 @@ const ProjectsMenu: React.FC<ProjectsMenuProps> = ({ width, height, projects, te
         clickHandler(newIndex)
     }
 
-    const onProjectHover = (event: ThreeEvent<MouseEvent>, index: number) => {
+    const onProjectHover = (event: ThreeEvent<PointerEvent>, index: number) => {
         console.log('event', event)
-        // event.stopPropagation()
+        event.stopPropagation()
         if (currentIndex === index) return
         if (meshRefs.current[index]?.current) {
             meshRefs.current[index].current.scale.set(1.1, 1.1, 1)
         }
     }
 
-    const onProjectUnhover = (event: ThreeEvent<MouseEvent>, index: number) => {
-        // event.stopPropagation()
+    const onProjectUnhover = (event: ThreeEvent<PointerEvent>, index: number) => {
+        event.stopPropagation()
         if (currentIndex === index) return
         if (meshRefs.current[index]?.current) {
             meshRefs.current[index].current.scale.set(1, 1, 1)
@@ -82,35 +82,35 @@ const ProjectsMenu: React.FC<ProjectsMenuProps> = ({ width, height, projects, te
             flexDir='row'
             flexWrap='wrap'
         >
-        {projects.length > 0 ? (
-            projects.map((project, i) => 
-            <Box 
-                ref={(el) => { meshRefs.current[i] = { current: el} }}
-                margin={0.05}
-                centerAnchor
-                key={`${project.slug}-${i}`}
-            >
-                <mesh
-                    onClick={(e) => selectProject(e, i)}
-                    onPointerOver={(e) => onProjectHover(e, i)}
-                    onPointerOut={(e) => onProjectUnhover(e, i)}
-                    name='project'
+            {projects.length > 0 ? (
+                projects.map((project, i) => 
+                <Box 
+                    ref={(el) => { meshRefs.current[i] = { current: el} }}
+                    margin={0.05}
+                    centerAnchor
+                    key={`${project.slug}-${i}`}
                 >
-                    <planeGeometry args={[.35, .35]} />
-                    <meshBasicMaterial attach="material" map={textures[i]} />
-                </mesh>
-                {currentIndex === i && (
                     <mesh
-                        position={[0, 0, -0.01]} // Slightly behind the main mesh
+                        onClick={(e) => selectProject(e, i)}
+                        onPointerOver={(e) => onProjectHover(e, i)}
+                        onPointerOut={(e) => onProjectUnhover(e, i)}
+                        name='project'
                     >
-                        <planeGeometry args={[.38, .38]} /> {/* Slightly larger than the main mesh */}
-                        <meshBasicMaterial attach="material" color="black" transparent opacity={0.5} />
+                        <planeGeometry args={[.35, .35]} />
+                        <meshBasicMaterial attach="material" map={textures[i]} />
                     </mesh>
-                )}
-            </Box>)
-        ) : (
-            <ComputerMesh scale={0.2} />
-        )}
+                    {currentIndex === i && (
+                        <mesh
+                            position={[0, 0, -0.01]} // Slightly behind the main mesh
+                        >
+                            <planeGeometry args={[.38, .38]} />
+                            <meshBasicMaterial attach="material" color="black" transparent opacity={0.5} />
+                        </mesh>
+                    )}
+                </Box>)
+            ) : (
+                <ComputerMesh scale={0.2} />
+            )}
         </Flex>
     </>
     )
