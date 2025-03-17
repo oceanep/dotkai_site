@@ -9,9 +9,9 @@ const Parallax = () => {
     const [cursor, setCursor] = useState({x: 0, y: 0})
     
     const initCamPos = useMemo(() => ({
-        x: camera.position.x || 0, 
-        y: camera.position.y || 0, 
-        z: camera.position.z || 0
+        x: camera.position.x || 0,
+        y: camera.position.y || 0.5, 
+        z: camera.position.z || 3.5
     }), [])
 
     const handleCursor = (e) => 
