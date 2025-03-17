@@ -41,10 +41,14 @@ const DOM = () => {
 };
 // Canvas/R3F components here
 const R3F = ({ projects }) => {
+  //State Logic
   const [selectedProject, setSelectedProject] = useState<Project>(projects.projects[0])
+
+  //Prepare three related data
   const { height, width } = useThree((state) => state.viewport)
   const textures: Texture[] = projects.projects.map((project) => useTexture(`${project.mainImageUrl}?w750&fm=webp&q=50`))
 
+  //prepare image layout data
   const imgWidth = 250
   const imageUrl = useMemo(() => urlForImage(selectedProject.mainImage).width(imgWidth).quality(70).url(), [selectedProject])
   const blurImageUrl = useMemo(() => urlForImage(selectedProject.mainImage).width(20).format('webp').quality(20).url(), [selectedProject])
@@ -52,6 +56,7 @@ const R3F = ({ projects }) => {
   const imgHeight = Math.round(imgWidth / aspectRatio)
   const displayType = useMemo(() => selectedProject.gallery.display, [selectedProject])
 
+  //Event Handlers
   const handleProjectSelect = (projectIndex: number) => {
     setSelectedProject(projects.projects[projectIndex])
   }

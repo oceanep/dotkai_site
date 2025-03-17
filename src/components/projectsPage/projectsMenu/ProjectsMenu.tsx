@@ -4,6 +4,7 @@ import { Group, Texture } from 'three'
 import ComputerMesh from '~/components/ComputerMesh'
 import { Project } from '~/lib/sanity.queries'
 import { useRef } from 'react'
+import { ThreeEvent } from '@react-three/fiber'
 
 interface ProjectsMenuProps {
   width: number
@@ -25,7 +26,8 @@ const ProjectsMenu: React.FC<ProjectsMenuProps> = ({ width, height, projects, te
         }
     }, [])
 
-    const selectProject = (newIndex: number) => {
+    const selectProject = (event: ThreeEvent<MouseEvent>, newIndex: number) => {
+        // event.stopPropagation()
         if (newIndex === currentIndex) return
         if (meshRefs.current[currentIndex]?.current) {
             //set scale back to 1 because hover state proceeds click state
@@ -41,14 +43,17 @@ const ProjectsMenu: React.FC<ProjectsMenuProps> = ({ width, height, projects, te
         clickHandler(newIndex)
     }
 
-    const onProjectHover = (index: number) => {
+    const onProjectHover = (event: ThreeEvent<MouseEvent>, index: number) => {
+        console.log('event', event)
+        // event.stopPropagation()
         if (currentIndex === index) return
         if (meshRefs.current[index]?.current) {
             meshRefs.current[index].current.scale.set(1.1, 1.1, 1)
         }
     }
 
-    const onProjectUnhover = (index: number) => {
+    const onProjectUnhover = (event: ThreeEvent<MouseEvent>, index: number) => {
+        // event.stopPropagation()
         if (currentIndex === index) return
         if (meshRefs.current[index]?.current) {
             meshRefs.current[index].current.scale.set(1, 1, 1)
@@ -86,9 +91,9 @@ const ProjectsMenu: React.FC<ProjectsMenuProps> = ({ width, height, projects, te
                 key={`${project.slug}-${i}`}
             >
                 <mesh
-                    onClick={() => selectProject(i)}
-                    onPointerOver={() => onProjectHover(i)}
-                    onPointerOut={() => onProjectUnhover(i)}
+                    onClick={(e) => selectProject(e, i)}
+                    onPointerOver={(e) => onProjectHover(e, i)}
+                    onPointerOut={(e) => onProjectUnhover(e, i)}
                     name='project'
                 >
                     <planeGeometry args={[.35, .35]} />
