@@ -129,23 +129,23 @@ const EffectPass:FC = () => {
     
     return (
         <EffectComposer multisampling={0}>
-            <ToneMapping mode={ToneMappingMode.ACES_FILMIC} /> 
-            {glitchOn && (
+            <ToneMapping mode={ToneMappingMode.NEUTRAL} /> 
+            {/* {glitchOn && (
                 <Glitch
                     delay={new Vector2(delay[0], delay[1])}
                     duration={new Vector2(duration[0], duration[1])}
                     strength={new Vector2(strength[0], strength[1])}
                     mode={GlitchMode[glitchMode]}
                 />
-            )}
+            )} */}
             
-            {dofOn && (
+            {/* {dofOn && (
                 <DepthOfField
                     focusDistance={focusDistance}
                     focalLength={focalLength}
                     bokehScale={bokehScale}
                 />
-            )}
+            )} */}
             {/* {bloomOn && (
                 <Bloom
                     luminanceThreshold={luminanceThreshold}

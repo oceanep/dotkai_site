@@ -69,15 +69,15 @@ const ProjectsMenuItem: React.FC<ProjectsMenuItemProps> = ({ project, texture, s
                 }}
                 name='project'
             >
-                <planeGeometry args={[.35, .35]} />
-                <meshBasicMaterial attach="material" map={texture} />
+                <planeGeometry args={[.3, .3]} />
+                <meshBasicMaterial attach="material" toneMapped={false} map={texture} />
             </mesh>
             {selected && (
                 <mesh
                     position={[0, 0, -0.01]} // Slightly behind the main mesh
                 >
-                    <planeGeometry args={[.38, .38]} />
-                    <meshBasicMaterial attach="material" color="black" transparent opacity={0.5} />
+                    <planeGeometry args={[.33, .33]} />
+                    <meshBasicMaterial attach="material" color="black" opacity={0.5} />
                 </mesh>
             )}
         </Box>

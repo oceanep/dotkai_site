@@ -10,7 +10,7 @@ import { getProjects, type Project, projectsQuery } from '~/lib/sanity.queries'
 import type { SharedPageProps } from '~/pages/_app'
 import { useThree } from '@react-three/fiber'
 import { urlForImage } from '~/lib/sanity.image'
-import { Texture } from 'three'
+import { LinearSRGBColorSpace, SRGBColorSpace, Texture } from 'three'
 
 import { Suspense, useMemo, useState } from 'react'
 import ProjectsMenu from '~/components/projectsPage/projectsMenu/ProjectsMenu'
@@ -46,7 +46,11 @@ const R3F = ({ projects }) => {
 
   //Prepare three related data
   const { height, width } = useThree((state) => state.viewport)
-  const textures: Texture[] = projects.projects.map((project) => useTexture(`${project.mainImageUrl}?w750&fm=webp&q=50`))
+  const textures: Texture[] = projects.projects.map((project) => {
+    const _texture = useTexture(`${project.mainImageUrl}?w750&fm=webp&q=50`)
+    _texture.colorSpace = SRGBColorSpace
+    return _texture
+  })
 
   //prepare image layout data
   const imgWidth = 250
