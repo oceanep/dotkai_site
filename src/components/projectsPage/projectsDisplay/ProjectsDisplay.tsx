@@ -7,16 +7,15 @@ import { urlForImage } from '~/lib/sanity.image'
 import styles from './ProjectsDisplay.module.scss'
 import { Project } from '~/lib/sanity.queries'
 import { customMarks } from '~/components/portableText/CustomMarks'
+import LabledImage from '~/components/projectsPage/projectsDisplay/CustomImage'
+import CustomImage from '~/components/projectsPage/projectsDisplay/CustomImage'
+import CustomVideo from './CustomVideo'
 
 interface ProjectsDisplayProps {
   width: number
   height: number
   selectedProject: Project
   imgWidth: number
-  imgHeight: number
-  imageUrl: string
-  blurImageUrl: string
-  displayType: string
 }
 
 const ProjectsDisplay = ({
@@ -24,87 +23,64 @@ const ProjectsDisplay = ({
   height,
   selectedProject,
   imgWidth,
-  imgHeight,
-  imageUrl,
-  blurImageUrl,
-  displayType
 }: ProjectsDisplayProps) => {
     const bgTexture = useTexture('/images/Display-0_93 aspect ratio.png')
     return (
         <group>
-            <mesh position={[0.9, .5, 0]}>
+            <mesh
+                position={[0.9, .5, 0]}
+                rotation={[0, - Math.PI / 18, 0]}
+            >
                 <planeGeometry args={[width * 0.5, height * 0.9]} />
                 <meshBasicMaterial attach="material" transparent map={bgTexture} />
-                <Html wrapperClass={styles['html-content']} transform distanceFactor={1}>
+                <Html
+                    wrapperClass={styles['html-content']}
+                    transform 
+                    distanceFactor={1}
+                >
                     <div className={styles['preview-wrapper']}>
-                    <div className={styles['grid']}>
-                        <div className={styles['title-wrapper']}>
-                        <div className={styles['title-card']}>
-                            <h1>{selectedProject.title.toUpperCase()}</h1>
-                        </div>
-                        </div>
-                        <div className={`${styles['image-wrapper']} ${styles['main-image']}`}>
-                        <Image
-                            width={imgWidth}
-                            height={imgHeight}
-                            src={imageUrl}
-                            blurDataURL={blurImageUrl}
-                            alt={selectedProject.title}
-                            priority
-                            loader={() => urlForImage(selectedProject.mainImage).width(200).format('webp').quality(70).url()}
-                        />
-                        </div>
-                        <div className={styles['description-wrapper']}>
-                        <div className={styles['description-card']}>
-                            <PortableText value={selectedProject.desc} components={customMarks} />
-                        </div>
-                        </div>
-                        {selectedProject.gallery.images?.length > 0 &&
-                        selectedProject.gallery.images.map((image, i) => {
-                            const width = 200
-                            const url = urlForImage(image).width(width).quality(70).url()
-                            const blurUrl = urlForImage(image).width(20).format('webp').quality(20).url()
-                            const { aspectRatio } = getImageDimensions(url)
-                            const height = Math.round(width / aspectRatio)
-                            return (
-                            <div className={`${styles['image-wrapper']} ${styles[`item-${i + 1}`]} ${styles[displayType]}`} key={`${image._key}-${i}`}>
-                                <Image
-                                width={width}
-                                height={height}
-                                src={url}
-                                blurDataURL={blurUrl}
+                        <div className={styles['grid']}>
+                            <div className={styles['title-wrapper']}>
+                                <div className={styles['title-card']}>
+                                    <h1>{selectedProject.title.toUpperCase()}</h1>
+                                </div>
+                            </div>
+                            <CustomImage
+                                src={selectedProject.mainImage}
                                 alt={selectedProject.title}
-                                priority
-                                loader={() => urlForImage(image).width(width).format('webp').quality(70).url()}
-                                />
+                                width={imgWidth}
+                            />
+                            <div className={styles['description-wrapper']}>
+                                <div className={styles['description-card']}>
+                                    <PortableText value={selectedProject.desc} components={customMarks} />
+                                </div>
                             </div>
-                            )
-                        })
-                        }
-                        {selectedProject.gallery.videos?.length > 0 &&
-                        selectedProject.gallery.videos.map((video, i) => {
-                            const vidAspectRatio = Number(video.width) / Number(video.height)
-                            const vidWidth = 450 * vidAspectRatio
-                            const imgArrLength = selectedProject.gallery.images.length
-                            return (
-                            <div className={`${styles['video-wrapper']} ${styles[`item-${imgArrLength + i + 1}`]} ${styles[displayType]}`} key={`${video._key}-${i}`}>
-                                <Suspense fallback={<div>Loading...</div>}>
-                                <video
-                                    muted
-                                    autoPlay
-                                    loop
-                                    preload='auto'
-                                    playsInline
-                                    poster={blurImageUrl}
-                                    width={vidWidth}
-                                    src={video.url}
-                                />
-                                </Suspense>
-                            </div>
-                            )
-                        })
-                        }
-                    </div>
+                            {selectedProject.gallery.images?.length > 0 &&
+                                selectedProject.gallery.images.map((image, i) => 
+                                    <CustomImage
+                                        src={image}
+                                        alt={image.alt}
+                                        displayType={selectedProject.gallery.display}
+                                        index={i}
+                                        width={200}
+                                        key={`${image._key}-${i}`}
+                                    />
+                                )
+                            }
+                            {selectedProject.gallery.videos?.length > 0 &&
+                                selectedProject.gallery.videos.map((video, i) => 
+                                    <CustomVideo
+                                        video={video}
+                                        fallback={urlForImage(selectedProject.mainImage).width(20).format('webp').quality(20).url()}
+                                        width={450}
+                                        imgArrLength={selectedProject.gallery.images.length}
+                                        displayType={selectedProject.gallery.display}
+                                        index={i}
+                                        key={`${video._key}-${i}`}
+                                    />
+                                )
+                            }
+                        </div>
                     </div>
                 </Html>
             </mesh>

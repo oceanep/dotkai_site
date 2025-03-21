@@ -30,8 +30,10 @@ export const projectsQuery = groq`
       "desc": desc,
       "title": title,
       "slug": slug.current,
-      "mainImage": mainImage,
-      "mainImageUrl": mainImage.asset->url,
+      "mainImage": mainImage{
+        ...,
+        "url": asset->url,
+      },
       "gallery": {
         "display": gallery.display,
         "images": gallery.images[]{
@@ -97,10 +99,21 @@ export enum GalleryDisplay {
   InlineBottom = 'inline-bottom',
 }
 
-interface Gallery {
+export interface Gallery {
   _type: 'gallery'
-  images: ImageAsset[]
-  videos: FileAsset[]
+  images: ProjectImageAsset[]
+  videos: VideoAsset[]
   display: GalleryDisplay
   zoom?: boolean
+}
+
+export interface ProjectImageAsset extends ImageAsset {
+  alt: 'string'
+}
+
+export interface VideoAsset extends FileAsset {
+  width: number,
+  height: number,
+  url: string,
+  alt?: string,
 }

@@ -47,18 +47,10 @@ const R3F = ({ projects }) => {
   //Prepare three related data
   const { height, width } = useThree((state) => state.viewport)
   const textures: Texture[] = projects.projects.map((project) => {
-    const _texture = useTexture(`${project.mainImageUrl}?w750&fm=webp&q=50`)
+    const _texture = useTexture(`${project.mainImage.url}?w750&fm=webp&q=50`)
     _texture.colorSpace = SRGBColorSpace
     return _texture
   })
-
-  //prepare image layout data
-  const imgWidth = 250
-  const imageUrl = useMemo(() => urlForImage(selectedProject.mainImage).width(imgWidth).quality(70).url(), [selectedProject])
-  const blurImageUrl = useMemo(() => urlForImage(selectedProject.mainImage).width(20).format('webp').quality(20).url(), [selectedProject])
-  const { aspectRatio } = getImageDimensions(imageUrl)
-  const imgHeight = Math.round(imgWidth / aspectRatio)
-  const displayType = useMemo(() => selectedProject.gallery.display, [selectedProject])
 
   //Event Handlers
   const handleProjectSelect = (projectIndex: number) => {
@@ -81,11 +73,7 @@ const R3F = ({ projects }) => {
           width={width}
           height={height}
           selectedProject={selectedProject}
-          imgWidth={imgWidth}
-          imgHeight={imgHeight}
-          imageUrl={imageUrl}
-          blurImageUrl={blurImageUrl}
-          displayType={displayType}
+          imgWidth={250}
         />
       </Suspense>
     </>

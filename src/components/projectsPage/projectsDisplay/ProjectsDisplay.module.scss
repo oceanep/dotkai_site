@@ -98,12 +98,24 @@ $colors: (
 .image-wrapper, .video-wrapper {
     position: relative;
     z-index: 9;
+    
+    transition: transform 0.2s ease-in-out;
+    &:hover {
+        transform: scale(1.2);
+        z-index: 999;
+    }
 }
 
 .main-image {
     grid-column: 3 / 5;
     grid-row: 2 / 3;
     // justify-self: end;
+
+    transition: transform 0.2s ease-in-out;
+    &:hover {
+        transform: scale(1.2);
+        z-index: 999;
+    }
 }
 
 .item-1 {
@@ -174,6 +186,7 @@ $colors: (
     @media (min-width: 1200px) {
         font-size: 1.2rem; 
     }
+    
 }
 
 .description-card {
