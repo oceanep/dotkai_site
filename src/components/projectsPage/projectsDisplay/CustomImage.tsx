@@ -7,6 +7,7 @@ import { GalleryDisplay } from '~/lib/sanity.queries';
 import { ImageAsset } from 'sanity';
 
 import styles from './ProjectsDisplay.module.scss'
+import TextCard from './TextCard';
 
 interface CustomImageProps {
     src: ImageAsset;
@@ -15,9 +16,10 @@ interface CustomImageProps {
     index?: number;
     width?: number;
     priority?: boolean;
+    label?: string;
 }
 
-const CustomImage: React.FC<CustomImageProps> = ({ src, alt, displayType, index, width = 200, priority = true }) => {
+const CustomImage: React.FC<CustomImageProps> = ({ src, alt, displayType, index, width = 200, priority = true, label }) => {
     const url = urlForImage(src).width(width).quality(70).url()
     const blurUrl = urlForImage(src).width(20).format('webp').quality(20).url()
     const { aspectRatio } = getImageDimensions(url)
@@ -34,6 +36,10 @@ const CustomImage: React.FC<CustomImageProps> = ({ src, alt, displayType, index,
                 priority={priority}
                 loader={() => urlForImage(src).width(width).format('webp').quality(70).url()}
             />
+            {label && (
+                //modulos the index to flip the position offset of the text card
+                <TextCard text={label} flip={!(index%2) || false}/>
+            )}
         </div>
     );
 };

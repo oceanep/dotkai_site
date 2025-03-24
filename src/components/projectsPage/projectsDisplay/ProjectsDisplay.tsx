@@ -1,15 +1,16 @@
 import { Html, useTexture } from '@react-three/drei'
-import Image from 'next/image'
 import { PortableText } from '@portabletext/react'
-import { Suspense } from 'react'
-import { getImageDimensions } from '@sanity/asset-utils'
+
 import { urlForImage } from '~/lib/sanity.image'
-import styles from './ProjectsDisplay.module.scss'
 import { Project } from '~/lib/sanity.queries'
+
 import { customMarks } from '~/components/portableText/CustomMarks'
-import LabledImage from '~/components/projectsPage/projectsDisplay/CustomImage'
-import CustomImage from '~/components/projectsPage/projectsDisplay/CustomImage'
+import CustomImage from './CustomImage'
 import CustomVideo from './CustomVideo'
+import TextCard from './TextCard'
+
+import styles from './ProjectsDisplay.module.scss'
+import DescCard from './DescCard'
 
 interface ProjectsDisplayProps {
   width: number
@@ -40,21 +41,16 @@ const ProjectsDisplay = ({
                 >
                     <div className={styles['preview-wrapper']}>
                         <div className={styles['grid']}>
-                            <div className={styles['title-wrapper']}>
-                                <div className={styles['title-card']}>
-                                    <h1>{selectedProject.title.toUpperCase()}</h1>
-                                </div>
-                            </div>
+                            <TextCard
+                                text={selectedProject.title.toUpperCase()}
+                                isTitle
+                            />
                             <CustomImage
                                 src={selectedProject.mainImage}
                                 alt={selectedProject.title}
                                 width={imgWidth}
                             />
-                            <div className={styles['description-wrapper']}>
-                                <div className={styles['description-card']}>
-                                    <PortableText value={selectedProject.desc} components={customMarks} />
-                                </div>
-                            </div>
+                            <DescCard text={selectedProject.desc} />
                             {selectedProject.gallery.images?.length > 0 &&
                                 selectedProject.gallery.images.map((image, i) => 
                                     <CustomImage
@@ -64,6 +60,7 @@ const ProjectsDisplay = ({
                                         index={i}
                                         width={200}
                                         key={`${image._key}-${i}`}
+                                        label={image.alt}
                                     />
                                 )
                             }
@@ -77,6 +74,7 @@ const ProjectsDisplay = ({
                                         displayType={selectedProject.gallery.display}
                                         index={i}
                                         key={`${video._key}-${i}`}
+                                        label={video.alt}
                                     />
                                 )
                             }
