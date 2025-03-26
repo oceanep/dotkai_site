@@ -10,11 +10,12 @@ const Parallax = () => {
     
     const initCamPos = useMemo(() => ({
         x: camera.position.x || 0,
-        y: camera.position.y || 0.5, 
+        y: camera.position.y || 0, 
         z: camera.position.z || 3.5
     }), [])
 
     const handleCursor = (e) => 
+        //cursor returns as a decimal of 1 so subtract .5 to get accurate mapping to screen
         setCursor({
             x: e.clientX / window.innerWidth - 0.5,
             y: e.clientY / window.innerHeight - 0.5
@@ -41,7 +42,7 @@ const Parallax = () => {
 
     return (
         <mesh
-            position={[0, 0.5, -0.1]}
+            position={[0, 0, -0.1]}
             scale={0.05}
             ref={foci}
             visible={false}

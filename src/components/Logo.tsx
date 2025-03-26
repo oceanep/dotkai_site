@@ -36,9 +36,12 @@ const Logo:FC = () => {
 
     return (
         <group ref={group}>
-            <LogoMesh ref={logo} />
+            <LogoMesh
+                ref={logo}
+                position-y={-0.5}            
+            />
             <mesh
-                position={[-0.7, 0.5, -0.15]}
+                position={[-0.7, 0, -0.15]}
                 scale={1.4}
             >
                 <boxGeometry args={[0.5,0.11,0]} />
@@ -46,7 +49,7 @@ const Logo:FC = () => {
             </mesh>
             <mesh
                 ref={boxRef}
-                position-y={0.5}
+                position-y={0}
                 position-z={-0.8}
                 scale={0.8}
                 visible={visible}
@@ -58,7 +61,7 @@ const Logo:FC = () => {
                 />
             </mesh>
             <Html
-                position={[0,0,0]}
+                position={[0,-0.5,0]}
                 // occlude="blending"
                 receiveShadow
                 transform
