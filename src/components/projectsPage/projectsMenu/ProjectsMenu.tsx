@@ -3,19 +3,31 @@ import { Box, Flex } from '@react-three/flex'
 import { Group, Texture } from 'three'
 import ComputerMesh from '~/components/ComputerMesh'
 import { Project } from '~/lib/sanity.queries'
-import { ThreeEvent } from '@react-three/fiber'
+import { Euler, ThreeEvent, Vector3 } from '@react-three/fiber'
 import ProjectsMenuItem from './ProjectsMenuItem'
 import { useTexture } from '@react-three/drei'
 
 interface ProjectsMenuProps {
   width: number
   height: number
+  position: Vector3
+  rotation: Euler
   projects: Project[]
   textures: Texture[]
   clickHandler: (projectIndex: number) => void
+
 }
 
-const ProjectsMenu: React.FC<ProjectsMenuProps> = ({ width, height, projects, textures, clickHandler }) => {
+
+const ProjectsMenu: React.FC<ProjectsMenuProps> = ({
+    width, 
+    height, 
+    position, 
+    rotation, 
+    projects, 
+    textures, 
+    clickHandler 
+}) => {
     // const meshRefs = useRef<(React.RefObject<Group> | null)[]>([])
 
     const [ previousIndex, setPreviousIndex ] = React.useState<number | undefined>(undefined)
@@ -43,19 +55,22 @@ const ProjectsMenu: React.FC<ProjectsMenuProps> = ({ width, height, projects, te
     return (
         <>
             <mesh
-                position={[-width / 4, height / 4 - 0.25, 0]}
-                rotation={[0, Math.PI / 4, 0]}
+                position={position}
+                //position={[-width / 4, height / 4 - 0.25, 0]}
+                rotation={rotation}
             >
                 <planeGeometry
-                    args={[width * 0.4, height * 0.8]}
+                    // args={[width * 0.4, height * 0.8]}
+                    args={[width, height]}
                 />
                 <meshBasicMaterial attach="material" transparent map={bgTexture} />
             </mesh>
             <Flex
-                size={[width * 0.35, height * 0.75, 0]}
+                // size={[width * 0.35, height * 0.75, 0]}
+                size={[width, height, 0]}
                 // position={[-width / 2 + 0.2, height / 2 + 0.25, 0.1]}
-                position={[-width / 4, height / 4 - 0.25, 0.02]}
-                rotation={[0, Math.PI / 4, 0]}
+                position={[position[0], position[1], position[2] + 0.02]}
+                rotation={rotation}
                 centerAnchor
                 plane='xy'
                 justifyContent='flex-start'

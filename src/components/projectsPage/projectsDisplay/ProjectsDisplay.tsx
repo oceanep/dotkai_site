@@ -11,28 +11,37 @@ import TextCard from './TextCard'
 
 import styles from './ProjectsDisplay.module.scss'
 import DescCard from './DescCard'
+import { Euler, Vector3 } from '@react-three/fiber'
 
 interface ProjectsDisplayProps {
   width: number
   height: number
+  position: Vector3
+  rotation: Euler
   selectedProject: Project
   imgWidth: number
 }
 
-const ProjectsDisplay = ({
+const ProjectsDisplay: React.FC<ProjectsDisplayProps> = ({
   width,
   height,
+  position,
+  rotation,
   selectedProject,
   imgWidth,
-}: ProjectsDisplayProps) => {
+}) => {
     const bgTexture = useTexture('/images/Display-0_93 aspect ratio.png')
     return (
         <group>
             <mesh
-                position={[0.9, .5, 0]}
-                rotation={[0, - Math.PI / 18, 0]}
+                // position={[0.9, .5, 0]}
+                position={position}
+                rotation={rotation}
             >
-                <planeGeometry args={[width * 0.5, height * 0.9]} />
+                <planeGeometry
+                    // args={[width * 0.5, height * 0.9]} 
+                    args={[width, height]} 
+                />
                 <meshBasicMaterial attach="material" transparent map={bgTexture} />
                 <Html
                     wrapperClass={styles['html-content']}

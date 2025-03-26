@@ -92,6 +92,17 @@ export interface Project {
   gallery?: Gallery
 }
 
+export interface ProjectImageAsset extends ImageAsset {
+  alt: 'string'
+}
+
+export interface VideoAsset extends FileAsset {
+  width: number,
+  height: number,
+  url: string,
+  alt?: string,
+}
+
 export enum GalleryDisplay {
   Tri = 'tri',
   InlineLeft = 'inline-left',
@@ -105,15 +116,4 @@ export interface Gallery {
   videos: VideoAsset[]
   display: GalleryDisplay
   zoom?: boolean
-}
-
-export interface ProjectImageAsset extends ImageAsset {
-  alt: 'string'
-}
-
-export interface VideoAsset extends FileAsset {
-  width: number,
-  height: number,
-  url: string,
-  alt?: string,
 }
