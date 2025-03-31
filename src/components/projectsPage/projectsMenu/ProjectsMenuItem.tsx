@@ -48,7 +48,7 @@ const ProjectsMenuItem: React.FC<ProjectsMenuItemProps> = ({ project, texture, s
     return (
         <Box 
             ref={meshRef}
-            margin={0.05}
+            margin={0.04}
             centerAnchor
             key={`${project.slug}-${index}`}
         >

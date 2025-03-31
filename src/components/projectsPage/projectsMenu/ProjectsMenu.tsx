@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef } from 'react'
 import { Box, Flex } from '@react-three/flex'
 import { Group, Texture } from 'three'
 import ComputerMesh from '~/components/ComputerMesh'
@@ -35,6 +35,11 @@ const ProjectsMenu: React.FC<ProjectsMenuProps> = ({
 
     const bgTexture = useTexture('/images/Menu-0_84 aspect ratio.png')
 
+    // add margin to flex container sizing
+    // Use difference in widths to add margin to flex contianer positioning
+    const [ flexWidth, flexHeight ] = useMemo(() => [ width * 0.9375, height * 0.9375 ], [width, height])
+    const widthDiff = useMemo(() => (width - flexWidth) / 2, [flexWidth])
+
     const selectProject = (event: ThreeEvent<MouseEvent>, newIndex: number) => {
         if (newIndex === currentIndex) return
         setPreviousIndex(currentIndex)
@@ -67,9 +72,9 @@ const ProjectsMenu: React.FC<ProjectsMenuProps> = ({
             </mesh>
             <Flex
                 // size={[width * 0.35, height * 0.75, 0]}
-                size={[width, height, 0]}
+                size={[flexWidth, flexHeight, 0]}
                 // position={[-width / 2 + 0.2, height / 2 + 0.25, 0.1]}
-                position={[position[0], position[1], position[2] + 0.02]}
+                position={[position[0] + widthDiff, position[1], position[2] + 0.02]}
                 rotation={rotation}
                 centerAnchor
                 plane='xy'

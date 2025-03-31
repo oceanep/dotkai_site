@@ -146,7 +146,7 @@ const R3F = ({ projects }) => {
           width={meshBWidth}
           height={meshBHeight}
           position={[meshBX, meshBY, -0.25]}
-          rotation={[0, - Math.PI / 18, 0]}
+          rotation={[0, - Math.PI / 12, 0]}
           selectedProject={selectedProject}
           imgWidth={250}
         />
