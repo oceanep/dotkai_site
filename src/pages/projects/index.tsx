@@ -73,11 +73,14 @@ const R3F = ({ projects }) => {
   
   // Clamp the width between 450px and 600px (converted to world units)
   const minWidthA = 450 * worldUnitsPerWidthPixel
-  const maxWidthA = 650 * worldUnitsPerWidthPixel
+  const maxWidthA = 550 * worldUnitsPerWidthPixel
   const meshAWidth = clamp(availableWidthA, minWidthA, maxWidthA)
   
   // Compute the height based on the height/width aspect ratio (ie. width:height is 19:34; so height = width * (34/19))
-  const meshAHeight = meshAWidth * (26 / 19) - 2 * marginAY
+  const availableHeightA = meshAWidth * (26 / 19) - 2 * marginAY
+  const minHeightA = minWidthA * (26 / 19) - 2 * marginAY
+  const maxHeightA = maxWidthA * (26 / 19)
+  const meshAHeight = clamp(availableHeightA, minHeightA, maxHeightA)
   
   // Position: the left area starts at x = -viewport.width/2.
   // Place the mesh so that its left edge is marginA from the left boundary.
@@ -93,34 +96,43 @@ const R3F = ({ projects }) => {
   const rightAreaWidth = width * 0.575
   
   // Desired margin for Mesh B; here we pick 20px (you might choose a value between 20 and 40px)
-  const marginBX = 20 * worldUnitsPerWidthPixel
-  const marginBY = 10 * worldUnitsPerHeightPixel
+  const marginBX = 30 * worldUnitsPerWidthPixel
+  const marginBY = 50 * worldUnitsPerHeightPixel
   
   // Compute the available width in the right area after subtracting left and right margins
   const availableWidthB = rightAreaWidth - 2 * marginBX
   
-  // Clamp the width between 650px and 950px (converted to world units)
-  const minWidthB = 650 * worldUnitsPerWidthPixel
-  const maxWidthB = 1050 * worldUnitsPerWidthPixel
+  // Clamp the width between 650px and 900px (converted to world units)
+  const minWidthB = 750 * worldUnitsPerWidthPixel
+  const maxWidthB = 900 * worldUnitsPerWidthPixel
   const meshBWidth = clamp(availableWidthB, minWidthB, maxWidthB)
   
   // Compute the height based on the height/width aspect ratio (ie. width:height is 19:34; so height = width * (34/19))
-  const meshBHeight = meshBWidth * (62 / 59) - marginBY
+  const avalibaleHeightB = meshBWidth * (62 / 59) - marginBY
+  const minHeightB = minWidthB * (62 / 59) - marginBY
+  const maxHeightB = maxWidthB * (62 / 59)
+  const meshBHeight = clamp(avalibaleHeightB, minWidthB, maxHeightB)
   
   // For positioning Mesh B, the right area starts at:
   const rightAreaStartX = -width / 2 + leftAreaWidth
   // Place Mesh B so that its left edge is marginB from the start of the right area.
   // Don't add margin here to remove left margin and not double inner margins for both halves
-  const meshBX = rightAreaStartX  + meshBWidth / 2
+  const bPosMin = -width /2 + meshAWidth + marginAX + meshBWidth / 2
+  // To prevent overlapping, clamp mesh B position to mesh a's width and margin from the screen start
+  const bPosMax = meshAWidth + meshBWidth
+  const meshBPosBase = rightAreaStartX  + meshBWidth / 2
+  const meshBX = clamp(meshBPosBase, bPosMin, bPosMax) 
   // Vertically, again center it
   const meshBY = 0
   
-  console.log('width x height: ', width, height)
-  console.log('client width x height: ', window.innerWidth, window.innerHeight)
+  // console.log('width x height: ', width, height)
+  // console.log('client width x height: ', window.innerWidth, window.innerHeight)
   // console.log('world units height: ', worldUnitsPerHeightPixel)
   // console.log('world units width: ', worldUnitsPerWidthPixel)
-  console.log('position X, Y: ', meshBX, meshBY)
-  console.log('Mesh width and height: ', meshBWidth, meshBHeight)
+  console.log('world start: ', -width/2)
+  console.log('position X, Y: ', meshBPosBase, meshBY)
+  // console.log('Mesh width and height: ', meshAWidth)
+  console.log('b position minimum: ', bPosMin)
 
   //Event Handlers
   const handleProjectSelect = (projectIndex: number) => {
@@ -146,6 +158,7 @@ const R3F = ({ projects }) => {
           width={meshBWidth}
           height={meshBHeight}
           position={[meshBX, meshBY, -0.25]}
+          // rotation={[0,0,0]}
           rotation={[0, - Math.PI / 12, 0]}
           selectedProject={selectedProject}
           imgWidth={250}

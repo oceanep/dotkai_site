@@ -1,6 +1,6 @@
 import {PortableTextComponents} from '@portabletext/react'
 
-import styles from './CustomMarks.module.css'
+import styles from './customMarks.module.scss'
 
 export const customMarks: PortableTextComponents = {
   marks: {

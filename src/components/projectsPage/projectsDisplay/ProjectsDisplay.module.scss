@@ -20,8 +20,12 @@ $colors: (
     padding: 0;
 }
 .preview-wrapper {    
-    width: 62vw;
-    height: 112vh;
+    width: 66vmax;
+    height: 67vmax;
+    min-width: 920px;
+    min-height: 940px;
+    max-width: 1095px;
+    max-height: 1130px;
     padding: 15px;
     background-color: rgba(0, 0, 0, 0.01);
     box-sizing: border-box;
@@ -235,6 +239,11 @@ $colors: (
     @include colors(border-right-color, secondary);
     border-bottom: 1px solid;
     @include colors(border-bottom-color, secondary);
+
+    & > p {
+        position: relative;
+        z-index: 100;
+    }
 
     //line decorations for text container
     &::before,

@@ -11,7 +11,7 @@ import TextCard from './TextCard'
 
 import styles from './ProjectsDisplay.module.scss'
 import DescCard from './DescCard'
-import { Euler, Vector3 } from '@react-three/fiber'
+import { Euler, useThree, Vector3 } from '@react-three/fiber'
 
 interface ProjectsDisplayProps {
   width: number
@@ -31,6 +31,9 @@ const ProjectsDisplay: React.FC<ProjectsDisplayProps> = ({
   imgWidth,
 }) => {
     const bgTexture = useTexture('/images/Display-0_93 aspect ratio.png')
+    const { size } = useThree()
+    const refHeight = 915
+    const scaleFactor = (refHeight / size.height) * .1
     return (
         <group>
             <mesh
@@ -46,7 +49,9 @@ const ProjectsDisplay: React.FC<ProjectsDisplayProps> = ({
                 <Html
                     wrapperClass={styles['html-content']}
                     transform 
-                    distanceFactor={1}
+                    // distanceFactor={1}
+                    scale={scaleFactor}
+                    
                 >
                     <div className={styles['preview-wrapper']}>
                         <div className={styles['grid']}>

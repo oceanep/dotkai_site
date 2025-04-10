@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react'
 import { Box } from '@react-three/flex'
 import { Group, Texture, Vector3 } from 'three'
-import { ThreeEvent, useFrame } from '@react-three/fiber'
+import { ThreeEvent, useFrame, useThree } from '@react-three/fiber'
 import { Project } from '~/lib/sanity.queries'
 
 interface ProjectsMenuItemProps {
@@ -17,18 +17,25 @@ interface ProjectsMenuItemProps {
 
 const ProjectsMenuItem: React.FC<ProjectsMenuItemProps> = ({ project, texture, selected, index, selectProject }) => {
     const [ hover, setHover ] = React.useState(false)
-    const [ firstRender, setFirstRender ] = React.useState(true)
   
     const meshRef = useRef<Group | null>(null)
 
-    useEffect(() => {setFirstRender(false)}, [])
+    const { height, width } = useThree((state) => state.viewport)
+    // Conversion factor: how many world units equal one pixel
+    const worldUnitsPerWidthPixel = width / window.innerWidth
+    const worldUnitsPerHeightPixel = height/ window.innerHeight
+    // Calculate menu item size and selected menu item size
+    const [ menuItemWidth, menuItemHeight ] = [100 * worldUnitsPerWidthPixel, 100 * worldUnitsPerHeightPixel]
+    const [ itemSelectWidth, itemSelectHeight ] = [110 * worldUnitsPerWidthPixel, 110 * worldUnitsPerHeightPixel]
+
+
 
     useFrame((state, delta) => {
         if (meshRef.current) {
             //animate selected state
             //If selection has been made but z position is not at 0.15 lerp
             //If selection has been removed but z position is not at 0 lerp
-            const easing = 20 * delta
+            const easing = 40 * delta
             if (selected && meshRef.current.position.z < 0.14999 || !selected && meshRef.current.children[0].position.z > 0.001) {
                 const targetPosition = new Vector3() 
                 targetPosition.copy(meshRef.current.children[0].position)
@@ -48,7 +55,7 @@ const ProjectsMenuItem: React.FC<ProjectsMenuItemProps> = ({ project, texture, s
     return (
         <Box 
             ref={meshRef}
-            margin={0.04}
+            margin={0.03}
             centerAnchor
             key={`${project.slug}-${index}`}
         >
@@ -69,15 +76,15 @@ const ProjectsMenuItem: React.FC<ProjectsMenuItemProps> = ({ project, texture, s
                 }}
                 name='project'
             >
-                <planeGeometry args={[.3, .3]} />
+                <planeGeometry args={[ menuItemWidth, menuItemHeight ]} />
                 <meshBasicMaterial attach="material" toneMapped={false} map={texture} />
             </mesh>
             {selected && (
                 <mesh
                     position={[0, 0, -0.01]} // Slightly behind the main mesh
                 >
-                    <planeGeometry args={[.33, .33]} />
-                    <meshBasicMaterial attach="material" color="black" opacity={0.5} />
+                    <planeGeometry args={[ itemSelectWidth, itemSelectHeight ]} />
+                    <meshBasicMaterial attach="material" transparent color="black" opacity={0.5} />
                 </mesh>
             )}
         </Box>
