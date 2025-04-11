@@ -6,6 +6,8 @@ import { Project } from '~/lib/sanity.queries'
 import { Euler, ThreeEvent, Vector3 } from '@react-three/fiber'
 import ProjectsMenuItem from './ProjectsMenuItem'
 import { useTexture } from '@react-three/drei'
+import { useMediaQuery } from '~/utils/hooks'
+import { EMEdiaType } from '~/utils/types'
 
 interface ProjectsMenuProps {
   width: number
@@ -33,12 +35,15 @@ const ProjectsMenu: React.FC<ProjectsMenuProps> = ({
     const [ previousIndex, setPreviousIndex ] = React.useState<number | undefined>(undefined)
     const [ currentIndex, setCurrentIndex ] = React.useState<number>(0)
 
+    const isMobile = useMediaQuery(EMEdiaType.SMARTPHONE)
+    const isTablet = useMediaQuery(EMEdiaType.TABLET)
+
     const bgTexture = useTexture('/images/Menu-0_84 aspect ratio.png')
 
     // add margin to flex container sizing
     // Use difference in widths to add margin to flex contianer positioning
     const [ flexWidth, flexHeight ] = [ width * 0.9375, height * 0.9375 ]
-    const widthDiff = (width - flexWidth) / 2
+    const widthDiff = isMobile ? 0 : (width - flexWidth) / 2
 
     const selectProject = (event: ThreeEvent<MouseEvent>, newIndex: number) => {
         if (newIndex === currentIndex) return
@@ -74,7 +79,7 @@ const ProjectsMenu: React.FC<ProjectsMenuProps> = ({
                 rotation={rotation}
                 centerAnchor
                 plane='xy'
-                justifyContent='flex-start'
+                justifyContent={isMobile || isTablet ? 'space-evenly' : 'flex-start'}
                 alignContent='flex-start'
                 alignItems='center'
                 flexDir='row'

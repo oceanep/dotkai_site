@@ -35,3 +35,11 @@ export interface IMeshProps {
     position?: Vector3,
     rotation?: Vector3
 }
+
+export enum EMEdiaType {
+    SMARTPHONE = '(min-width: 375px) and (max-width: 812px)',
+    TABLET = '(min-width: 768px) and (max-width: 1024px)',
+    DESKTOP = '(min-width: 1024px) and (max-width: 1440px)',
+    LARGE_DESKTOP = '(min-width: 1440px) and (max-width: 2560px)',
+    WIDESCREEN = '(min-width: 2560px)',
+}

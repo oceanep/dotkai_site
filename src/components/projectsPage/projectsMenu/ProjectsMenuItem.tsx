@@ -3,6 +3,8 @@ import { Box } from '@react-three/flex'
 import { Group, Texture, Vector3 } from 'three'
 import { ThreeEvent, useFrame, useThree } from '@react-three/fiber'
 import { Project } from '~/lib/sanity.queries'
+import { useMediaQuery } from '~/utils/hooks'
+import { EMEdiaType } from '~/utils/types'
 
 interface ProjectsMenuItemProps {
   project: Project
@@ -20,13 +22,17 @@ const ProjectsMenuItem: React.FC<ProjectsMenuItemProps> = ({ project, texture, s
   
     const meshRef = useRef<Group | null>(null)
 
+    const isMobile = useMediaQuery(EMEdiaType.SMARTPHONE)
+    const isTablet = useMediaQuery(EMEdiaType.TABLET)
+
     const { height, width } = useThree((state) => state.viewport)
     // Conversion factor: how many world units equal one pixel
     const worldUnitsPerWidthPixel = width / window.innerWidth
     const worldUnitsPerHeightPixel = height/ window.innerHeight
     // Calculate menu item size and selected menu item size
-    const [ menuItemWidth, menuItemHeight ] = [100 * worldUnitsPerWidthPixel, 100 * worldUnitsPerHeightPixel]
-    const [ itemSelectWidth, itemSelectHeight ] = [110 * worldUnitsPerWidthPixel, 110 * worldUnitsPerHeightPixel]
+    const menuItemSize = isMobile || isTablet ? 130 : 90 
+    const [ menuItemWidth, menuItemHeight ] = [menuItemSize * worldUnitsPerWidthPixel, menuItemSize * worldUnitsPerHeightPixel]
+    const [ itemSelectWidth, itemSelectHeight ] = [(menuItemSize + 10) * worldUnitsPerWidthPixel, (menuItemSize + 10) * worldUnitsPerHeightPixel]
 
 
 
@@ -55,7 +61,7 @@ const ProjectsMenuItem: React.FC<ProjectsMenuItemProps> = ({ project, texture, s
     return (
         <Box 
             ref={meshRef}
-            margin={0.03}
+            margin={isMobile || isTablet ? 0.05 : 0.03}
             centerAnchor
             key={`${project.slug}-${index}`}
         >

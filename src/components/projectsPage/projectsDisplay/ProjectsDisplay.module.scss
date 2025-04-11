@@ -20,12 +20,12 @@ $colors: (
     padding: 0;
 }
 .preview-wrapper {    
-    width: 66vmax;
-    height: 67vmax;
+    width: 64vmax;
+    height: 62vmax;
     min-width: 920px;
-    min-height: 940px;
-    max-width: 1095px;
-    max-height: 1130px;
+    min-height: 900px;
+    max-width: 1110px;
+    max-height: 1090px;
     padding: 15px;
     background-color: rgba(0, 0, 0, 0.01);
     box-sizing: border-box;
@@ -35,8 +35,12 @@ $colors: (
     font-size: 1rem;
     line-height: 1.2;
     letter-spacing: 0.05em;
-    @media (max-width: 768px) {
+    @media (min-width: 375px) and (max-width: 812px) {
         font-size: 0.8rem; 
+        width: 80vw;
+        height: 80vh;
+        min-width: 440px;
+        min-height: 990px;
     }
     @media (min-width: 1200px) {
         font-size: 1.2rem; 
@@ -51,6 +55,24 @@ $colors: (
     grid-template-rows: 80px;
     grid-auto-rows: minmax(190px, 1fr);
     justify-items: center;
+}
+
+.mobileBackButton {
+    height: 50px;
+    width: 50px;
+    font-size: 3em;
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    z-index: 1000;
+    background-color: rgb(255, 255, 255);
+    text-align: center;
+    border: 1px solid;
+    @include colors(border-color, secondary);
+    &:active {
+        transform: scale(0.9);
+        transition: transform 0.1s ease-in-out;
+    }
 }
 
 .title-card {

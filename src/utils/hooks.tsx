@@ -2,9 +2,9 @@ import { useCallback, useEffect, useState } from "react"
 import { throttle } from "."
 import { Vector2 } from "@react-three/fiber"
 
-export const useDebouncedResize = (): Vector2 => {
+export const useDebouncedResize = (): number[] => {
     //set screen resolution
-    const [size, setSize] = useState<Vector2>([
+    const [size, setSize] = useState<number[]>([
         window.innerWidth,
         window.innerHeight
     ])
@@ -22,4 +22,22 @@ export const useDebouncedResize = (): Vector2 => {
     }, [])
 
     return size
+}
+
+export const useMediaQuery = (query: string): boolean => {
+    const [matches, setMatches] = useState<boolean>(false)
+
+    useEffect(() => {
+        const media = window.matchMedia(query)
+        if (media.matches !== matches) {
+            setMatches(media.matches);
+        }
+        console.log('checking media: ', media)
+        const listener = () => setMatches(media.matches)
+
+        media.addEventListener('change', listener)
+        return () => media.removeEventListener('change', listener)
+    }, [matches, query])
+
+    return matches
 }

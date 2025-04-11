@@ -12,6 +12,10 @@ import TextCard from './TextCard'
 import styles from './ProjectsDisplay.module.scss'
 import DescCard from './DescCard'
 import { Euler, useThree, Vector3 } from '@react-three/fiber'
+import { forwardRef } from 'react'
+import { Mesh } from 'three'
+import { useMediaQuery } from '~/utils/hooks'
+import { EMEdiaType } from '~/utils/types'
 
 interface ProjectsDisplayProps {
   width: number
@@ -19,27 +23,31 @@ interface ProjectsDisplayProps {
   position: Vector3
   rotation: Euler
   selectedProject: Project
+  backClick: React.MouseEventHandler<HTMLDivElement>
   imgWidth: number
 }
 
-const ProjectsDisplay: React.FC<ProjectsDisplayProps> = ({
+const ProjectsDisplay = forwardRef<Mesh, ProjectsDisplayProps>(({
   width,
   height,
   position,
   rotation,
   selectedProject,
+  backClick,
   imgWidth,
-}) => {
+}, ref) => {
     const bgTexture = useTexture('/images/Display-0_93 aspect ratio.png')
     const { size } = useThree()
     const refHeight = 915
     const scaleFactor = (refHeight / size.height) * .1
+    const isMobile = useMediaQuery(EMEdiaType.SMARTPHONE)
     return (
         <group>
             <mesh
                 // position={[0.9, .5, 0]}
                 position={position}
                 rotation={rotation}
+                ref={ref}
             >
                 <planeGeometry
                     // args={[width * 0.5, height * 0.9]} 
@@ -55,6 +63,14 @@ const ProjectsDisplay: React.FC<ProjectsDisplayProps> = ({
                 >
                     <div className={styles['preview-wrapper']}>
                         <div className={styles['grid']}>
+                            {isMobile && (
+                                <div
+                                    className={styles['mobileBackButton']}
+                                    onClick={backClick}
+                                >
+                                    {`<`}
+                                </div>
+                            )}
                             <TextCard
                                 text={selectedProject.title.toUpperCase()}
                                 isTitle
@@ -98,6 +114,6 @@ const ProjectsDisplay: React.FC<ProjectsDisplayProps> = ({
             </mesh>
         </group>
     )
-}
+})
 
 export default ProjectsDisplay
