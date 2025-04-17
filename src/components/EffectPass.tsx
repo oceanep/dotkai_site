@@ -98,17 +98,17 @@ const EffectPass:FC = () => {
         frequency: {
             value: 0.85, 
             min: 0,
-            max: 5,
+            max: 2,
             step: 0.1
         },
         warp: {
-            value: 0.85,
+            value: 0.4,
             min: 0,
             max: 5,
             step: 0.1
         },
         intensity: {
-            value: 0.5,
+            value: 0.3,
             min: 0,
             max: 2,
             step: 0.1

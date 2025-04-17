@@ -90,7 +90,7 @@ const ProjectsMenuItem: React.FC<ProjectsMenuItemProps> = ({ project, texture, s
                     position={[0, 0, -0.01]} // Slightly behind the main mesh
                 >
                     <planeGeometry args={[ itemSelectWidth, itemSelectHeight ]} />
-                    <meshBasicMaterial attach="material" transparent color="black" opacity={0.5} />
+                    <meshBasicMaterial attach="material" depthWrite={false} transparent color="black" opacity={0.25} />
                 </mesh>
             )}
         </Box>

@@ -10,7 +10,7 @@ import { getProjects, type Project, projectsQuery } from '~/lib/sanity.queries'
 import type { SharedPageProps } from '~/pages/_app'
 import { useFrame, useThree } from '@react-three/fiber'
 import { urlForImage } from '~/lib/sanity.image'
-import { Euler, LinearSRGBColorSpace, Mesh, SRGBColorSpace, Texture, Vector3 } from 'three'
+import { Color, Euler, LinearSRGBColorSpace, Mesh, SRGBColorSpace, Texture, Vector3 } from 'three'
 
 import { Suspense, useEffect, useMemo, useRef, useState } from 'react'
 import ProjectsMenu from '~/components/projectsPage/projectsMenu/ProjectsMenu'
@@ -19,6 +19,7 @@ import { useTexture } from '@react-three/drei'
 import { clamp } from 'three/src/math/MathUtils'
 import { useDebouncedResize, useMediaQuery } from '~/utils/hooks'
 import { EMEdiaType } from '~/utils/types'
+import EffectPass from '~/components/EffectPass'
 
 export const getStaticProps: GetStaticProps<
   SharedPageProps & {
@@ -252,9 +253,16 @@ const R3F = ({ projects }) => {
       state.camera.lookAt(state.camera.position.clone().lerp(new Vector3(0, 0, 0), delta * 5))
     }
   })
+
+  // temporary fix to persist background color across pages
+  const scene = useThree((state) => state.scene)
+  useEffect(() => {
+        scene.background = new Color('#ffffff');
+    }, []);
   
   return (
     <>
+      <EffectPass />
       <Suspense fallback={null}>
         <ProjectsMenu 
           width={meshAWidth} 
