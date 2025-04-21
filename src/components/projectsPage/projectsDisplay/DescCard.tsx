@@ -13,7 +13,9 @@ const DescCard:React.FC<DescCardProps> = ({text}) => {
     return (
         <div className={styles['description-wrapper']}>
             <div className={styles['description-card']}>
-                <PortableText value={text} components={customMarks} />
+                <div className={styles['crt-text']}>
+                    <PortableText value={text} components={customMarks} />
+                </div>
             </div>
         </div>
     )

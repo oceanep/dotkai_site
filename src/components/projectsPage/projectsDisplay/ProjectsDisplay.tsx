@@ -65,7 +65,7 @@ const ProjectsDisplay = forwardRef<Mesh, ProjectsDisplayProps>(({
                         <div className={styles['grid']}>
                             {isMobile && (
                                 <div
-                                    className={styles['mobileBackButton']}
+                                    className={`${styles['mobileBackButton']} ${styles['crt-text']}`}
                                     onClick={backClick}
                                 >
                                     {`<`}

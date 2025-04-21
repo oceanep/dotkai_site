@@ -27,15 +27,24 @@ const CustomImage: React.FC<CustomImageProps> = ({ src, alt, displayType, index,
     const classString = `${styles['image-wrapper']} ${ index !== undefined ? styles[`item-${index + 1}`] : styles['main-image']} ${styles[displayType]}`;
     return (
         <div className={classString}>
-            <Image
-                width={width}
-                height={height}
-                src={url}
-                blurDataURL={blurUrl}
-                alt={alt}
-                priority={priority}
-                loader={() => urlForImage(src).width(width).format('webp').quality(70).url()}
-            />
+            <div
+                className={styles['crt']}
+                style={{
+                    width: `${width}px`,
+                    height: `${height}px`,
+                    aspectRatio: `${aspectRatio}`,
+                }}
+            >
+                <Image
+                    width={width}
+                    height={height}
+                    src={url}
+                    blurDataURL={blurUrl}
+                    alt={alt}
+                    priority={priority}
+                    loader={() => urlForImage(src).width(width).format('webp').quality(70).url()}
+                />
+            </div>
             {label && (
                 //modulos the index to flip the position offset of the text card
                 <TextCard text={label} flip={!(index%2) || false}/>

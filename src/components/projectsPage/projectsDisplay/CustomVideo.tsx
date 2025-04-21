@@ -21,16 +21,18 @@ const CustomVideo: React.FC<CustomVideoProps> = ({ video, fallback, width, index
     const classString = `${styles['video-wrapper']} ${ index !== undefined && styles[`item-${imgArrLength + index + 1}`]} ${styles[displayType]}`
     return (
         <div className={classString}>
-            <video
-                muted
-                autoPlay
-                loop
-                preload='auto'
-                playsInline
-                poster={fallback}
-                width={vidWidth}
-                src={video.url}
-            />
+            <div className={styles['crt']}>
+                <video
+                    muted
+                    autoPlay
+                    loop
+                    preload='auto'
+                    playsInline
+                    poster={fallback}
+                    width={vidWidth}
+                    src={video.url}
+                />
+            </div>
             {label && (
                 //modulos the index to flip the position offset of the text card
                 <TextCard text={label} flip={!!(index%2) || false}/>
