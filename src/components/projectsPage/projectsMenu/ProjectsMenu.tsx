@@ -67,6 +67,7 @@ const ProjectsMenu: React.FC<ProjectsMenuProps> = ({
             position={position}
             rotation={rotation}
         >
+            {/* background mesh */}
             <mesh>
                 <planeGeometry
                     args={[width, height]}
@@ -79,7 +80,7 @@ const ProjectsMenu: React.FC<ProjectsMenuProps> = ({
             >
                 <planeGeometry args={[width * 0.5, height * 0.07]} />
                 <meshBasicMaterial color="white" />
-                <lineSegments>
+                <lineSegments position={[0, 0, 0.01]}>
                     <edgesGeometry attach="geometry" args={[new PlaneGeometry(width * 0.5, height * 0.07)]} />
                     <lineBasicMaterial attach="material" color="black" />
                 </lineSegments>
@@ -103,12 +104,12 @@ const ProjectsMenu: React.FC<ProjectsMenuProps> = ({
             </mesh>
             {/* Contact Icon Square */}
             <group
-                position={[ - width / 2.3 , height / 2 - 0.8,  0.01]}
+                position={[ - width / 2 , height / 2 - 0.8,  0.15]}
             >
                 <mesh>
                     <planeGeometry args={[0.1, 0.1]} />
                     <meshBasicMaterial color="white" />
-                    <lineSegments>
+                    <lineSegments position={[0, 0, 0.01]}>
                         <edgesGeometry attach="geometry" args={[new PlaneGeometry(0.1, 0.1)]} />
                         <lineBasicMaterial attach="material" color="black" />
                     </lineSegments>
@@ -123,16 +124,23 @@ const ProjectsMenu: React.FC<ProjectsMenuProps> = ({
                 >
                     📞
                 </Text>
+                {/* shadow mesh for contact icon square */}
+                <mesh
+                    position={[ 0, 0, -0.15]}
+                >
+                    <planeGeometry args={[0.1, 0.1]} />
+                    <meshBasicMaterial attach="material" depthWrite={false} transparent color="black" opacity={0.25} />
+                </mesh>
             </group>
 
             {/* About Me Icon Square */}
             <group
-                position={[ - width / 2.3 , height / 2 - 0.95, 0.01]}
+                position={[ - width / 2 , height / 2 - 0.95, 0.15]}
             >
                 <mesh>
                     <planeGeometry args={[0.1, 0.1]} />
                     <meshBasicMaterial color="white"/>
-                    <lineSegments>
+                    <lineSegments position={[0, 0, 0.01]}>
                         <edgesGeometry attach="geometry" args={[new PlaneGeometry(0.1, 0.1)]} />
                         <lineBasicMaterial attach="material" color="black" />
                     </lineSegments>
@@ -147,6 +155,13 @@ const ProjectsMenu: React.FC<ProjectsMenuProps> = ({
                 >
                     👤
                 </Text>
+                {/* shadow mesh for about me icon square */}
+                <mesh
+                    position={[ 0, 0, -0.15]}
+                >
+                    <planeGeometry args={[0.1, 0.1]} />
+                    <meshBasicMaterial attach="material" depthWrite={false} transparent color="black" opacity={0.25} />
+                </mesh>
             </group>
             <Flex
                 size={[flexWidth, flexHeight, 0]}
