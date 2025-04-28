@@ -111,6 +111,8 @@ $colors: (
         transition: transform 0.1s ease-in-out;
     }
 }
+
+//control the effect intesnsity by reducing the range between the values
 @keyframes flicker {
     0% {
         opacity: 0.39403;
@@ -197,6 +199,7 @@ $colors: (
     }
 }
 
+//Control intensity by adjusting blur amount and rgba opacity
 @keyframes textShadowAnimation {
     0% {
         text-shadow: 0.2194962096650432px 0 0.2px rgba(0, 30, 255, 0.3), -0.2194962096650432px 0 0.2px rgba(255, 0, 80, 0.1), 0 0 0.2px;
@@ -299,6 +302,8 @@ $colors: (
         left: 0;
         bottom: 0;
         right: 0;
+        //first linear gradient controls the horizontal scan lines
+        //second linear gradient controls the rgb bend
         background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.05) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
         z-index: 99;
         background-size: 100% 2px, 3px 100%;
@@ -312,6 +317,7 @@ $colors: (
         left: 0;
         bottom: 0;
         right: 0;
+        //opacity controls maximum of flicker
         background: rgba(18, 16, 16, 0.05);
         opacity: 0;
         z-index: 2;
