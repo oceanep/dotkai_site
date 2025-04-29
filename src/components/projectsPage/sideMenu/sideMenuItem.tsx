@@ -31,21 +31,6 @@ const SideMenuItem: React.FC<SideMenuItemProps> = ({
     const topLayerPosition: Vector3 = [0, 0, 0.01];
     const shadowPosition: Vector3 = [0, 0, - 0.14];
 
-    console.log({
-        width,
-        height,
-        position,
-        icon,
-        font,
-        fontSize,
-        textColor,
-        squareColor,
-        shadowColor,
-        shadowOpacity,
-        topLayerPosition,
-        shadowPosition
-    });
-
     return (
         <group position={position}>
             {/* Icon Square */}

@@ -85,8 +85,8 @@ const ProjectsMenu: React.FC<ProjectsMenuProps> = ({
                 height={height * 0.07}
             />
             <SideMenu 
-                pageWidth={width}
-                pageHeight={height}
+                sectionWidth={width}
+                sectionHeight={height}
             />
             <Flex
                 size={[flexWidth, flexHeight, 0]}
