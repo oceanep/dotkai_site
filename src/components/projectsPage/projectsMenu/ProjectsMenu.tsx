@@ -1,13 +1,18 @@
 import React, { useCallback, useEffect, useMemo, useRef } from 'react'
-import { Box, Flex } from '@react-three/flex'
-import { Group, PlaneGeometry, Texture } from 'three'
-import ComputerMesh from '~/components/ComputerMesh'
-import { Project } from '~/lib/sanity.queries'
+
 import { Euler, ThreeEvent, Vector3 } from '@react-three/fiber'
-import ProjectsMenuItem from './ProjectsMenuItem'
-import { useTexture, Text } from '@react-three/drei'
+import { Texture } from 'three'
+import { Flex } from '@react-three/flex'
+import { useTexture } from '@react-three/drei'
+
+import { Project } from '~/lib/sanity.queries'
 import { useMediaQuery } from '~/utils/hooks'
 import { EMEdiaType } from '~/utils/types'
+
+import ProjectsMenuItem from './ProjectsMenuItem'
+import SideMenu from '../sideMenu/sideMenu'
+import MenuTitle from './MenuTitle'
+import ComputerMesh from '~/components/ComputerMesh'
 
 interface ProjectsMenuProps {
   width: number
@@ -74,95 +79,15 @@ const ProjectsMenu: React.FC<ProjectsMenuProps> = ({
                 />
                 <meshBasicMaterial attach="material" transparent map={bgTexture} />
             </mesh>
-            {/* mesh for title */}
-            <mesh
-                position={[ widthDiff, height / 2 - 0.02, 0.15]}
-            >
-                <planeGeometry args={[width * 0.5, height * 0.07]} />
-                <meshBasicMaterial color="white" />
-                <lineSegments position={[0, 0, 0.01]}>
-                    <edgesGeometry attach="geometry" args={[new PlaneGeometry(width * 0.5, height * 0.07)]} />
-                    <lineBasicMaterial attach="material" color="black" />
-                </lineSegments>
-            </mesh>
-            <Text
-                position={[ widthDiff, height / 2 - 0.025, 0.151]}
-                font="/fonts/Crude.otf"
-                fontSize={0.08}
-                color="black"
-                anchorX="center"
-                anchorY="middle"
-            >
-                PROJECTS
-            </Text>
-            {/* shadow mesh for title */}
-            <mesh
-                position={[ 0, height / 2 - 0.02, 0]}
-            >
-                <planeGeometry args={[width * 0.5, height * 0.07]} />
-                    <meshBasicMaterial attach="material" depthWrite={false} transparent color="black" opacity={0.25} />
-            </mesh>
-            {/* Contact Icon Square */}
-            <group
-                position={[ - width / 2 , height / 2 - 0.8,  0.15]}
-            >
-                <mesh>
-                    <planeGeometry args={[0.1, 0.1]} />
-                    <meshBasicMaterial color="white" />
-                    <lineSegments position={[0, 0, 0.01]}>
-                        <edgesGeometry attach="geometry" args={[new PlaneGeometry(0.1, 0.1)]} />
-                        <lineBasicMaterial attach="material" color="black" />
-                    </lineSegments>
-                </mesh>
-                <Text
-                    position={[0, 0, 0]}
-                    font="/fonts/Crude.otf"
-                    fontSize={0.05}
-                    color="black"
-                    anchorX="center"
-                    anchorY="middle"
-                >
-                    📞
-                </Text>
-                {/* shadow mesh for contact icon square */}
-                <mesh
-                    position={[ 0, 0, -0.15]}
-                >
-                    <planeGeometry args={[0.1, 0.1]} />
-                    <meshBasicMaterial attach="material" depthWrite={false} transparent color="black" opacity={0.25} />
-                </mesh>
-            </group>
-
-            {/* About Me Icon Square */}
-            <group
-                position={[ - width / 2 , height / 2 - 0.95, 0.15]}
-            >
-                <mesh>
-                    <planeGeometry args={[0.1, 0.1]} />
-                    <meshBasicMaterial color="white"/>
-                    <lineSegments position={[0, 0, 0.01]}>
-                        <edgesGeometry attach="geometry" args={[new PlaneGeometry(0.1, 0.1)]} />
-                        <lineBasicMaterial attach="material" color="black" />
-                    </lineSegments>
-                </mesh>
-                <Text
-                    position={[0, 0, 0]}
-                    font="/fonts/Crude.otf"
-                    fontSize={0.05}
-                    color="black"
-                    anchorX="center"
-                    anchorY="middle"
-                >
-                    👤
-                </Text>
-                {/* shadow mesh for about me icon square */}
-                <mesh
-                    position={[ 0, 0, -0.15]}
-                >
-                    <planeGeometry args={[0.1, 0.1]} />
-                    <meshBasicMaterial attach="material" depthWrite={false} transparent color="black" opacity={0.25} />
-                </mesh>
-            </group>
+            <MenuTitle
+                position={[widthDiff, height / 2 - 0.02, 0.15]}
+                width={width * 0.5}
+                height={height * 0.07}
+            />
+            <SideMenu 
+                pageWidth={width}
+                pageHeight={height}
+            />
             <Flex
                 size={[flexWidth, flexHeight, 0]}
                 position={[ widthDiff, - 0.05, 0.02 ]}
