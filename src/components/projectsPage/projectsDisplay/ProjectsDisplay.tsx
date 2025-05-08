@@ -12,7 +12,7 @@ import TextCard from './TextCard'
 import styles from './ProjectsDisplay.module.scss'
 import DescCard from './DescCard'
 import { Euler, useThree, Vector3 } from '@react-three/fiber'
-import { forwardRef } from 'react'
+import { Children, forwardRef } from 'react'
 import { Mesh } from 'three'
 import { useMediaQuery } from '~/utils/hooks'
 import { EMediaType } from '~/utils/types'
@@ -22,9 +22,8 @@ interface ProjectsDisplayProps {
   height: number
   position: Vector3
   rotation: Euler
-  selectedProject: Project
   backClick: React.MouseEventHandler<HTMLDivElement>
-  imgWidth: number
+  children: React.ReactNode
 }
 
 const ProjectsDisplay = forwardRef<Mesh, ProjectsDisplayProps>(({
@@ -32,9 +31,8 @@ const ProjectsDisplay = forwardRef<Mesh, ProjectsDisplayProps>(({
   height,
   position,
   rotation,
-  selectedProject,
   backClick,
-  imgWidth,
+  children,
 }, ref) => {
     const bgTexture = useTexture('/images/Display-0_93 aspect ratio.png')
     const { size } = useThree()
@@ -71,43 +69,7 @@ const ProjectsDisplay = forwardRef<Mesh, ProjectsDisplayProps>(({
                                     {`<`}
                                 </div>
                             )}
-                            <TextCard
-                                text={selectedProject.title.toUpperCase()}
-                                isTitle
-                            />
-                            <CustomImage
-                                src={selectedProject.mainImage}
-                                alt={selectedProject.title}
-                                width={imgWidth}
-                            />
-                            <DescCard text={selectedProject.desc} />
-                            {selectedProject.gallery.images?.length > 0 &&
-                                selectedProject.gallery.images.map((image, i) => 
-                                    <CustomImage
-                                        src={image}
-                                        alt={image.alt}
-                                        displayType={selectedProject.gallery.display}
-                                        index={i}
-                                        width={200}
-                                        key={`${image._key}-${i}`}
-                                        label={image.alt}
-                                    />
-                                )
-                            }
-                            {selectedProject.gallery.videos?.length > 0 &&
-                                selectedProject.gallery.videos.map((video, i) => 
-                                    <CustomVideo
-                                        video={video}
-                                        fallback={urlForImage(selectedProject.mainImage).width(20).format('webp').quality(20).url()}
-                                        width={450}
-                                        imgArrLength={selectedProject.gallery.images.length}
-                                        displayType={selectedProject.gallery.display}
-                                        index={i}
-                                        key={`${video._key}-${i}`}
-                                        label={video.alt}
-                                    />
-                                )
-                            }
+                            {children}
                         </div>
                     </div>
                 </Html>

@@ -36,6 +36,12 @@ export interface IMeshProps {
     rotation?: Vector3
 }
 
+export interface ISideMenuItem {
+    id: string,
+    icon: string,
+    label: string
+}
+
 export enum EMediaType {
     SMARTPHONE = '(min-width: 375px) and (max-width: 812px)',
     TABLET = '(min-width: 768px) and (max-width: 1024px)',

@@ -18,8 +18,9 @@ import ProjectsDisplay from '~/components/projectsPage/projectsDisplay/ProjectsD
 import { useTexture } from '@react-three/drei'
 import { clamp } from 'three/src/math/MathUtils'
 import { useDebouncedResize, useMediaQuery } from '~/utils/hooks'
-import { EMediaType } from '~/utils/types'
+import { EMediaType, ISideMenuItem } from '~/utils/types'
 import EffectPass from '~/components/EffectPass'
+import ProjectsContent from '~/components/projectsPage/projectsDisplay/ProjectsContent'
 
 export const getStaticProps: GetStaticProps<
   SharedPageProps & {
@@ -47,6 +48,7 @@ const DOM = () => {
 const R3F = ({ projects }) => {
   //State Logic
   const [selectedProject, setSelectedProject] = useState<Project>(projects.projects[0])
+  const [selectedMenuItem, setSelectedMenuItem] = useState<ISideMenuItem | null>(null)
   const [showDisplay, setShowDisplay] = useState<boolean>(false)
 
   //Ref for ProjectsDisplay component
@@ -72,10 +74,6 @@ const R3F = ({ projects }) => {
   const isLargeDesktop = useMediaQuery(EMediaType.LARGE_DESKTOP)
 
   const isDesktop = isNormalDesktop || isLargeDesktop
-
-  console.log('isMobile: ', isMobile)
-  console.log('isTablet: ', isTablet)
-  console.log('isDesktop: ', isDesktop)
   
   // Conversion factor: how many world units equal one pixel
   const worldUnitsPerWidthPixel = width / windowWidth
@@ -222,10 +220,10 @@ const R3F = ({ projects }) => {
   // console.log('client width x height: ', window.innerWidth, window.innerHeight)
   // console.log('world units height: ', worldUnitsPerHeightPixel)
   // console.log('world units width: ', worldUnitsPerWidthPixel)
-  console.log('world start: ', -width/2)
-  console.log('position X, Y: ', meshBPosBase, meshBY)
+  // console.log('world start: ', -width/2)
+  // console.log('position X, Y: ', meshBPosBase, meshBY)
   // console.log('Mesh width and height: ', meshAWidth)
-  console.log('b position minimum: ', bPosMin)
+  // console.log('b position minimum: ', bPosMin)
 
   //Event Handlers
   const handleProjectSelect = (projectIndex: number) => {
@@ -234,6 +232,11 @@ const R3F = ({ projects }) => {
       setShowDisplay(true)
     }
   }
+
+  const handleMenuItemSelect = (menuIndex: number) => {
+    setSelectedMenuItem
+  }
+
   const handleBackButtonClick = () => {
     setShowDisplay(false)
   }
@@ -283,10 +286,13 @@ const R3F = ({ projects }) => {
           position={[meshBX, meshBY, -0.25]}
           // rotation={[0,0,0]}
           rotation={rotationB}
-          selectedProject={selectedProject}
           backClick={handleBackButtonClick}
-          imgWidth={250}
-        />
+        >
+          <ProjectsContent
+            selectedProject={selectedProject}
+            imgWidth={250}
+          />
+        </ProjectsDisplay>
       </Suspense>
     </>
   )
