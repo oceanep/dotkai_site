@@ -4,7 +4,7 @@ import { Group, Texture, Vector3 } from 'three'
 import { ThreeEvent, useFrame, useThree } from '@react-three/fiber'
 import { Project } from '~/lib/sanity.queries'
 import { useMediaQuery } from '~/utils/hooks'
-import { EMEdiaType } from '~/utils/types'
+import { EMediaType } from '~/utils/types'
 
 interface ProjectsMenuItemProps {
   project: Project
@@ -22,8 +22,8 @@ const ProjectsMenuItem: React.FC<ProjectsMenuItemProps> = ({ project, texture, s
   
     const meshRef = useRef<Group | null>(null)
 
-    const isMobile = useMediaQuery(EMEdiaType.SMARTPHONE)
-    const isTablet = useMediaQuery(EMEdiaType.TABLET)
+    const isMobile = useMediaQuery(EMediaType.SMARTPHONE)
+    const isTablet = useMediaQuery(EMediaType.TABLET)
 
     const { height, width } = useThree((state) => state.viewport)
     // Conversion factor: how many world units equal one pixel

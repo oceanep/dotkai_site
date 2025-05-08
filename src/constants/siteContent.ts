@@ -4,6 +4,7 @@ const siteContent = {
         secondaryFont: "/fonts/PPNeueMachina-InktrapRegular.otf",
         sideMenu: {
             fontSize: 0.05,
+            mobileFontSize: 0.08,
             sideMenuItems: [
                 {
                     id: "contact",
@@ -32,6 +33,7 @@ const siteContent = {
         secondaryFont: "Noto Sans JP",
         sideMenu: {
             fontSize: 0.05,
+            mobileFontSize: 0.08,
             sideMenuItems: [
                 {
                     id: "contact",

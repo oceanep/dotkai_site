@@ -28,6 +28,7 @@ const SideMenuItem: React.FC<SideMenuItemProps> = ({
     shadowColor,
     shadowOpacity,
 }) => {
+    // These are relative to the group position and thus don't need to be calculated
     const topLayerPosition: Vector3 = [0, 0, 0.01];
     const shadowPosition: Vector3 = [0, 0, - 0.14];
 

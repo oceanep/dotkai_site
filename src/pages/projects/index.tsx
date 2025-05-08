@@ -18,7 +18,7 @@ import ProjectsDisplay from '~/components/projectsPage/projectsDisplay/ProjectsD
 import { useTexture } from '@react-three/drei'
 import { clamp } from 'three/src/math/MathUtils'
 import { useDebouncedResize, useMediaQuery } from '~/utils/hooks'
-import { EMEdiaType } from '~/utils/types'
+import { EMediaType } from '~/utils/types'
 import EffectPass from '~/components/EffectPass'
 
 export const getStaticProps: GetStaticProps<
@@ -66,10 +66,10 @@ const R3F = ({ projects }) => {
   })
 
   //Media queries
-  const isMobile = useMediaQuery(EMEdiaType.SMARTPHONE)
-  const isTablet = useMediaQuery(EMEdiaType.TABLET)
-  const isNormalDesktop = useMediaQuery(EMEdiaType.DESKTOP)
-  const isLargeDesktop = useMediaQuery(EMEdiaType.LARGE_DESKTOP)
+  const isMobile = useMediaQuery(EMediaType.SMARTPHONE)
+  const isTablet = useMediaQuery(EMediaType.TABLET)
+  const isNormalDesktop = useMediaQuery(EMediaType.DESKTOP)
+  const isLargeDesktop = useMediaQuery(EMediaType.LARGE_DESKTOP)
 
   const isDesktop = isNormalDesktop || isLargeDesktop
 

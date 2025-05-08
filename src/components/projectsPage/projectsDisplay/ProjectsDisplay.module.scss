@@ -576,7 +576,7 @@ $colors: (
     border-bottom: 1px solid;
     @include colors(border-bottom-color, secondary);
 
-    & > p {
+    & p {
         position: relative;
         z-index: 100;
     }

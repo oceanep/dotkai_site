@@ -36,7 +36,7 @@ export interface IMeshProps {
     rotation?: Vector3
 }
 
-export enum EMEdiaType {
+export enum EMediaType {
     SMARTPHONE = '(min-width: 375px) and (max-width: 812px)',
     TABLET = '(min-width: 768px) and (max-width: 1024px)',
     DESKTOP = '(min-width: 1024px) and (max-width: 1440px)',

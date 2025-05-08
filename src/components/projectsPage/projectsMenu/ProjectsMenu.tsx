@@ -7,7 +7,7 @@ import { useTexture } from '@react-three/drei'
 
 import { Project } from '~/lib/sanity.queries'
 import { useMediaQuery } from '~/utils/hooks'
-import { EMEdiaType } from '~/utils/types'
+import { EMediaType } from '~/utils/types'
 
 import ProjectsMenuItem from './ProjectsMenuItem'
 import SideMenu from '../sideMenu/sideMenu'
@@ -40,8 +40,8 @@ const ProjectsMenu: React.FC<ProjectsMenuProps> = ({
     const [ previousIndex, setPreviousIndex ] = React.useState<number | undefined>(undefined)
     const [ currentIndex, setCurrentIndex ] = React.useState<number>(0)
 
-    const isMobile = useMediaQuery(EMEdiaType.SMARTPHONE)
-    const isTablet = useMediaQuery(EMEdiaType.TABLET)
+    const isMobile = useMediaQuery(EMediaType.SMARTPHONE)
+    const isTablet = useMediaQuery(EMediaType.TABLET)
 
     const bgTexture = useTexture('/images/Menu-0_84 aspect ratio.png')
 
@@ -49,6 +49,32 @@ const ProjectsMenu: React.FC<ProjectsMenuProps> = ({
     // Use difference in widths to add margin to flex contianer positioning
     const [ flexWidth, flexHeight ] = [ width * 0.9375, height * 0.9375 ]
     const widthDiff = isMobile ? 0 : (width - flexWidth) / 2
+
+    // set menu title position based on screen size
+    const menuTitlePosition: [number, number, number] = useMemo(() => 
+        isMobile 
+        ? [widthDiff, height / 2 - 0.15, 0.15]
+        : [widthDiff, height / 2 - 0.02, 0.15]
+    , [isMobile, widthDiff, height])
+
+    // set menu item and title sizes based on screen size
+    const sideMenuItemSize: number = useMemo(() => {
+        if (isMobile) return 0.18
+        return 0.11
+    }, [isMobile])
+
+    // set flex container size and position based on screen size
+    const flexPosition: [number, number, number] = useMemo(() => 
+        isMobile 
+        ? [ widthDiff, - ( 0.2 + sideMenuItemSize ), 0.02 ]
+        : [ widthDiff, - 0.05, 0.02 ]
+    , [isMobile, widthDiff, sideMenuItemSize])
+
+    const flexSize: [number, number, number] = useMemo(() => 
+        isMobile 
+        ? [flexWidth, flexHeight, 0]
+        : [flexWidth, flexHeight, 0]
+    , [isMobile, flexWidth, flexHeight])
 
     const selectProject = (event: ThreeEvent<MouseEvent>, newIndex: number) => {
         if (newIndex === currentIndex) return
@@ -80,17 +106,18 @@ const ProjectsMenu: React.FC<ProjectsMenuProps> = ({
                 <meshBasicMaterial attach="material" transparent map={bgTexture} />
             </mesh>
             <MenuTitle
-                position={[widthDiff, height / 2 - 0.02, 0.15]}
+                position={menuTitlePosition}
                 width={width * 0.5}
                 height={height * 0.07}
             />
             <SideMenu 
                 sectionWidth={width}
                 sectionHeight={height}
+                menuItemSize={sideMenuItemSize}
             />
             <Flex
-                size={[flexWidth, flexHeight, 0]}
-                position={[ widthDiff, - 0.05, 0.02 ]}
+                size={flexSize}
+                position={flexPosition}
                 centerAnchor
                 plane='xy'
                 justifyContent={isMobile || isTablet ? 'space-evenly' : 'flex-start'}

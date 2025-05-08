@@ -15,7 +15,7 @@ import { Euler, useThree, Vector3 } from '@react-three/fiber'
 import { forwardRef } from 'react'
 import { Mesh } from 'three'
 import { useMediaQuery } from '~/utils/hooks'
-import { EMEdiaType } from '~/utils/types'
+import { EMediaType } from '~/utils/types'
 
 interface ProjectsDisplayProps {
   width: number
@@ -40,7 +40,7 @@ const ProjectsDisplay = forwardRef<Mesh, ProjectsDisplayProps>(({
     const { size } = useThree()
     const refHeight = 915
     const scaleFactor = (refHeight / size.height) * .1
-    const isMobile = useMediaQuery(EMEdiaType.SMARTPHONE)
+    const isMobile = useMediaQuery(EMediaType.SMARTPHONE)
     return (
         <group>
             <mesh
