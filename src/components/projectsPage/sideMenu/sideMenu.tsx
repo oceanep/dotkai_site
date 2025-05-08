@@ -36,8 +36,6 @@ const SideMenu: React.FC<SideMenuProps> = ({ sectionWidth, sectionHeight, menuIt
     // So for a 50% size gap between, you need half of two items plus the desired gap
     const gap = useMemo(() =>  menuItemSize * 1.5, [menuItemSize]);
 
-    console.log({sectionHeight})
-
     // Calculate the position of menu items and increment y using index
     // position and space vertically for desktop, horizontally for mobile
     const calculatePosition = useCallback((index: number): [number, number, number] => {

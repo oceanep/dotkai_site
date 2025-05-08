@@ -69,6 +69,68 @@ export const projectSlugsQuery = groq`
 *[_type == "project" && defined(slug.current)][].slug.current
 `
 
+export const pagesQuery = groq`
+  *[_type == "page" && defined(slug.current)] | order(_createdAt) {
+    "title": title,
+    "secondaryTitle": secondaryTitle,
+    "subtitle": subtitle,
+    "slug": slug,
+    "mainText": mainText,
+    "links": links[]{
+      "title": title,
+      "url": url,
+    },
+    "skills": skills[]{
+      "title": title,
+    },
+    "images": images,
+    "videos": videos[]{
+      "alt": alt,
+      "height": height,
+      "width": width,
+      "asset": asset,
+    },
+  } | order(_createdAt desc)
+`
+
+export const pageBySlugQuery = groq`*[_type == "page" && slug.current == $slug][0]`
+
+export async function getPage(
+  client: SanityClient,
+  slug: string,
+): Promise<Page> {
+  return await client.fetch(pageBySlugQuery, {
+    slug,
+  })
+}
+
+export const pageSlugsQuery = groq`
+*[_type == "page" && defined(slug.current)][].slug.current
+`
+
+export async function getPageSlugs(client: SanityClient): Promise<string[]> {
+  return await client.fetch(pageSlugsQuery)
+}
+
+export async function getPages(client: SanityClient): Promise<Page[]> {
+  return await client.fetch(pagesQuery)
+}
+
+export interface Page {
+  _type: 'page'
+  _id: string
+  _createdAt: string
+  title: string
+  secondaryTitle?: string
+  subtitle?: string
+  slug: string
+  mainText: PortableTextBlock[]
+  links?: { title: string; url: string }[]
+  skills?: { title: string }[]
+  images?: ImageAsset[]
+  videos?: VideoAsset[]
+}
+
 export interface Post {
   _type: 'post'
   _id: string

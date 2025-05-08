@@ -32,7 +32,6 @@ export const useMediaQuery = (query: string): boolean => {
         if (media.matches !== matches) {
             setMatches(media.matches);
         }
-        console.log('checking media: ', media)
         const listener = () => setMatches(media.matches)
 
         media.addEventListener('change', listener)

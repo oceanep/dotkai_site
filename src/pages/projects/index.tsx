@@ -5,7 +5,7 @@ import {getImageDimensions} from '@sanity/asset-utils'
 
 import { readToken } from '~/lib/sanity.api'
 import { getClient } from '~/lib/sanity.client'
-import { getProjects, type Project, projectsQuery } from '~/lib/sanity.queries'
+import { getProjects, type Project, projectsQuery, getPages, type Page, pagesQuery } from '~/lib/sanity.queries'
 
 import type { SharedPageProps } from '~/pages/_app'
 import { useFrame, useThree } from '@react-three/fiber'
@@ -24,32 +24,37 @@ import ProjectsContent from '~/components/projectsPage/projectsDisplay/ProjectsC
 
 export const getStaticProps: GetStaticProps<
   SharedPageProps & {
-    projects: Project[]
+    projects: Project[];
+    pages: Page[];
   }
 > = async ({ draftMode = false }) => {
-  const client = getClient(draftMode ? { token: readToken } : undefined)
-  const projects = await getProjects(client)
+  const client = getClient(draftMode ? { token: readToken } : undefined);
+  const projects = await getProjects(client);
+  const pages = await getPages(client);
 
   return {
     props: {
       draftMode,
       token: draftMode ? readToken : '',
       projects,
-      title: 'Projects'
+      pages,
+      title: 'Projects',
     },
-  }
-}
+  };
+};
 
 // DOM elements here
 const DOM = () => {
     return <></>;
 };
 // Canvas/R3F components here
-const R3F = ({ projects }) => {
+const R3F = ({ projects, pages }) => {
   //State Logic
-  const [selectedProject, setSelectedProject] = useState<Project>(projects.projects[0])
+  const [selectedProject, setSelectedProject] = useState<Project>(projects[0])
   const [selectedMenuItem, setSelectedMenuItem] = useState<ISideMenuItem | null>(null)
   const [showDisplay, setShowDisplay] = useState<boolean>(false)
+
+  console.log({pages, projects})
 
   //Ref for ProjectsDisplay component
   const displayRef = useRef<Mesh>(null)
@@ -61,7 +66,7 @@ const R3F = ({ projects }) => {
   const [windowWidth, windowHeight] = useDebouncedResize();
 
   //Map textures to array to iterate over for menu items
-  const textures: Texture[] = projects.projects.map((project) => {
+  const textures: Texture[] = projects.map((project) => {
     const _texture = useTexture(`${project.mainImage.url}?w750&fm=webp&q=50`)
     _texture.colorSpace = SRGBColorSpace
     return _texture
@@ -227,7 +232,7 @@ const R3F = ({ projects }) => {
 
   //Event Handlers
   const handleProjectSelect = (projectIndex: number) => {
-    setSelectedProject(projects.projects[projectIndex])
+    setSelectedProject(projects[projectIndex])
     if (!!isMobile) {
       setShowDisplay(true)
     }
@@ -273,7 +278,7 @@ const R3F = ({ projects }) => {
           position={[meshAX, meshAY, -0.2]}
           // rotation={[0,0,0]}
           rotation={rotationA}
-          projects={projects.projects} 
+          projects={projects} 
           textures={textures}
           clickHandler={handleProjectSelect}
         />
@@ -302,11 +307,12 @@ export default function IndexPage(
   props: InferGetStaticPropsType<typeof getStaticProps>,
 ) {
   const [projects] = useLiveQuery<Project[]>(props.projects, projectsQuery)
+  const [pages] = useLiveQuery<Page[]>(props.pages, pagesQuery)
 
   return (
     <DOM/>
   )
 }
 
-IndexPage.canvas = (projects) => <R3F projects={projects} />
+IndexPage.canvas = (props) => <R3F projects={props.projects} pages={props.pages}/>
 
