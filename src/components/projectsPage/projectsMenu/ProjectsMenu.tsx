@@ -101,6 +101,7 @@ const ProjectsMenu: React.FC<ProjectsMenuProps> = ({
                 position={menuTitlePosition}
                 width={width * 0.5}
                 height={height * 0.07}
+                isProject={isProject}
             />
             <SideMenu 
                 sectionWidth={width}
