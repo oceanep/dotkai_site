@@ -3,9 +3,8 @@ import TextCard from './TextCard';
 import CustomImage from './CustomImage';
 import CustomVideo from './CustomVideo';
 import { urlForImage } from '~/lib/sanity.image'
-import { Project, VideoAsset } from '~/lib/sanity.queries';
+import { Project } from '~/lib/sanity.queries';
 import DescCard from './DescCard';
-import { ImageAsset } from 'sanity';
 
 interface ProjectsContentProps {
     selectedProject: Project;

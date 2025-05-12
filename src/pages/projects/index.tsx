@@ -12,15 +12,18 @@ import { useFrame, useThree } from '@react-three/fiber'
 import { urlForImage } from '~/lib/sanity.image'
 import { Color, Euler, LinearSRGBColorSpace, Mesh, SRGBColorSpace, Texture, Vector3 } from 'three'
 
-import { Suspense, useEffect, useMemo, useRef, useState } from 'react'
+import { Suspense, useCallback, useEffect, useRef, useState } from 'react'
 import ProjectsMenu from '~/components/projectsPage/projectsMenu/ProjectsMenu'
 import ProjectsDisplay from '~/components/projectsPage/projectsDisplay/ProjectsDisplay'
 import { useTexture } from '@react-three/drei'
 import { clamp } from 'three/src/math/MathUtils'
 import { useDebouncedResize, useMediaQuery } from '~/utils/hooks'
-import { EMediaType, ISideMenuItem } from '~/utils/types'
+import { EMediaType, ESideMenuItem, ISideMenuItem } from '~/utils/types'
 import EffectPass from '~/components/EffectPass'
 import ProjectsContent from '~/components/projectsPage/projectsDisplay/ProjectsContent'
+import siteContent from '~/constants/siteContent'
+import SideMenu from '~/components/projectsPage/sideMenu/sideMenu'
+import PagesContent from '~/components/projectsPage/projectsDisplay/PagesContent'
 
 export const getStaticProps: GetStaticProps<
   SharedPageProps & {
@@ -48,13 +51,14 @@ const DOM = () => {
     return <></>;
 };
 // Canvas/R3F components here
-const R3F = ({ projects, pages }) => {
+const R3F = ({ projects, pages }: { projects: Project[]; pages: Page[] }) => {
   //State Logic
   const [selectedProject, setSelectedProject] = useState<Project>(projects[0])
-  const [selectedMenuItem, setSelectedMenuItem] = useState<ISideMenuItem | null>(null)
+  const [selectedMenuItem, setSelectedMenuItem] = useState<Page>(pages.find((page) => page.slug === "about") || pages[0])
   const [showDisplay, setShowDisplay] = useState<boolean>(false)
+  const [isProject, setIsProject] = useState<boolean>(false)
 
-  console.log({pages, projects})
+  const { sideMenuItems: menuItems } = siteContent['en'].sideMenu
 
   //Ref for ProjectsDisplay component
   const displayRef = useRef<Mesh>(null)
@@ -231,16 +235,22 @@ const R3F = ({ projects, pages }) => {
   // console.log('b position minimum: ', bPosMin)
 
   //Event Handlers
-  const handleProjectSelect = (projectIndex: number) => {
+  const handleProjectSelect = useCallback((projectIndex: number) => {
+    setIsProject(true)
     setSelectedProject(projects[projectIndex])
     if (!!isMobile) {
       setShowDisplay(true)
     }
-  }
+  }, [projects, isMobile])
 
-  const handleMenuItemSelect = (menuIndex: number) => {
-    setSelectedMenuItem
-  }
+  const handleMenuItemSelect = useCallback((slug: ESideMenuItem) => {
+    const selected = pages.find((item) => item.slug === slug)
+    setIsProject(false)
+    setSelectedMenuItem(selected)
+    if (!!isMobile) {
+      setShowDisplay(true)
+    }
+  }, [pages, isMobile])
 
   const handleBackButtonClick = () => {
     setShowDisplay(false)
@@ -251,6 +261,7 @@ const R3F = ({ projects, pages }) => {
   }, [isMobile])
 
   //3D state management
+  //move camera between menu and information display
   useFrame((state, delta) => {
     if (showDisplay && displayRef.current) {
       state.camera.position.lerp(displayRef.current.position.clone().add(new Vector3(0, 0, 3.5)), delta * 5)
@@ -280,7 +291,9 @@ const R3F = ({ projects, pages }) => {
           rotation={rotationA}
           projects={projects} 
           textures={textures}
-          clickHandler={handleProjectSelect}
+          isProject={isProject}
+          projectClickHandler={handleProjectSelect}
+          sideMenuClickHandler={handleMenuItemSelect}
         />
       </Suspense>
       <Suspense fallback={null}>
@@ -293,10 +306,17 @@ const R3F = ({ projects, pages }) => {
           rotation={rotationB}
           backClick={handleBackButtonClick}
         >
-          <ProjectsContent
-            selectedProject={selectedProject}
-            imgWidth={250}
-          />
+          {!!isProject 
+            ? 
+              <ProjectsContent
+                selectedProject={selectedProject}
+                imgWidth={250}
+              />
+            :
+              <PagesContent
+                selectedPage={selectedMenuItem}
+              />
+          }
         </ProjectsDisplay>
       </Suspense>
     </>

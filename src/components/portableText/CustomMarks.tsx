@@ -12,7 +12,7 @@ export const customMarks: PortableTextComponents = {
         <a
             href={value?.href}
             target={target}
-            rel={target === '_blank' && 'noindex nofollow'}
+            rel={target === '_blank' && 'noindex nofollow' || undefined}
             className={styles['link']}
         >
           {children}

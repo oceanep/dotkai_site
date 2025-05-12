@@ -13,9 +13,10 @@ export interface CustomVideoProps {
     displayType?: string,
     index?: number
     label?: string;
+    controls?: boolean;
 }
 
-const CustomVideo: React.FC<CustomVideoProps> = ({ video, fallback, width, index, imgArrLength, displayType, label }) => {
+const CustomVideo: React.FC<CustomVideoProps> = ({ video, fallback, width, index, imgArrLength, displayType = 'tri', label, controls = false }) => {
     const vidAspectRatio = Number(video.width) / Number(video.height)
     const vidWidth = width ? width * vidAspectRatio : video.width
     const classString = `${styles['video-wrapper']} ${ index !== undefined && styles[`item-${imgArrLength + index + 1}`]} ${styles[displayType]}`
@@ -24,6 +25,7 @@ const CustomVideo: React.FC<CustomVideoProps> = ({ video, fallback, width, index
             <div className={styles['crt']}>
                 <video
                     muted
+                    controls={controls}
                     autoPlay
                     loop
                     preload='auto'

@@ -49,3 +49,8 @@ export enum EMediaType {
     LARGE_DESKTOP = '(min-width: 1440px) and (max-width: 2560px)',
     WIDESCREEN = '(min-width: 2560px)',
 }
+
+export enum ESideMenuItem {
+    ABOUT = 'about',
+    CONTACT = 'contact',
+}

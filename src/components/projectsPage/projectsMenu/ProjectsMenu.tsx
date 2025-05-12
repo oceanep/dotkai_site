@@ -7,7 +7,7 @@ import { useTexture } from '@react-three/drei'
 
 import { Project } from '~/lib/sanity.queries'
 import { useMediaQuery } from '~/utils/hooks'
-import { EMediaType } from '~/utils/types'
+import { EMediaType, ESideMenuItem } from '~/utils/types'
 
 import ProjectsMenuItem from './ProjectsMenuItem'
 import SideMenu from '../sideMenu/sideMenu'
@@ -15,14 +15,15 @@ import MenuTitle from './MenuTitle'
 import ComputerMesh from '~/components/ComputerMesh'
 
 interface ProjectsMenuProps {
-  width: number
-  height: number
-  position: Vector3
-  rotation: Euler
-  projects: Project[]
-  textures: Texture[]
-  clickHandler: (projectIndex: number) => void
-
+    width: number
+    height: number
+    position: Vector3
+    rotation: Euler
+    projects: Project[]
+    textures: Texture[]
+    isProject: boolean
+    projectClickHandler: (projectIndex: number) => void
+    sideMenuClickHandler: (slug: ESideMenuItem) => void
 }
 
 
@@ -32,12 +33,13 @@ const ProjectsMenu: React.FC<ProjectsMenuProps> = ({
     position, 
     rotation, 
     projects, 
-    textures, 
-    clickHandler 
+    textures,
+    isProject,
+    projectClickHandler,
+    sideMenuClickHandler
 }) => {
     // const meshRefs = useRef<(React.RefObject<Group> | null)[]>([])
 
-    const [ previousIndex, setPreviousIndex ] = React.useState<number | undefined>(undefined)
     const [ currentIndex, setCurrentIndex ] = React.useState<number>(0)
 
     const isMobile = useMediaQuery(EMediaType.SMARTPHONE)
@@ -76,22 +78,12 @@ const ProjectsMenu: React.FC<ProjectsMenuProps> = ({
         : [flexWidth, flexHeight, 0]
     , [isMobile, flexWidth, flexHeight])
 
+    // State event callbacks
     const selectProject = (event: ThreeEvent<MouseEvent>, newIndex: number) => {
-        if (newIndex === currentIndex) return
-        setPreviousIndex(currentIndex)
+        if (newIndex === currentIndex && isProject === true) return
         setCurrentIndex(newIndex)
-        clickHandler(newIndex)
+        projectClickHandler(newIndex)
     }
-
-    const onProjectHover = useCallback((event: ThreeEvent<PointerEvent>, index: number, setHover: Function) => {
-        if (currentIndex === index) return
-        setHover(true)
-    }, [currentIndex])
-
-    const onProjectUnhover = useCallback((event: ThreeEvent<PointerEvent>, index: number, setHover: Function) => {
-        if (currentIndex === index) return
-        setHover(false)
-    }, [currentIndex])
 
     return (
         <group
@@ -114,6 +106,8 @@ const ProjectsMenu: React.FC<ProjectsMenuProps> = ({
                 sectionWidth={width}
                 sectionHeight={height}
                 menuItemSize={sideMenuItemSize}
+                isProject={isProject}
+                clickHandler={sideMenuClickHandler}
             />
             <Flex
                 size={flexSize}
@@ -131,13 +125,10 @@ const ProjectsMenu: React.FC<ProjectsMenuProps> = ({
                     <ProjectsMenuItem
                         key={`${project.slug}-${i}`}
                         project={project}
-                        selected={currentIndex === i}
+                        selected={!!isProject && currentIndex === i}
                         texture={textures[i]}
                         index={i}
-                        currentIndex={currentIndex}
                         selectProject={selectProject}
-                        onProjectHover={onProjectHover}
-                        onProjectUnhover={onProjectUnhover}
                     />)
                 ) : (
                     <ComputerMesh scale={0.2} />

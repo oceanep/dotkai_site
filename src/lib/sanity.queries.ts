@@ -74,7 +74,7 @@ export const pagesQuery = groq`
     "title": title,
     "secondaryTitle": secondaryTitle,
     "subtitle": subtitle,
-    "slug": slug,
+    "slug": slug.current,
     "mainText": mainText,
     "links": links[]{
       "title": title,
@@ -89,6 +89,7 @@ export const pagesQuery = groq`
       "height": height,
       "width": width,
       "asset": asset,
+      "url": asset->url,
     },
   } | order(_createdAt desc)
 `
@@ -124,10 +125,11 @@ export interface Page {
   secondaryTitle?: string
   subtitle?: string
   slug: string
+  mainImage?: ImageAsset
   mainText: PortableTextBlock[]
   links?: { title: string; url: string }[]
   skills?: { title: string }[]
-  images?: ImageAsset[]
+  images?: ProjectImageAsset[]
   videos?: VideoAsset[]
 }
 

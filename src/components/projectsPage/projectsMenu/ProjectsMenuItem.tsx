@@ -11,13 +11,16 @@ interface ProjectsMenuItemProps {
   texture: Texture
   selected: boolean
   index: number
-  currentIndex: number
   selectProject: (event: ThreeEvent<MouseEvent>, newIndex: number) => void
-  onProjectHover: (event: ThreeEvent<PointerEvent>, index: number, setHover: Function) => void
-  onProjectUnhover: (event: ThreeEvent<PointerEvent>, index: number, setHover: Function) => void
 }
 
-const ProjectsMenuItem: React.FC<ProjectsMenuItemProps> = ({ project, texture, selected, index, selectProject }) => {
+const ProjectsMenuItem: React.FC<ProjectsMenuItemProps> = ({
+    project,
+    texture,
+    selected,
+    index,
+    selectProject 
+}) => {
     const [ hover, setHover ] = React.useState(false)
   
     const meshRef = useRef<Group | null>(null)

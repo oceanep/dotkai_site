@@ -1,20 +1,36 @@
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import SideMenuItem from './sideMenuItem';
 import siteContent from '../../../constants/siteContent';
-import { EMediaType } from '~/utils/types';
+import { EMediaType, ESideMenuItem } from '~/utils/types';
 import { useMediaQuery } from '~/utils/hooks';
+import { ThreeEvent } from '@react-three/fiber';
+import { useEffect } from 'react';
 
 interface SideMenuProps {
-    sectionWidth: number;
-    sectionHeight: number;
-    menuItemSize?: number;
-    language?: 'en' | 'jp';
+    sectionWidth: number
+    sectionHeight: number
+    menuItemSize?: number
+    language?: 'en' | 'jp'
+    isProject: boolean
+    clickHandler: (slug: ESideMenuItem) => void
+
 }
 
-const SideMenu: React.FC<SideMenuProps> = ({ sectionWidth, sectionHeight, menuItemSize = 0.11, language = 'en' }) => {
+const SideMenu: React.FC<SideMenuProps> = ({
+    sectionWidth,
+    sectionHeight,
+    menuItemSize = 0.11,
+    language = 'en',
+    isProject,
+    clickHandler 
+}) => {
+    // import static site content
     const { fontSize: desktopFontSize, mobileFontSize, sideMenuItems: menuItems } = siteContent[language].sideMenu
     const primaryFont = siteContent[language].primaryFont
     const { textColor, squareColor, shadowColor, shadowOpacity} = siteContent.colors.menu
+
+    // state management
+    const [currentSlug, setCurrentSlug] = useState<ESideMenuItem>(menuItems.find((item) => item.id === ESideMenuItem.ABOUT)?.id as ESideMenuItem || ESideMenuItem.ABOUT)
 
     // mobile breakpoint
     const isMobile = useMediaQuery(EMediaType.SMARTPHONE)
@@ -48,16 +64,24 @@ const SideMenu: React.FC<SideMenuProps> = ({ sectionWidth, sectionHeight, menuIt
         const y = isMobile 
             ? sectionHeight/2 - 0.15 - (sectionHeight * 0.07) - (gap * 0.1)
             : posAdjustment - (gap * index) + offset
-        const z = 0.15
+        const z = 0.02
         
         return [x, y, z]
     }, [sectionWidth, sectionHeight, itemCount, posAdjustment, gap])
+
+    // State event callbacks
+    const selectPage = (event: ThreeEvent<MouseEvent>, newSlug: ESideMenuItem) => {
+        if (newSlug === currentSlug && isProject === false) return
+        setCurrentSlug(newSlug)
+        clickHandler(newSlug)
+    }
 
     return (
         <>
             {menuItems.map((item, index) => (
                 <SideMenuItem
                     key={item.id}
+                    slug={item.id as ESideMenuItem}
                     width={menuItemSize}
                     height={menuItemSize}
                     position={calculatePosition(index)}
@@ -68,6 +92,8 @@ const SideMenu: React.FC<SideMenuProps> = ({ sectionWidth, sectionHeight, menuIt
                     squareColor={squareColor}
                     shadowColor={shadowColor}
                     shadowOpacity={shadowOpacity}
+                    selected={!isProject && currentSlug === item.id}
+                    selectPage={selectPage}
                 />
             ))}
         </>
