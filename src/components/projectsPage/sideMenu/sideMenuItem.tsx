@@ -37,7 +37,6 @@ const SideMenuItem: React.FC<SideMenuItemProps> = ({
 }) => {
     // These are relative to the group position and thus don't need to be calculated
     const topLayerPosition: Vector3 = [0, 0, 0.01];
-    const shadowPosition: Vector3 = [0, 0, -0.15];
 
     // State management
     const [ hover, setHover ] = React.useState(false)
@@ -50,7 +49,7 @@ const SideMenuItem: React.FC<SideMenuItemProps> = ({
             //If selection has been made but z position is not at 0.15 lerp
             //If selection has been removed but z position is not at 0 lerp
             const easing = 40 * delta
-            if (selected && meshRef.current.position.z < 0.14999 || !selected && meshRef.current.position.z > 0.001) {
+            if (selected && meshRef.current.position.z < 0.14999 || !selected && meshRef.current.position.z > 0.019999) {
                 console.log('triggered')
                 const targetPosition = new Vector3Class() 
                 const targetShadowPosition = new Vector3Class(0, 0, 0)
@@ -71,6 +70,14 @@ const SideMenuItem: React.FC<SideMenuItemProps> = ({
             if (!hover) meshRef.current.scale.lerp({ x: 1, y: 1, z: 1 }, 0.2 * easing)
         }
     })
+
+    React.useEffect(() => {
+        if (meshRef.current) {
+                console.log('Current meshRef position:', meshRef.current.position);
+                console.log('Selected state:', selected);
+                console.log('Position prop:', position);
+        }
+    }, [meshRef, selected]);
 
     return (
         <group

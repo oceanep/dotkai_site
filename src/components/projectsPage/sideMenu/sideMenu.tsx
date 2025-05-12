@@ -64,7 +64,7 @@ const SideMenu: React.FC<SideMenuProps> = ({
         const y = isMobile 
             ? sectionHeight/2 - 0.15 - (sectionHeight * 0.07) - (gap * 0.1)
             : posAdjustment - (gap * index) + offset
-        const z = 0.02
+        const z = 0.01
         
         return [x, y, z]
     }, [sectionWidth, sectionHeight, itemCount, posAdjustment, gap])
