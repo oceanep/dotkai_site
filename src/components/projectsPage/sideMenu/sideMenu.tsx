@@ -71,7 +71,7 @@ const SideMenu: React.FC<SideMenuProps> = ({
 
     // State event callbacks
     const selectPage = (event: ThreeEvent<MouseEvent>, newSlug: ESideMenuItem) => {
-        if (newSlug === currentSlug && isProject === false) return
+        if (newSlug === currentSlug && isProject === false && !isMobile) return
         setCurrentSlug(newSlug)
         clickHandler(newSlug)
     }
@@ -92,7 +92,7 @@ const SideMenu: React.FC<SideMenuProps> = ({
                     squareColor={squareColor}
                     shadowColor={shadowColor}
                     shadowOpacity={shadowOpacity}
-                    selected={!isProject && currentSlug === item.id}
+                    selected={!isProject && currentSlug === item.id && !isMobile}
                     selectPage={selectPage}
                 />
             ))}

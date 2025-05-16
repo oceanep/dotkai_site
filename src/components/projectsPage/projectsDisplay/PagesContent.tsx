@@ -2,9 +2,13 @@ import React from 'react';
 import TextCard from './TextCard';
 import CustomImage from './CustomImage';
 import CustomVideo from './CustomVideo';
-import { urlForImage } from '~/lib/sanity.image'
 import { Page } from '~/lib/sanity.queries';
 import DescCard from './DescCard';
+
+import styles from './ProjectsDisplay.module.scss';
+import ListCard from './ListCard';
+import { useMediaQuery } from '~/utils/hooks';
+import { EMediaType } from '~/utils/types';
 
 interface PagesContentProps {
     selectedPage: Page;
@@ -12,10 +16,13 @@ interface PagesContentProps {
 }
 
 const PagesContent: React.FC<PagesContentProps> = ({ selectedPage, imgWidth = 250 }) => {
+    //Media queries
+    const isMobile = useMediaQuery(EMediaType.SMARTPHONE)
+    
     return (
         <>
             <TextCard
-                text={selectedPage.title.toUpperCase()}
+                text={selectedPage?.title.toUpperCase()}
                 isTitle
             />
             {selectedPage?.mainImage && (
@@ -25,7 +32,52 @@ const PagesContent: React.FC<PagesContentProps> = ({ selectedPage, imgWidth = 25
                     width={imgWidth}
                 />
             )}
-            <DescCard text={selectedPage.mainText} />
+            {selectedPage?.secondaryTitle || selectedPage?.subtitle 
+                ?   
+                    <div className={`${styles['titledDesc-wrapper']} ${!selectedPage?.mainImage ? styles['no-image'] : ''}`}>
+                        {selectedPage?.secondaryTitle && (
+                            <TextCard
+                                text={selectedPage.secondaryTitle}
+                                isSecondaryTitle
+                                flip
+                            />
+                        )}
+                        {selectedPage?.subtitle && (
+                            <TextCard
+                                text={selectedPage.subtitle}
+                                isSubtitle
+                            />
+                        )}
+                        <DescCard
+                            text={selectedPage.mainText}
+                            noImage={!selectedPage?.mainImage}
+                        />
+                    </div>
+                : 
+                    <DescCard
+                        text={selectedPage.mainText}
+                        noImage={!selectedPage?.mainImage}
+                    />
+            }
+            {selectedPage.links?.length && (
+                <div className={`${styles['item-1']} ${styles['inline-left']}`}>
+                    <ListCard 
+                        title="Relevant links"
+                        list={selectedPage.links}
+                    />
+                </div>
+            )}
+            {selectedPage.skills?.length && (
+                <div
+                    className={`${styles['item-2']} ${styles['inline-right']}`}
+                    style={{ marginTop: isMobile ? '0px' : '140px', zIndex: 10 }}
+                >
+                    <ListCard
+                        title="Skills"
+                        list={selectedPage.skills}
+                    />
+                </div>
+            )}
             {selectedPage.images?.length > 0 &&
                 selectedPage.images.map((image, i) => (
                     <CustomImage
@@ -44,9 +96,10 @@ const PagesContent: React.FC<PagesContentProps> = ({ selectedPage, imgWidth = 25
                         video={video}
                         fallback={"loading"}
                         controls
-                        width={450}
+                        width={isMobile ? 225 : 450}
                         imgArrLength={selectedPage.images?.length || 0}
-                        index={i}
+                        index={i + 2}
+                        displayType='center'
                         key={`${video._key}-${i}`}
                         label={video.alt}
                     />

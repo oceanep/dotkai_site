@@ -80,7 +80,7 @@ const ProjectsMenu: React.FC<ProjectsMenuProps> = ({
 
     // State event callbacks
     const selectProject = (event: ThreeEvent<MouseEvent>, newIndex: number) => {
-        if (newIndex === currentIndex && isProject === true) return
+        if (newIndex === currentIndex && isProject === true && !isMobile) return
         setCurrentIndex(newIndex)
         projectClickHandler(newIndex)
     }
@@ -126,7 +126,7 @@ const ProjectsMenu: React.FC<ProjectsMenuProps> = ({
                     <ProjectsMenuItem
                         key={`${project.slug}-${i}`}
                         project={project}
-                        selected={!!isProject && currentIndex === i}
+                        selected={!!isProject && currentIndex === i && !isMobile}
                         texture={textures[i]}
                         index={i}
                         selectProject={selectProject}

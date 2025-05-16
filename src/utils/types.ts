@@ -42,6 +42,11 @@ export interface ISideMenuItem {
     label: string
 }
 
+export interface IListItem {
+    title?: string,
+    url?: string,
+}
+
 export enum EMediaType {
     SMARTPHONE = '(min-width: 375px) and (max-width: 812px)',
     TABLET = '(min-width: 768px) and (max-width: 1024px)',

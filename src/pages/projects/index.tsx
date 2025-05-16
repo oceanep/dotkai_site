@@ -24,6 +24,7 @@ import ProjectsContent from '~/components/projectsPage/projectsDisplay/ProjectsC
 import siteContent from '~/constants/siteContent'
 import SideMenu from '~/components/projectsPage/sideMenu/sideMenu'
 import PagesContent from '~/components/projectsPage/projectsDisplay/PagesContent'
+import Loader from '~/components/Loader'
 
 export const getStaticProps: GetStaticProps<
   SharedPageProps & {
