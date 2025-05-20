@@ -51,6 +51,7 @@ const SideMenuItem: React.FC<SideMenuItemProps> = ({
             const easing = 40 * delta
             if (selected && meshRef.current.position.z < 0.14999 || !selected && meshRef.current.position.z > 0.019999) {
                 console.log('triggered')
+                console.log('animating sidemenu item position:', meshRef.current.position);
                 const targetPosition = new Vector3Class() 
                 const targetShadowPosition = new Vector3Class(0, 0, 0)
 
@@ -59,9 +60,9 @@ const SideMenuItem: React.FC<SideMenuItemProps> = ({
                 //for shadow, reverse the z position
                 targetPosition.z = selected ? 0.15 : 0.01
                 targetShadowPosition.z = selected ? -0.14 : -0.001
-                
-                meshRef.current.position.lerp(targetPosition, 0.2 * (2 * easing))
-                meshRef.current.children[meshRef.current.children.length - 1].position.lerp(targetShadowPosition, 0.2 * (2 * easing));
+                console.log('target position:', targetPosition);
+                meshRef.current.position.lerp(targetPosition, 0.2)
+                meshRef.current.children[meshRef.current.children.length - 1].position.lerp(targetShadowPosition, 0.2 * (easing));
             }
             //After lerping, exlcude selected items from hover state/animations
             if (selected) return
@@ -72,9 +73,9 @@ const SideMenuItem: React.FC<SideMenuItemProps> = ({
     })
 
     React.useEffect(() => {
-        if (meshRef.current) {
-                console.log('Current meshRef position:', meshRef.current.position);
-                console.log('Selected state:', selected);
+        if (meshRef.current && selected) {
+                console.log('Current sidemenu item position:', meshRef.current.position);
+                // console.log('Selected state:', selected);
                 console.log('Position prop:', position);
         }
     }, [meshRef, selected]);
@@ -125,7 +126,6 @@ const SideMenuItem: React.FC<SideMenuItemProps> = ({
                 {icon}
             </Text>
             {/* shadow mesh for icon square */}
-
                 <mesh>
                     <planeGeometry args={[width, height]} />
                     <meshBasicMaterial

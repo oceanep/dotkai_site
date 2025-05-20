@@ -283,7 +283,6 @@ const R3F = ({ projects, pages }: { projects: Project[]; pages: Page[] }) => {
   return (
     <>
       <EffectPass />
-      <Suspense fallback={null}>
         <ProjectsMenu 
           width={meshAWidth} 
           height={meshAHeight}
@@ -296,8 +295,6 @@ const R3F = ({ projects, pages }: { projects: Project[]; pages: Page[] }) => {
           projectClickHandler={handleProjectSelect}
           sideMenuClickHandler={handleMenuItemSelect}
         />
-      </Suspense>
-      <Suspense fallback={null}>
         <ProjectsDisplay
           ref={displayRef}
           width={meshBWidth}
@@ -319,7 +316,6 @@ const R3F = ({ projects, pages }: { projects: Project[]; pages: Page[] }) => {
               />
           }
         </ProjectsDisplay>
-      </Suspense>
     </>
   )
 }

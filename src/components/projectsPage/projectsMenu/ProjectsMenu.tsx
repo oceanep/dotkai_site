@@ -55,15 +55,16 @@ const ProjectsMenu: React.FC<ProjectsMenuProps> = ({
     // set menu title position based on screen size
     const menuTitlePosition: [number, number, number] = useMemo(() => 
         isMobile 
-        ? [widthDiff, height / 2 - 0.15, 0.15]
-        : [widthDiff, height / 2 - 0.02, 0.15]
+        ? [widthDiff, height / 2 - 0.15, 0.01]
+        : [widthDiff, height / 2 - 0.02, 0.01]
     , [isMobile, widthDiff, height])
 
     // set menu item and title sizes based on screen size
     const sideMenuItemSize: number = useMemo(() => {
         if (isMobile) return 0.18
+        if (isTablet) return 0.14
         return 0.11
-    }, [isMobile])
+    }, [isMobile, isTablet])
 
     // set flex container size and position based on screen size
     const flexPosition: [number, number, number] = useMemo(() => 
