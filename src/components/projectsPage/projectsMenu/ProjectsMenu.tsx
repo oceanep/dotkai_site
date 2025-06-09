@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useRef } from 'react'
+import React, { Suspense, useCallback, useEffect, useMemo, useRef } from 'react'
 
 import { Euler, ThreeEvent, Vector3 } from '@react-three/fiber'
 import { Texture } from 'three'
@@ -13,6 +13,7 @@ import ProjectsMenuItem from './ProjectsMenuItem'
 import SideMenu from '../sideMenu/sideMenu'
 import MenuTitle from './MenuTitle'
 import ComputerMesh from '~/components/ComputerMesh'
+import MenuItemSkeleton from '~/components/skeleton/MenuItemSkeleton'
 
 interface ProjectsMenuProps {
     width: number
@@ -122,18 +123,19 @@ const ProjectsMenu: React.FC<ProjectsMenuProps> = ({
                 flexDir='row'
                 flexWrap='wrap'
             >
-                {projects.length > 0 ? (
+                {projects.length > 0 && (
                     projects.map((project, i) => 
-                    <ProjectsMenuItem
-                        key={`${project.slug}-${i}`}
-                        project={project}
-                        selected={!!isProject && currentIndex === i && !isMobile}
-                        texture={textures[i]}
-                        index={i}
-                        selectProject={selectProject}
-                    />)
-                ) : (
-                    <ComputerMesh scale={0.2} />
+                        <Suspense fallback={<MenuItemSkeleton isMobile={isMobile} isTablet={isTablet} index={i} />} key={i}>
+                            <ProjectsMenuItem
+                                key={`${project.slug}-${i}`}
+                                project={project}
+                                selected={!!isProject && currentIndex === i && !isMobile}
+                                texture={textures[i]}
+                                index={i}
+                                selectProject={selectProject}
+                            />
+                        </Suspense>
+                    )
                 )}
             </Flex>
         </group>

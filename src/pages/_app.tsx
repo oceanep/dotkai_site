@@ -1,13 +1,12 @@
 import type { AppProps } from 'next/app'
 
-import React, { createElement, lazy, StrictMode, useMemo } from 'react'
+import React, { lazy, StrictMode, useRef } from 'react'
 import dynamic from 'next/dynamic'
 import { IBM_Plex_Mono, Inter, PT_Serif } from 'next/font/google'
 
-import '~/styles/global.css'
 import DomWrapper from '~/components/layout/DomWrapper'
-import { NextPage } from 'next'
 
+import '~/styles/global.css'
 
 export interface SharedPageProps {
   draftMode: boolean
@@ -26,7 +25,7 @@ interface CustomAppProps<P = any> extends AppProps {
 const PreviewProvider = lazy(() => import('~/components/PreviewProvider'));
 
 const CanvasWrapper = dynamic(() => import("@/components/layout/CanvasWrapper"), {
-  ssr: false,
+  ssr: true,
 });
 
 const mono = IBM_Plex_Mono({
@@ -54,6 +53,8 @@ export default function App({
 }: CustomAppProps<SharedPageProps>) {
   const { draftMode, token } = pageProps
 
+  const ref = useRef();
+
   return (
     <>
       <StrictMode>
@@ -68,36 +69,38 @@ export default function App({
         </style>
         {draftMode ? (
           <PreviewProvider token={token}>
-            <DomWrapper>
-              <Component {...pageProps} />
-            </DomWrapper>
-            {
-              /**
-               * Assign canvas items to canvas property of components
-               * Check if property exist here and render conditionally
-               * This assures a persistent 3d canvas that doesn't rerender every
-               * Page load
-               */
-              Component?.canvas && (
-                <CanvasWrapper>
-                  <Component.canvas {...pageProps} />
-                </CanvasWrapper>
-              )
-            }
+            <div ref={ref}>
+              <DomWrapper>
+                <Component {...pageProps} />
+              </DomWrapper>
+              {
+                /**
+                 * Assign canvas items to canvas property of components
+                 * Check if property exist here and render conditionally
+                 * This assures a persistent 3d canvas that doesn't rerender every
+                 * Page load
+                 */
+                Component?.canvas && (
+                  <CanvasWrapper eventSource={ref}>
+                    <Component.canvas {...pageProps} />
+                  </CanvasWrapper>
+                )
+              }
+            </div>
           </PreviewProvider>
         ) : (
-          <>
+          <div ref={ref}>
             <DomWrapper>
               <Component {...pageProps} />
             </DomWrapper>
             {
               Component?.canvas && (
-                <CanvasWrapper>
+                <CanvasWrapper eventSource={ref}>
                   <Component.canvas {...pageProps} /> 
                 </CanvasWrapper>
               )
             }
-          </>
+          </div>
         )}
       </StrictMode>
     </>

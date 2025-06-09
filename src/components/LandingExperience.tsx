@@ -1,7 +1,5 @@
-"use client"
-
 import { FC, Suspense, useEffect, useRef, useState } from "react";
-import { CapsuleGeometry, Color, DirectionalLightHelper, MathUtils, MeshStandardMaterial, Vector2, Vector3 } from "three";
+import { CapsuleGeometry, Color, DirectionalLightHelper, MeshStandardMaterial } from "three";
 import {
     DragControls,
     Float,
@@ -16,17 +14,15 @@ import {
     Lightformer,
     PerspectiveCamera,
     CameraControls,
-    Bounds
+    Bounds,
+    Bvh
 } from '@react-three/drei'
 import { Perf } from 'r3f-perf'
 import { useControls } from "leva";
 
-import Floor from '~/components/Floor'
 import Logo from '~/components/Logo'
-import Controls from '~/components/Controls'
 import { useFrame, useThree } from "@react-three/fiber";
 import Fallback from "./Fallback";
-import ComputerMesh from "./ComputerMesh";
 import Accents from "./Accents";
 import { DigiviceMesh } from "~/jsx-models/DigiviceMesh";
 import EffectPass from "./EffectPass";
@@ -36,8 +32,6 @@ const capsuleGeometry = new CapsuleGeometry(1, 1, 4, 8);
 const capsuleMaterial = new MeshStandardMaterial();
 
 const LandingExperience: FC = () => {
-
-    const [orbActive, setOrbActive] = useState<boolean>(true);
 
     //update capsule material
     useEffect(() => {
@@ -52,7 +46,6 @@ const LandingExperience: FC = () => {
     //Accent mesh group refs
     const digiviceRef = useRef([]);
     const capsuleRef = useRef([]);
-    const warpRef = useRef(null);
 
     //mesh group animations
     useFrame((s, delta) => {
@@ -164,7 +157,7 @@ const LandingExperience: FC = () => {
     }, [envMapIntensity, backgroundColor]);
 
     return (
-        <>
+        <Bvh>
             {perfVisible && <Perf position="top-left" />}
             {/* <color args={[ backgroundColor ]} attach="background" /> */}
             <Environment
@@ -236,14 +229,14 @@ const LandingExperience: FC = () => {
                 onDragStart={() => setOrbActive(false)}
                 onDragEnd={() => setOrbActive(true)}
             > */}
-            <Suspense
+            {/* <Suspense
                 fallback={
                     <Fallback
                         fontSize={.5}
                         color="#9ce928"
                         position={[0.5, 0.5, 0]}
                     />
-                }>
+                }> */}
                 <Bounds fit clip observe margin={0.9}>
                     <Logo />
                 </Bounds>
@@ -271,11 +264,11 @@ const LandingExperience: FC = () => {
                         material={capsuleMaterial}
                     />
                 </Accents>
-            </Suspense>
+            {/* </Suspense> */}
             {/* </DragControls> */}
             {/* <Controls active={orbActive} /> */}
             {/* <Floor position={[0, -1, 0]} /> */}
-        </>
+        </Bvh>
     )
 };
 

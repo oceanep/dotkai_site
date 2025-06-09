@@ -1,10 +1,11 @@
-import { Preload } from "@react-three/drei";
+import { Loader, Preload } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
 import { Leva } from "leva";
+import { Suspense } from "react";
 import { ACESFilmicToneMapping, SRGBColorSpace } from "three";
 import { SceneContainer } from "~/styles/styled";
 
-const CanvasWrapper = ({ children }) => {
+const CanvasWrapper = ({ children, eventSource }) => {
     return (
         <SceneContainer>
             <Leva
@@ -26,12 +27,15 @@ const CanvasWrapper = ({ children }) => {
                     position: [0, 0, 3.5],
                     rotation: [0, 0, 0]
                 }}
-                eventSource={document.getElementById('root')}
+                eventSource={eventSource}
                 eventPrefix="client"
             >
                 <Preload all />
-                {children}
+                <Suspense fallback={null}>
+                    {children}
+                </Suspense>
             </Canvas>
+            <Loader />
         </SceneContainer>
     );
 };
