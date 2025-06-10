@@ -1,17 +1,17 @@
 import { FC, useRef } from 'react'
-import { useFrame, useLoader } from '@react-three/fiber'
-import { Html, PivotControls, useGLTF, useTexture } from '@react-three/drei'
-import { DoubleSide, Group, Mesh, MeshBasicMaterial } from 'three'
+import { useFrame } from '@react-three/fiber'
+import { Html, useTexture } from '@react-three/drei'
+import { Group, Mesh } from 'three'
 import { useControls } from 'leva'
 import { useRouter } from 'next/navigation'
 
-import { CyberButton, Inner3dPill } from '~/styles/styled'
+import { CyberButton, } from '~/styles/styled'
 import LogoMesh from '../jsx-models/LogoMesh'
 
 const Logo: FC = () => {
-  const group = useRef<Group>(null!)
-  const logo = useRef<Group>(null!)
-  const boxRef = useRef<Mesh>(null!)
+  const group = useRef<Group>(null)
+  const logo = useRef<Group>(null)
+  const boxRef = useRef<Mesh>(null)
 
   const bgTexture = useTexture('/images/bg_shape.png')
   const subTexture = useTexture('/images/sub_name.png')

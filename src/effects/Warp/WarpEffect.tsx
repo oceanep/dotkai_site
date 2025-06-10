@@ -1,6 +1,6 @@
 import { Effect, BlendFunction } from "postprocessing";
-import { Uniform, Vector2, WebGLRenderer, WebGLRenderTarget } from "three";
-import { IWarpClassProps } from "~/utils/types";
+import { Uniform, Vector2 } from "three";
+import { IWarpClassProps } from "@/utils/types";
 import WarpFragmentShader from "./WarpFragmentShader.glsl";
 
 export default class WarpEffect extends Effect {

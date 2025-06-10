@@ -1,18 +1,18 @@
 import React, { Suspense, useMemo } from 'react'
 
-import { Euler, ThreeEvent, Vector3 } from '@react-three/fiber'
+import { Euler, Vector3 } from '@react-three/fiber'
 import { SRGBColorSpace } from 'three'
 import { Flex } from '@react-three/flex'
 import { useTexture } from '@react-three/drei'
 
 import { Project } from '~/lib/sanity.queries'
-import { useMediaQuery } from '~/utils/hooks'
-import { EMediaType, ESideMenuItem } from '~/utils/types'
+import { useMediaQuery } from '@/utils/hooks'
+import { EMediaType, ESideMenuItem } from '@/utils/types'
 
-import ProjectsMenuItem from './ProjectsMenuItem'
-import SideMenu from '../sideMenu/sideMenu'
-import MenuTitle from './MenuTitle'
-import MenuItemSkeleton from '~/components/skeleton/MenuItemSkeleton'
+import ProjectsMenuItem from '@/components/projectsPage/projectsMenu/ProjectsMenuItem'
+import SideMenu from '@/components/projectsPage/sideMenu/sideMenu'
+import MenuTitle from '@/components/projectsPage/projectsMenu/MenuTitle'
+import MenuItemSkeleton from '@/components/skeleton/MenuItemSkeleton'
 
 interface ProjectsMenuProps {
     width: number
@@ -85,7 +85,7 @@ const ProjectsMenu: React.FC<ProjectsMenuProps> = ({
     , [isMobile, flexWidth, flexHeight])
 
     // State event callbacks
-    const selectProject = (event: ThreeEvent<MouseEvent>, newIndex: number) => {
+    const selectProject = (newIndex: number) => {
         if (newIndex === currentIndex && isProject === true && !isMobile) return
         setCurrentIndex(newIndex)
         projectClickHandler(newIndex)

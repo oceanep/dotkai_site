@@ -5,13 +5,9 @@ import dynamic from 'next/dynamic'
 import { IBM_Plex_Mono, Inter, PT_Serif } from 'next/font/google'
 
 import DomWrapper from '~/components/layout/DomWrapper'
+import { SharedPageProps } from '@/utils/types'
 
 import '~/styles/global.css'
-
-export interface SharedPageProps {
-  draftMode: boolean
-  token: string
-}
 
 export interface CustomNextPage {
   (props: any): JSX.Element;
@@ -25,7 +21,7 @@ interface CustomAppProps<P = any> extends AppProps {
 const PreviewProvider = lazy(() => import('~/components/PreviewProvider'));
 
 const CanvasWrapper = dynamic(() => import("@/components/layout/CanvasWrapper"), {
-  ssr: true,
+  ssr: false,
 });
 
 const mono = IBM_Plex_Mono({

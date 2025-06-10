@@ -1,4 +1,4 @@
-import { Color, Group, NearestFilter, TextureLoader } from 'three'
+import { Group, NearestFilter, TextureLoader } from 'three'
 import React, { forwardRef, useEffect } from 'react'
 import { useGLTF } from '@react-three/drei'
 import { useControls } from 'leva'

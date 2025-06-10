@@ -1,7 +1,7 @@
 import React, { useRef } from 'react'
 import { Box } from '@react-three/flex'
 import { Group, Texture, Vector3 } from 'three'
-import { ThreeEvent, useFrame, useThree } from '@react-three/fiber'
+import { useFrame, useThree } from '@react-three/fiber'
 import { Project } from '~/lib/sanity.queries'
 import { useMediaQuery } from '~/utils/hooks'
 import { EMediaType } from '~/utils/types'
@@ -11,7 +11,7 @@ interface ProjectsMenuItemProps {
   texture: Texture
   selected: boolean
   index: number
-  selectProject: (event: ThreeEvent<MouseEvent>, newIndex: number) => void
+  selectProject: (newIndex: number) => void
 }
 
 const ProjectsMenuItem: React.FC<ProjectsMenuItemProps> = ({
@@ -71,7 +71,7 @@ const ProjectsMenuItem: React.FC<ProjectsMenuItemProps> = ({
             <mesh
                 onClick={(e) => {
                     e.stopPropagation()
-                    selectProject(e, index)
+                    selectProject(index)
                 }}
                 onPointerOver={(e) =>{
                     e.stopPropagation

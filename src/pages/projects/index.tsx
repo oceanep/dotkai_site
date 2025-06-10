@@ -1,18 +1,17 @@
 import type { GetStaticProps, InferGetStaticPropsType } from 'next'
 
-import { readToken } from '~/lib/sanity.api'
-import { getClient } from '~/lib/sanity.client'
+import { readToken } from '@/lib/sanity.api'
+import { getClient } from '@/lib/sanity.client'
 import {
   getProjects,
   type Project,
   getPages,
   type Page,
-} from '~/lib/sanity.queries'
+} from '@/lib/sanity.queries'
 
-import type { SharedPageProps } from '~/pages/_app'
+import type { SharedPageProps } from '@/utils/types'
 
 import dynamic from 'next/dynamic'
-import Loader from '~/components/Loader'
 
 export const getStaticProps: GetStaticProps<
   SharedPageProps & {
@@ -53,9 +52,4 @@ export default function IndexPage(
   return <DOM />
 }
 
-IndexPage.canvas = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
-  // const [projects] = useLiveQuery<Project[]>(props.projects, projectsQuery)
-  // const [pages] = useLiveQuery<Page[]>(props.pages, pagesQuery)
-
-  return <ProjectsScene projects={props.projects} pages={props.pages} />
-}
+IndexPage.canvas = (props: InferGetStaticPropsType<typeof getStaticProps>) => <ProjectsScene projects={props.projects} pages={props.pages} />

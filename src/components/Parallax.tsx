@@ -1,6 +1,6 @@
 import { useThree, useFrame } from "@react-three/fiber";
 import { useState, useEffect, useRef, useMemo } from "react";
-import { Mesh, Vector3 } from "three";
+import { Mesh } from "three";
 
 const Parallax = () => {
     const camera = useThree(state => state.camera);

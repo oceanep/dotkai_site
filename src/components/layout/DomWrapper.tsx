@@ -1,6 +1,5 @@
 import { useRef } from "react";
-// import HtmlLoader from "../HtmlLoader";
-import ThreeLoader from "../ThreeLoader";
+import ThreeLoader from "../loaders/ThreeLoader";
 
 const Dom = ({ children }) => {
   const ref = useRef(null);
@@ -20,7 +19,6 @@ const Dom = ({ children }) => {
     >
       {children}
       <ThreeLoader/>
-      {/* <HtmlLoader/> */}
     </div>
   );
 };

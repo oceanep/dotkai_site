@@ -1,17 +1,9 @@
-// import { Loader } from '@react-three/drei'
 import { Canvas } from '@react-three/fiber'
 import { Leva } from 'leva'
-// import dynamic from 'next/dynamic'
 import { Suspense } from 'react'
 import { ACESFilmicToneMapping, SRGBColorSpace } from 'three'
 import { SceneContainer } from '~/styles/styled'
-// import ThreeLoader from '../ThreeLoader'
 import EffectPass from '@/components/EffectPass'
-
-// const EffectPass = dynamic(() => import('@/components/EffectPass'), {
-//   ssr: false,
-//   loading: () => <ThreeLoader/>
-// })
 
 const CanvasWrapper = ({ children, eventSource }) => {
   return (
@@ -43,8 +35,6 @@ const CanvasWrapper = ({ children, eventSource }) => {
             </>
         </Suspense>
       </Canvas>
-      {/* <Loader /> */}
-      {/* <ThreeLoader /> */}
     </SceneContainer>
   )
 }

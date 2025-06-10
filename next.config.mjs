@@ -16,6 +16,11 @@ const config = {
       '@sanity/demo',
       '@sanity/vision',
       '@tailwindcss/typography',
+      '@portabletext/react',
+      '@/utils/types',
+      '@/utils/hooks',
+      '@/lib/sanity.api',
+      '@lib/sanity.queries',
     ]
   },
   images: {

@@ -1,20 +1,11 @@
 import { Html, useProgress, useTexture } from '@react-three/drei'
-import { PortableText } from '@portabletext/react'
-
-import { urlForImage } from '~/lib/sanity.image'
-import { Project } from '~/lib/sanity.queries'
-
-import { customMarks } from '~/components/portableText/CustomMarks'
-import CustomImage from './CustomImage'
-import CustomVideo from './CustomVideo'
-import TextCard from './TextCard'
 
 import styles from './ProjectsDisplay.module.scss'
 import { Euler, useThree, Vector3 } from '@react-three/fiber'
 import { forwardRef } from 'react'
 import { Mesh } from 'three'
-import { useMediaQuery } from '~/utils/hooks'
-import { EMediaType } from '~/utils/types'
+import { useMediaQuery } from '@/utils/hooks'
+import { EMediaType } from '@/utils/types'
 
 interface ProjectsDisplayProps {
   width: number

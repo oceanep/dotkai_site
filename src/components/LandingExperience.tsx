@@ -1,4 +1,4 @@
-import { FC, useEffect, useRef } from "react";
+import { FC, Suspense, useEffect, useRef } from "react";
 import { CapsuleGeometry, Color, MeshStandardMaterial } from "three";
 import {
     Environment,
@@ -158,9 +158,11 @@ const LandingExperience: FC = () => {
                 shadow-mapSize={[1024, 1024]}
                 shadow-normalBias={0.04}
             />
-            <Bounds fit clip observe margin={0.9}>
-                <Logo />
-            </Bounds>
+            <Suspense fallback={null}>
+                <Bounds fit clip observe margin={0.9}>
+                    <Logo />
+                </Bounds>
+            </Suspense>
             <Parallax/>
             {/* <Accents
                 amount={75}
@@ -173,17 +175,19 @@ const LandingExperience: FC = () => {
                     material={capsuleMaterial}
                 />
             </Accents> */}
-            <Accents
-                amount={75}
-                scaleFactor={Math.pow(10, -1.4)}
-                ref={capsuleRef}
-            >
-                <mesh
-                    receiveShadow
-                    geometry={capsuleGeometry}
-                    material={capsuleMaterial}
-                />
-            </Accents>
+            <Suspense fallback={null}>
+                <Accents
+                    amount={75}
+                    scaleFactor={Math.pow(10, -1.4)}
+                    ref={capsuleRef}
+                >
+                    <mesh
+                        receiveShadow
+                        geometry={capsuleGeometry}
+                        material={capsuleMaterial}
+                    />
+                </Accents>
+            </Suspense>
         </Bvh>
     )
 };

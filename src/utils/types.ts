@@ -59,3 +59,8 @@ export enum ESideMenuItem {
     ABOUT = 'about',
     CONTACT = 'contact',
 }
+
+export interface SharedPageProps {
+    draftMode: boolean
+    token: string
+  }

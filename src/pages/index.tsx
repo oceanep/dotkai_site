@@ -1,10 +1,9 @@
 import type { GetStaticProps, InferGetStaticPropsType } from 'next'
 
-import { readToken } from '~/lib/sanity.api'
+import { readToken } from '@/lib/sanity.api'
 
-import type { SharedPageProps } from '~/pages/_app'
+import type { SharedPageProps } from '@/utils/types'
 import dynamic from 'next/dynamic'
-import Loader from '~/components/Loader'
 
 export const getStaticProps: GetStaticProps<SharedPageProps> = async ({ draftMode = false }) => {
 

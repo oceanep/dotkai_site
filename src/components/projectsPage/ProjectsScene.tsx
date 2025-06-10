@@ -1,20 +1,28 @@
 import { Suspense, useCallback, useEffect, useRef, useState } from 'react'
 
+import dynamic from 'next/dynamic'
 import { type Project, type Page } from '~/lib/sanity.queries'
 
 import { useFrame, useThree } from '@react-three/fiber'
 import { Color, Euler, Mesh, Vector3 } from 'three'
 
 import { clamp } from 'three/src/math/MathUtils'
-import { useDebouncedResize, useMediaQuery } from '~/utils/hooks'
-import { EMediaType, ESideMenuItem } from '~/utils/types'
+import { useDebouncedResize, useMediaQuery } from '@/utils/hooks'
+import { EMediaType, ESideMenuItem } from '@/utils/types'
 
 import ProjectsMenu from '@/components/projectsPage/projectsMenu/ProjectsMenu'
 import ProjectsDisplay from '@/components/projectsPage/projectsDisplay/ProjectsDisplay'
-import ProjectsContent from '@/components/projectsPage/projectsDisplay/ProjectsContent'
 import PagesContent from '@/components/projectsPage/projectsDisplay/PagesContent'
-import PanelSkeleton from '../skeleton/PanelSkeleton'
-import DisplaySkeleton from '../skeleton/DisplaySkeleton'
+import PanelSkeleton from '@/components//skeleton/PanelSkeleton'
+import DisplaySkeleton from '@/components/skeleton/DisplaySkeleton'
+import Parallax from '../Parallax'
+
+const ProjectsContent = dynamic(
+  () => import('@/components/projectsPage/projectsDisplay/ProjectsContent'), { 
+    ssr: false,
+    loading: () => <DisplaySkeleton/>
+  }
+)
 
 // Canvas/R3F components here
 const ProjectsScene = ({
@@ -195,15 +203,6 @@ const ProjectsScene = ({
   // Vertically, again center it
   const meshBY = 0
 
-  // console.log('width x height: ', width, height)
-  // console.log('client width x height: ', window.innerWidth, window.innerHeight)
-  // console.log('world units height: ', worldUnitsPerHeightPixel)
-  // console.log('world units width: ', worldUnitsPerWidthPixel)
-  // console.log('world start: ', -width/2)
-  // console.log('position X, Y: ', meshBPosBase, meshBY)
-  // console.log('Mesh width and height: ', meshAWidth)
-  // console.log('b position minimum: ', bPosMin)
-
   //Event Handlers
   const handleProjectSelect = useCallback(
     (projectIndex: number) => {
@@ -241,7 +240,8 @@ const ProjectsScene = ({
   useFrame((state, delta) => {
     if (showDisplay && displayRef.current) {
       state.camera.position.lerp(
-        displayRef.current.position.clone().add(new Vector3(0, 0, 3.5)),
+        //add .85 to x to offset the camera position from the parralax component
+        displayRef.current.position.clone().add(new Vector3(.85, 0, 3.5)),
         delta * 5,
       )
       state.camera.lookAt(
@@ -266,6 +266,7 @@ const ProjectsScene = ({
 
   return (
     <>
+      <Parallax/>
       <Suspense
         fallback={
           <PanelSkeleton
@@ -307,12 +308,7 @@ const ProjectsScene = ({
           backClick={handleBackButtonClick}
         >      
           {!!isProject ? (
-            <Suspense fallback={
-                <DisplaySkeleton/>
-              } 
-            >
               <ProjectsContent selectedProject={selectedProject} imgWidth={250} />
-            </Suspense>
           ) : (
             <Suspense fallback={
                 <DisplaySkeleton/>
