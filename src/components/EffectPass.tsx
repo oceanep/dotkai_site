@@ -1,12 +1,8 @@
-"use client"
-
-import { FC, useCallback, useEffect, useState } from "react";
-import { Vector2 } from "three";
-import { EffectComposer, ToneMapping, Vignette, Glitch, Noise, Bloom, DepthOfField } from "@react-three/postprocessing";
+import { FC } from "react";
+import { EffectComposer, ToneMapping, Vignette,  Noise } from "@react-three/postprocessing";
 import { ToneMappingMode, BlendFunction, GlitchMode } from "postprocessing";
 import { useControls, folder } from "leva";
 import Warp from "~/effects/Warp";
-import { throttle } from "~/utils";
 
 const EffectPass:FC = () => {
     //Post Processing Controls

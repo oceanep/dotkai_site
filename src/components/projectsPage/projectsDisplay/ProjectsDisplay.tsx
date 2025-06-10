@@ -1,4 +1,4 @@
-import { Html, useTexture } from '@react-three/drei'
+import { Html, useProgress, useTexture } from '@react-three/drei'
 import { PortableText } from '@portabletext/react'
 
 import { urlForImage } from '~/lib/sanity.image'
@@ -10,9 +10,8 @@ import CustomVideo from './CustomVideo'
 import TextCard from './TextCard'
 
 import styles from './ProjectsDisplay.module.scss'
-import DescCard from './DescCard'
 import { Euler, useThree, Vector3 } from '@react-three/fiber'
-import { Children, forwardRef } from 'react'
+import { forwardRef } from 'react'
 import { Mesh } from 'three'
 import { useMediaQuery } from '~/utils/hooks'
 import { EMediaType } from '~/utils/types'
@@ -39,6 +38,7 @@ const ProjectsDisplay = forwardRef<Mesh, ProjectsDisplayProps>(({
     const refHeight = 915
     const scaleFactor = (refHeight / size.height) * .1
     const isMobile = useMediaQuery(EMediaType.SMARTPHONE)
+    const { progress } = useProgress();
     return (
         <group>
             <mesh
@@ -57,7 +57,7 @@ const ProjectsDisplay = forwardRef<Mesh, ProjectsDisplayProps>(({
                     transform 
                     // distanceFactor={1}
                     scale={scaleFactor}
-                    
+                    style={{ opacity: progress < 100 ? 0 : 1, transition: 'opacity 1s ease-in-out' }}
                 >
                     <div className={styles['preview-wrapper']}>
                         <div className={styles['grid']}>
@@ -78,4 +78,5 @@ const ProjectsDisplay = forwardRef<Mesh, ProjectsDisplayProps>(({
     )
 })
 
+ProjectsDisplay.displayName = 'ProjectsDisplay'
 export default ProjectsDisplay

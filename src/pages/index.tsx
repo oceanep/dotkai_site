@@ -20,7 +20,6 @@ export const getStaticProps: GetStaticProps<SharedPageProps> = async ({ draftMod
 // Canvas/R3F components here
 const R3F = dynamic(() => import("@/components/LandingExperience"), {
   ssr: false,
-  loading: () => <Loader/>
 });
 
 // DOM elements here

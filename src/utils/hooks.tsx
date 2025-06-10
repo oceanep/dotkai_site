@@ -11,7 +11,7 @@ export const useDebouncedResize = (): number[] => {
 
     const handleSetSize = useCallback(() =>
         setSize([window.innerWidth, window.innerHeight]),
-    [window.innerWidth, window.innerHeight])
+    [])
 
     useEffect(() => {
         const debouncedResize = throttle(
@@ -19,7 +19,7 @@ export const useDebouncedResize = (): number[] => {
         500)
         window.addEventListener('resize', debouncedResize)
         return () => window.removeEventListener('resize', debouncedResize)
-    }, [])
+    }, [handleSetSize])
 
     return size
 }

@@ -1,19 +1,8 @@
-import { FC, Suspense, useEffect, useRef, useState } from "react";
-import { CapsuleGeometry, Color, DirectionalLightHelper, MeshStandardMaterial } from "three";
+import { FC, useEffect, useRef } from "react";
+import { CapsuleGeometry, Color, MeshStandardMaterial } from "three";
 import {
-    DragControls,
-    Float,
-    useHelper,
-    BakeShadows,
-    SoftShadows,
-    AccumulativeShadows,
-    RandomizedLight,
-    ContactShadows,
-    Sky,
     Environment,
     Lightformer,
-    PerspectiveCamera,
-    CameraControls,
     Bounds,
     Bvh
 } from '@react-three/drei'
@@ -22,10 +11,8 @@ import { useControls } from "leva";
 
 import Logo from '~/components/Logo'
 import { useFrame, useThree } from "@react-three/fiber";
-import Fallback from "./Fallback";
 import Accents from "./Accents";
-import { DigiviceMesh } from "~/jsx-models/DigiviceMesh";
-import EffectPass from "./EffectPass";
+// import { DigiviceMesh } from "~/jsx-models/DigiviceMesh";
 import Parallax from "./Parallax";
 
 const capsuleGeometry = new CapsuleGeometry(1, 1, 4, 8);
@@ -37,8 +24,8 @@ const LandingExperience: FC = () => {
     useEffect(() => {
         capsuleMaterial.metalness = 0.9
         capsuleMaterial.roughness = 0.05
-        capsuleMaterial.color = new Color(0.34, 1, 0.05)
-        capsuleMaterial.emissive = new Color(0.34, 1, 0.05)
+        capsuleMaterial.color = new Color(0.3, 0.3, 0.3)
+        capsuleMaterial.emissive = new Color(0.3, 0.3, 0.3)
         capsuleMaterial.emissiveIntensity = 2
         capsuleMaterial.needsUpdate = true
     }, []);
@@ -50,22 +37,25 @@ const LandingExperience: FC = () => {
     //mesh group animations
     useFrame((s, delta) => {
         let i = 1;
-        for (const digivice of digiviceRef.current) {
-            const t = s.clock.getElapsedTime() + 2 * 10000
-            digivice.rotation.y += delta * 1.2
-            digivice.rotation.z += delta * 1.4
-            digivice.position.x = Math.cos(t / 4.5) / 2 + i / 5 - 10
-            i++;
+        if (digiviceRef.current && digiviceRef.current.length > 0) {
+            for (const digivice of digiviceRef.current) {
+                const t = s.clock.getElapsedTime() + 2 * 10000
+                digivice.rotation.y += delta * 1.2
+                digivice.rotation.z += delta * 1.4
+                digivice.position.x = Math.cos(t / 4.5) / 2 + i / 5 - 10
+                i++;
+            }
         }
-        for (const capsule of capsuleRef.current) {
-            capsule.rotation.y += delta * 5.7;
-            capsule.rotation.z += delta * 3.2;
+        if (capsuleRef.current && capsuleRef.current.length > 0 ) {
+            for (const capsule of capsuleRef.current) {
+                capsule.rotation.y += delta * 5.7;
+                capsule.rotation.z += delta * 3.2;
+            }
         }
     });
 
     //Light Visual Helper
     const directionalLight = useRef();
-    useHelper(directionalLight, DirectionalLightHelper, 1);
     
     const { perfVisible, pillColor } = useControls({
         perfVisible: true,
@@ -96,25 +86,6 @@ const LandingExperience: FC = () => {
         }
     });
 
-    // const { color, opacity, blur, scale, far, near } = useControls("contact shadows", {
-    //     color: '#000000',
-    //     opacity: {
-    //         value: 0.5, min: 0, max: 1
-    //     },
-    //     blur: {
-    //         value: 1, min: 0, max: 10
-    //     },
-    //     scale: {
-    //         value: 10, min: 0, max: 15
-    //     },
-    //     far: {
-    //         value: 3, min: 0, max: 50
-    //     },
-    //     near: {
-    //         value: 0, min: -50, max: 0
-    //     }
-    // });
-
     const {
         envMapIntensity,
         envMapHeight,
@@ -143,7 +114,7 @@ const LandingExperience: FC = () => {
             min: 10,
             max: 1000
         },
-        envColor: "#0087d8",
+        envColor: "#ffe5e5",
         backgroundColor: "#ffffff"
     });
 
@@ -154,7 +125,7 @@ const LandingExperience: FC = () => {
     useEffect(() => {
         scene.environmentIntensity = envMapIntensity;
         scene.background = new Color(backgroundColor);
-    }, [envMapIntensity, backgroundColor]);
+    }, [envMapIntensity, backgroundColor, scene]);
 
     return (
         <Bvh>
@@ -168,7 +139,7 @@ const LandingExperience: FC = () => {
                 //     radius: envMapRadius,
                 //     scale: envMapScale
                 // }}
-                files="/environmentMaps/beautiful_sunrise_at_coast_2k.hdr"
+                // files="/environmentMaps/beautiful_sunrise_at_coast_2k.hdr"
             // resolution={32}
             >
                 <Lightformer
@@ -179,12 +150,6 @@ const LandingExperience: FC = () => {
                     form="ring"
                 />
             </Environment>
-            {/* <SoftShadows
-                size={size}
-                samples={samples}
-                focus={focus}
-            /> */}
-            {/* <ambientLight color={"white"} intensity={0.3} /> */}
             <directionalLight
                 ref={directionalLight}
                 position={sunPosition}
@@ -193,81 +158,32 @@ const LandingExperience: FC = () => {
                 shadow-mapSize={[1024, 1024]}
                 shadow-normalBias={0.04}
             />
-            {/* <Sky sunPosition={sunPosition} /> */}
-            {/* <BakeShadows />  */}
-            {/*Use one of the below prerendered shadows if no lights*/}
-            {/* <ContactShadows
-                position={[0, -0.94, 0]}
-                resolution={512}
-                scale={scale}
-                far={far}
-                near={near}
-                color={color}
-                opacity={opacity}
-                blur={blur}
-            /> */}
-            {/* <AccumulativeShadows
-                position={[0, -0.94, 0]}
-                scale={3}
-                color="#2a000a"
-                opacity={0.8}
-                frames={Infinity}
-                temporal
-                blend={100}
+            <Bounds fit clip observe margin={0.9}>
+                <Logo />
+            </Bounds>
+            <Parallax/>
+            {/* <Accents
+                amount={75}
+                scaleFactor={Math.pow(10, -1.4)}
+                ref={digiviceRef}
             >
-                <RandomizedLight 
-                    amount={8}
-                    radius={1}
-                    ambient={0.5}
-                    intensity={3}
-                    position={[1,2,3]}
-                    bias={0.001}
+                <mesh
+                    receiveShadow
+                    geometry={capsuleGeometry}
+                    material={capsuleMaterial}
                 />
-            </AccumulativeShadows> */}
-            <EffectPass />
-            {/* <DragControls
-                onDragStart={() => setOrbActive(false)}
-                onDragEnd={() => setOrbActive(true)}
-            > */}
-            {/* <Suspense
-                fallback={
-                    <Fallback
-                        fontSize={.5}
-                        color="#9ce928"
-                        position={[0.5, 0.5, 0]}
-                    />
-                }> */}
-                <Bounds fit clip observe margin={0.9}>
-                    <Logo />
-                </Bounds>
-                {/* <ComputerMesh
-                    scale={0.2}
-                    position={[0, -0.94, 0]}
-                    rotation={[0, 0.75, 0]}
-                /> */}
-                <Parallax/>
-                <Accents
-                    amount={75}
-                    scaleFactor={Math.pow(10, -3.2)}
-                    ref={digiviceRef}
-                >
-                    <DigiviceMesh />
-                </Accents>
-                <Accents
-                    amount={75}
-                    scaleFactor={Math.pow(10, -1.4)}
-                    ref={capsuleRef}
-                >
-                    <mesh
-                        receiveShadow
-                        geometry={capsuleGeometry}
-                        material={capsuleMaterial}
-                    />
-                </Accents>
-            {/* </Suspense> */}
-            {/* </DragControls> */}
-            {/* <Controls active={orbActive} /> */}
-            {/* <Floor position={[0, -1, 0]} /> */}
+            </Accents> */}
+            <Accents
+                amount={75}
+                scaleFactor={Math.pow(10, -1.4)}
+                ref={capsuleRef}
+            >
+                <mesh
+                    receiveShadow
+                    geometry={capsuleGeometry}
+                    material={capsuleMaterial}
+                />
+            </Accents>
         </Bvh>
     )
 };

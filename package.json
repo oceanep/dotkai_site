@@ -5,9 +5,10 @@
     "dev": "next",
     "format": "npx prettier --write . --ignore-path .gitignore",
     "lint": "next lint -- --ignore-path .gitignore",
-    "lint:fix": "npm run format && npm run lint -- --fix",
+    "lint:fix": "yarn run lint --fix",
     "start": "next start",
-    "type-check": "tsc --noEmit"
+    "type-check": "tsc --noEmit",
+    "analyze": "cross-env ANALYZE=true next build"
   },
   "prettier": {
     "semi": false,
@@ -37,6 +38,7 @@
     "three": "^0.168.0"
   },
   "devDependencies": {
+    "@next/bundle-analyzer": "^15.3.3",
     "@types/react": "^18.3.7",
     "@types/three": "^0.168.0",
     "autoprefixer": "10.4.17",

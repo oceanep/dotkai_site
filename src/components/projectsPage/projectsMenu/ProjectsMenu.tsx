@@ -1,7 +1,7 @@
-import React, { Suspense, useCallback, useEffect, useMemo, useRef } from 'react'
+import React, { Suspense, useMemo } from 'react'
 
 import { Euler, ThreeEvent, Vector3 } from '@react-three/fiber'
-import { Texture } from 'three'
+import { SRGBColorSpace } from 'three'
 import { Flex } from '@react-three/flex'
 import { useTexture } from '@react-three/drei'
 
@@ -12,7 +12,6 @@ import { EMediaType, ESideMenuItem } from '~/utils/types'
 import ProjectsMenuItem from './ProjectsMenuItem'
 import SideMenu from '../sideMenu/sideMenu'
 import MenuTitle from './MenuTitle'
-import ComputerMesh from '~/components/ComputerMesh'
 import MenuItemSkeleton from '~/components/skeleton/MenuItemSkeleton'
 
 interface ProjectsMenuProps {
@@ -21,7 +20,7 @@ interface ProjectsMenuProps {
     position: Vector3
     rotation: Euler
     projects: Project[]
-    textures: Texture[]
+    textureUrls: string[]
     isProject: boolean
     projectClickHandler: (projectIndex: number) => void
     sideMenuClickHandler: (slug: ESideMenuItem) => void
@@ -34,7 +33,7 @@ const ProjectsMenu: React.FC<ProjectsMenuProps> = ({
     position, 
     rotation, 
     projects, 
-    textures,
+    textureUrls,
     isProject,
     projectClickHandler,
     sideMenuClickHandler
@@ -47,6 +46,11 @@ const ProjectsMenu: React.FC<ProjectsMenuProps> = ({
     const isTablet = useMediaQuery(EMediaType.TABLET)
 
     const bgTexture = useTexture('/images/Menu-0_84 aspect ratio.png')
+
+    const textures = useTexture(textureUrls)
+    textures.forEach((texture) => {
+      texture.colorSpace = SRGBColorSpace
+    })
 
     // add margin to flex container sizing
     // Use difference in widths to add margin to flex contianer positioning

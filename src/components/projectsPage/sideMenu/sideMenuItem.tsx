@@ -78,7 +78,7 @@ const SideMenuItem: React.FC<SideMenuItemProps> = ({
                 // console.log('Selected state:', selected);
                 console.log('Position prop:', position);
         }
-    }, [meshRef, selected]);
+    }, [meshRef, selected, position]);
 
     return (
         <group

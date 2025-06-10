@@ -12,7 +12,7 @@ const Parallax = () => {
         x: camera.position.x || 0,
         y: camera.position.y || 0, 
         z: camera.position.z || 3.5
-    }), [])
+    }), [camera.position]);
 
     const handleCursor = (e) => 
         //cursor returns as a decimal of 1 so subtract .5 to get accurate mapping to screen

@@ -1,0 +1,6 @@
+.display-skeleton {
+    grid-column: 1 / -1;
+    grid-row: 1 / -1;
+    background-color: rgba(128, 128, 128, 0.5); // Medium gray with 50% transparency
+    z-index: 5; // Ensure it appears above other elements but below higher z-index elements
+}

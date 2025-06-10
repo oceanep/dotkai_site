@@ -4,7 +4,6 @@ import siteContent from '../../../constants/siteContent';
 import { EMediaType, ESideMenuItem } from '~/utils/types';
 import { useMediaQuery } from '~/utils/hooks';
 import { ThreeEvent } from '@react-three/fiber';
-import { useEffect } from 'react';
 
 interface SideMenuProps {
     sectionWidth: number
@@ -36,7 +35,7 @@ const SideMenu: React.FC<SideMenuProps> = ({
     const isMobile = useMediaQuery(EMediaType.SMARTPHONE)
 
     // set font size based on mobile or deskdtop for icons
-    const fontSize = useMemo(() => isMobile ? mobileFontSize : desktopFontSize, [isMobile])
+    const fontSize = useMemo(() => isMobile ? mobileFontSize : desktopFontSize, [isMobile, mobileFontSize, desktopFontSize])
 
     // offset in y for aesthetic puproses
     const offset = 0.05
@@ -67,7 +66,7 @@ const SideMenu: React.FC<SideMenuProps> = ({
         const z = 0.01
         
         return [x, y, z]
-    }, [sectionWidth, sectionHeight, itemCount, posAdjustment, gap])
+    }, [sectionWidth, sectionHeight, posAdjustment, gap, isMobile])
 
     // State event callbacks
     const selectPage = (event: ThreeEvent<MouseEvent>, newSlug: ESideMenuItem) => {

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useRef } from 'react'
 import { Box } from '@react-three/flex'
 import { Group, Texture, Vector3 } from 'three'
 import { ThreeEvent, useFrame, useThree } from '@react-three/fiber'
