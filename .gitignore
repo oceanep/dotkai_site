@@ -48,4 +48,4 @@ yarn-error.log*
 studio/.env.development
 
 # Old Models
-.old
+*.old

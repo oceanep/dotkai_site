@@ -2,7 +2,7 @@ import { Html, useProgress, useTexture } from '@react-three/drei'
 
 import styles from './ProjectsDisplay.module.scss'
 import { Euler, useThree, Vector3 } from '@react-three/fiber'
-import { forwardRef } from 'react'
+import { forwardRef, Suspense } from 'react'
 // import { Mesh } from 'three'
 import { useMediaQuery } from '@/utils/hooks'
 import { EMediaType } from '@/utils/types'
@@ -61,7 +61,9 @@ const ProjectsDisplay = forwardRef<Mesh, ProjectsDisplayProps>(({
                                     {`<`}
                                 </div>
                             )}
-                            {children}
+                            <Suspense fallback={null}>
+                                {children}
+                            </Suspense>
                         </div>
                     </div>
                 </Html>
