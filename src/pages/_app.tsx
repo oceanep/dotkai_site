@@ -8,6 +8,7 @@ import DomWrapper from '@/components/layout/DomWrapper'
 import { SharedPageProps } from '@/utils/types'
 
 import '@/styles/global.css'
+import { useRouter } from 'next/router'
 
 export interface CustomNextPage {
   (props: any): JSX.Element;
@@ -48,6 +49,7 @@ export default function App({
   pageProps,
 }: CustomAppProps<SharedPageProps>) {
   const { draftMode, token } = pageProps
+  const { pathname } = useRouter();
 
   const ref = useRef();
 
@@ -66,7 +68,7 @@ export default function App({
         {draftMode ? (
           <PreviewProvider token={token}>
             <div ref={ref}>
-              <DomWrapper>
+              <DomWrapper studio={pathname.includes('studio')}>
                 <Component {...pageProps} />
               </DomWrapper>
               {
@@ -86,7 +88,7 @@ export default function App({
           </PreviewProvider>
         ) : (
           <div ref={ref}>
-            <DomWrapper>
+            <DomWrapper studio={pathname.includes('studio')}>
               <Component {...pageProps} />
             </DomWrapper>
             {

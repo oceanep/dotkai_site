@@ -1,7 +1,11 @@
 import { useRef } from "react";
 import ThreeLoader from "../loaders/ThreeLoader";
 
-const Dom = ({ children }) => {
+interface DomProps {
+  children: React.ReactNode;
+  studio?: boolean;
+}
+const Dom = ({ children, studio = false }) => {
   const ref = useRef(null);
 
   return (
@@ -18,7 +22,7 @@ const Dom = ({ children }) => {
       ref={ref}
     >
       {children}
-      <ThreeLoader/>
+      {!studio && <ThreeLoader/>}
     </div>
   );
 };
