@@ -1,4 +1,3 @@
-"use client"
 import { Html, useProgress, useTexture } from '@react-three/drei'
 
 import styles from './ProjectsDisplay.module.scss'
@@ -7,7 +6,6 @@ import { forwardRef, Suspense } from 'react'
 import { useMediaQuery } from '@/utils/hooks'
 import { EMediaType } from '@/utils/types'
 import { Mesh } from 'three/src/objects/Mesh'
-import PanelSkeleton from '~/components/skeleton/PanelSkeleton'
 
 interface ProjectsDisplayProps {
   width: number
@@ -33,12 +31,6 @@ const ProjectsDisplay = forwardRef<Mesh, ProjectsDisplayProps>(({
     const isMobile = useMediaQuery(EMediaType.SMARTPHONE)
     const { progress } = useProgress();
     return (
-    //     <PanelSkeleton
-    //     position={position}
-    //     rotation={rotation}
-    //     width={width}
-    //     height={height}
-    // />
         <group>
             <mesh
                 // position={[0.9, .5, 0]}

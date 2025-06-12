@@ -260,12 +260,6 @@ const ProjectsScene = ({
         state.camera.position.clone().lerp(new Vector3(0, 0, 0), delta * 5),
       )
     }
-
-    const currentPosition = state.camera.position.clone();
-    if (!state.camera.userData.lastPosition || !currentPosition.equals(state.camera.userData.lastPosition)) {
-      console.log('Camera position changed:', currentPosition);
-      state.camera.userData.lastPosition = currentPosition;
-    }
   })
 
   // temporary fix to persist background color across pages
