@@ -276,7 +276,7 @@ const ProjectsScene = ({
   return (
     <>
       {/* <Parallax/> */}
-      <Suspense
+      {/* <Suspense
         fallback={
           <PanelSkeleton
             position={[meshAX, meshAY, -0.2]}
@@ -297,8 +297,20 @@ const ProjectsScene = ({
           projectClickHandler={handleProjectSelect}
           sideMenuClickHandler={handleMenuItemSelect}
         />
-      </Suspense>
-      <Suspense fallback={
+      </Suspense> */}
+      <PanelSkeleton
+            position={[meshAX, meshAY, -0.2]}
+            rotation={rotationA.toArray() as [number, number, number]}
+            width={meshAWidth}
+            height={meshAHeight}
+          />
+        <PanelSkeleton
+          position={[meshBX, meshBY, -0.25]}
+          rotation={rotationB.toArray() as [number, number, number]}
+          width={meshBWidth}
+          height={meshBHeight}
+        />
+      {/* <Suspense fallback={
           <PanelSkeleton
             position={[meshBX, meshBY, -0.25]}
             rotation={rotationB.toArray() as [number, number, number]}
@@ -323,7 +335,7 @@ const ProjectsScene = ({
               <PagesContent selectedPage={selectedMenuItem} />
           )}
         </ProjectsDisplay>
-      </Suspense>
+      </Suspense> */}
     </>
   )
 }
