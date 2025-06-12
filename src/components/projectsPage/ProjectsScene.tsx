@@ -296,7 +296,7 @@ const ProjectsScene = ({
   return (
     <>
       <Parallax/>
-      {/* <Suspense
+      <Suspense
         fallback={
           <PanelSkeleton
             position={[meshAX, meshAY, -0.2]}
@@ -310,20 +310,20 @@ const ProjectsScene = ({
           width={meshAWidth}
           height={meshAHeight}
           position={[meshAX, meshAY, -0.2]}
-          rotation={rotationA as Euler}
+          rotation={rotationA.toArray() as [number, number, number]}
           projects={projects}
           textureUrls={textureUrls}
           isProject={isProject}
           projectClickHandler={handleProjectSelect}
           sideMenuClickHandler={handleMenuItemSelect}
         />
-      </Suspense> */}
-      <PanelSkeleton
+      </Suspense>
+      {/* <PanelSkeleton
             position={[meshAX, meshAY, -0.2]}
             rotation={rotationA.toArray() as [number, number, number]}
             width={meshAWidth}
             height={meshAHeight}
-          />
+          /> */}
         {/* <PanelSkeleton
           position={[meshBX, meshBY, -0.25]}
           rotation={rotationB.toArray() as [number, number, number]}
