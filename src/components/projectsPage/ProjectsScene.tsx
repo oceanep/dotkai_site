@@ -360,7 +360,7 @@ const ProjectsScene = ({
             <mesh
                name="projectsDisplay"
                position={[meshBX, meshBY, -0.25]}
-               rotation={rotationB}
+               rotation={rotationB.toArray() as [number, number, number]}
             >
               <planeGeometry
                 args={[meshBWidth, meshBHeight]} 
