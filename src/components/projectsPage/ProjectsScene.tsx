@@ -37,6 +37,7 @@ const ProjectsDisplay = dynamic(
 )
 
 import styles from './projectsDisplay/ProjectsDisplay.module.scss'
+import { MeshBasicMaterial } from 'three/src/materials/MeshBasicMaterial'
 
 
 // Canvas/R3F components here
@@ -290,6 +291,9 @@ const ProjectsScene = ({
       const refHeight = 915
       const scaleFactor = (refHeight / size.height) * .1
 
+          const materialRef = useRef<MeshBasicMaterial>(null);
+      
+
   return (
     <>
       <Parallax/>
@@ -353,6 +357,7 @@ const ProjectsScene = ({
           )}
           <div>TESTING</div>
         </ProjectsDisplay> */}
+ 
 
             <mesh
                name="projectsDisplay"
@@ -363,7 +368,7 @@ const ProjectsScene = ({
                 // args={[width * 0.5, height * 0.9]} 
                 args={[meshBWidth, meshBHeight]} 
               />
-              <meshBasicMaterial attach="material"  map={bgTexture} />
+              <meshBasicMaterial ref={materialRef} color="#aaaaaa" map={bgTexture} />
               {/* <Html
                 wrapperClass={styles['html-content']}
                 transform 
