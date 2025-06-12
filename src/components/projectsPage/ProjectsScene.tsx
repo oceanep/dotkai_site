@@ -1,4 +1,3 @@
-"use client"
 import { Suspense, useCallback, useEffect, useRef, useState } from 'react'
 
 // import dynamic from 'next/dynamic'
