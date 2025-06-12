@@ -36,7 +36,7 @@ const ProjectsDisplay = dynamic(
   }
 )
 
-import styles from './ProjectsDisplay.module.scss'
+import styles from './projectsDisplay/ProjectsDisplay.module.scss'
 
 
 // Canvas/R3F components here
