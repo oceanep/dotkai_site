@@ -1,4 +1,3 @@
-"use client"
 import { Html, useProgress, useTexture } from '@react-three/drei'
 
 import styles from './ProjectsDisplay.module.scss'

@@ -1,4 +1,4 @@
-
+"use client"
 import { Suspense, useCallback, useEffect, useRef, useState } from 'react'
 
 // import dynamic from 'next/dynamic'
@@ -276,7 +276,7 @@ const ProjectsScene = ({
 
   return (
     <>
-      {/* <Parallax/> */}
+      <Parallax/>
       {/* <Suspense
         fallback={
           <PanelSkeleton
@@ -329,12 +329,13 @@ const ProjectsScene = ({
           rotation={rotationB}
           backClick={handleBackButtonClick}
         >      
-          {!!isProject ? (
+          {/* {!!isProject ? (
               
               <ProjectsContent selectedProject={selectedProject} imgWidth={250} />
           ) : (
               <PagesContent selectedPage={selectedMenuItem} />
-          )}
+          )} */}
+          <div>TESTING</div>
         </ProjectsDisplay>
       {/* </Suspense> */}
     </>
