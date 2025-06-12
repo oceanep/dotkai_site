@@ -1,6 +1,7 @@
 import { useThree, useFrame } from "@react-three/fiber";
 import { useState, useEffect, useRef, useMemo } from "react";
-import { Mesh, Vector3 } from "three";
+import { Mesh } from "three/src/objects/Mesh";
+// import { Mesh } from "three";
 
 const Parallax = () => {
     const camera = useThree(state => state.camera);
@@ -9,12 +10,13 @@ const Parallax = () => {
     const [cursor, setCursor] = useState({x: 0, y: 0})
     
     const initCamPos = useMemo(() => ({
-        x: camera.position.x || 0, 
+        x: camera.position.x || 0,
         y: camera.position.y || 0, 
-        z: camera.position.z || 0
-    }), [])
+        z: camera.position.z || 3.5
+    }), [camera.position]);
 
     const handleCursor = (e) => 
+        //cursor returns as a decimal of 1 so subtract .5 to get accurate mapping to screen
         setCursor({
             x: e.clientX / window.innerWidth - 0.5,
             y: e.clientY / window.innerHeight - 0.5
@@ -41,7 +43,7 @@ const Parallax = () => {
 
     return (
         <mesh
-            position={[0, 0.5, -0.1]}
+            position={[0, 0, -0.1]}
             scale={0.05}
             ref={foci}
             visible={false}

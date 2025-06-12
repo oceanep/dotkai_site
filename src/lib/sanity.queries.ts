@@ -27,19 +27,24 @@ export const postSlugsQuery = groq`
 // Projects queries
 export const projectsQuery = groq`
   *[_type == "project" && defined(slug.current)] | order(_createdAt) {
-      "desc": desc[].children[].text,
+      "desc": desc,
       "title": title,
       "slug": slug.current,
-      "mainImage": mainImage.asset->url,
+      "mainImage": mainImage{
+        ...,
+        "url": asset->url,
+      },
       "gallery": {
+        "display": gallery.display,
         "images": gallery.images[]{
-          "_type": _type,
-          "alt": alt,
-          "url": asset->url
+          ...,
+          "metadata": asset->metadata
         },
         "videos": gallery.videos[]{
           "type": _type,
           "alt": alt,
+          "width": width,
+          "height": height,
           "url": asset->url
         }
       }
@@ -64,6 +69,70 @@ export const projectSlugsQuery = groq`
 *[_type == "project" && defined(slug.current)][].slug.current
 `
 
+export const pagesQuery = groq`
+  *[_type == "page" && defined(slug.current)] | order(_createdAt) {
+    "title": title,
+    "secondaryTitle": secondaryTitle,
+    "subtitle": subtitle,
+    "slug": slug.current,
+    "mainText": mainText,
+    "links": links[]{
+      "title": title,
+      "url": url,
+    },
+    "skills": skills[]{
+      "title": title,
+    },
+    "images": images,
+    "videos": videos[]{
+      "alt": alt,
+      "height": height,
+      "width": width,
+      "asset": asset,
+      "url": asset->url,
+    },
+  } | order(_createdAt desc)
+`
+
+export const pageBySlugQuery = groq`*[_type == "page" && slug.current == $slug][0]`
+
+export async function getPage(
+  client: SanityClient,
+  slug: string,
+): Promise<Page> {
+  return await client.fetch(pageBySlugQuery, {
+    slug,
+  })
+}
+
+export const pageSlugsQuery = groq`
+*[_type == "page" && defined(slug.current)][].slug.current
+`
+
+export async function getPageSlugs(client: SanityClient): Promise<string[]> {
+  return await client.fetch(pageSlugsQuery)
+}
+
+export async function getPages(client: SanityClient): Promise<Page[]> {
+  return await client.fetch(pagesQuery)
+}
+
+export interface Page {
+  _type: 'page'
+  _id: string
+  _createdAt: string
+  title: string
+  secondaryTitle?: string
+  subtitle?: string
+  slug: string
+  mainImage?: ImageAsset
+  mainText: PortableTextBlock[]
+  links?: { title: string; url: string }[]
+  skills?: { title: string }[]
+  images?: ProjectImageAsset[]
+  videos?: VideoAsset[]
+}
+
 export interface Post {
   _type: 'post'
   _id: string
@@ -83,5 +152,32 @@ export interface Project {
   slug: Slug
   desc?: PortableTextBlock[]
   mainImage?: ImageAsset
-  gallery?: (ImageAsset | FileAsset)[]
+  mainImageUrl?: string
+  gallery?: Gallery
+}
+
+export interface ProjectImageAsset extends ImageAsset {
+  alt: 'string'
+}
+
+export interface VideoAsset extends FileAsset {
+  width: number,
+  height: number,
+  url: string,
+  alt?: string,
+}
+
+export enum GalleryDisplay {
+  Tri = 'tri',
+  InlineLeft = 'inline-left',
+  InlineRight = 'inline-right',
+  InlineBottom = 'inline-bottom',
+}
+
+export interface Gallery {
+  _type: 'gallery'
+  images: ProjectImageAsset[]
+  videos: VideoAsset[]
+  display: GalleryDisplay
+  zoom?: boolean
 }

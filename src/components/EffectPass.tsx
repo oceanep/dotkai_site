@@ -1,12 +1,8 @@
-"use client"
-
-import { FC, useCallback, useEffect, useState } from "react";
-import { Vector2 } from "three";
-import { EffectComposer, ToneMapping, Vignette, Glitch, Noise, Bloom, DepthOfField } from "@react-three/postprocessing";
+import { FC } from "react";
+import { EffectComposer, ToneMapping, Vignette,  Noise } from "@react-three/postprocessing";
 import { ToneMappingMode, BlendFunction, GlitchMode } from "postprocessing";
 import { useControls, folder } from "leva";
 import Warp from "~/effects/Warp";
-import { throttle } from "~/utils";
 
 const EffectPass:FC = () => {
     //Post Processing Controls
@@ -98,17 +94,17 @@ const EffectPass:FC = () => {
         frequency: {
             value: 0.85, 
             min: 0,
-            max: 5,
+            max: 2,
             step: 0.1
         },
         warp: {
-            value: 0.85,
+            value: 0.4,
             min: 0,
             max: 5,
             step: 0.1
         },
         intensity: {
-            value: 0.5,
+            value: 0.3,
             min: 0,
             max: 2,
             step: 0.1
@@ -129,23 +125,23 @@ const EffectPass:FC = () => {
     
     return (
         <EffectComposer multisampling={0}>
-            <ToneMapping mode={ToneMappingMode.ACES_FILMIC} /> 
-            {glitchOn && (
+            <ToneMapping mode={ToneMappingMode.NEUTRAL} /> 
+            {/* {glitchOn && (
                 <Glitch
                     delay={new Vector2(delay[0], delay[1])}
                     duration={new Vector2(duration[0], duration[1])}
                     strength={new Vector2(strength[0], strength[1])}
                     mode={GlitchMode[glitchMode]}
                 />
-            )}
+            )} */}
             
-            {dofOn && (
+            {/* {dofOn && (
                 <DepthOfField
                     focusDistance={focusDistance}
                     focalLength={focalLength}
                     bokehScale={bokehScale}
                 />
-            )}
+            )} */}
             {/* {bloomOn && (
                 <Bloom
                     luminanceThreshold={luminanceThreshold}

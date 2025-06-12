@@ -1,0 +1,20 @@
+.displaySkeleton {
+    grid-column: 1 / -1;
+    grid-row: 1 / 3;
+    width: 100%;
+    z-index: 5; // Ensure it appears above other elements but below higher z-index elements
+    background-color: rgba(128, 128, 128, 0.5); // Medium gray with 50% transparency
+    animation: pulse 1.5s ease-in-out infinite;
+
+    @keyframes pulse {
+        0% {
+            opacity: 0.1;
+        }
+        50% {
+            opacity: 0.5;
+        }
+        100% {
+            opacity: 0.1;
+        }
+    }
+}

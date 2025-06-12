@@ -5,25 +5,28 @@
     "dev": "next",
     "format": "npx prettier --write . --ignore-path .gitignore",
     "lint": "next lint -- --ignore-path .gitignore",
-    "lint:fix": "npm run format && npm run lint -- --fix",
+    "lint:fix": "yarn run lint --fix",
     "start": "next start",
-    "type-check": "tsc --noEmit"
+    "type-check": "tsc --noEmit",
+    "analyze": "cross-env ANALYZE=true next build"
   },
   "prettier": {
     "semi": false,
     "singleQuote": true
   },
   "dependencies": {
-    "@portabletext/react": "3.0.11",
+    "@portabletext/react": "^3.2.1",
     "@react-three/drei": "^9.112.0",
     "@react-three/fiber": "^8.17.7",
+    "@react-three/flex": "^1.0.1",
     "@react-three/postprocessing": "2.16",
     "@sanity/client": "6.12.3",
     "@sanity/demo": "1.0.2",
+    "@sanity/image-url": "^1.1.0",
     "@sanity/vision": "3.28.0",
     "@tailwindcss/typography": "0.5.10",
     "leva": "0.9.34",
-    "next": "14.1.0",
+    "next": "14.2.4",
     "next-sanity": "5.5.11",
     "r3f-perf": "7.2",
     "react": "^18.3.1",
@@ -35,6 +38,7 @@
     "three": "^0.168.0"
   },
   "devDependencies": {
+    "@next/bundle-analyzer": "^15.3.3",
     "@types/react": "^18.3.7",
     "@types/three": "^0.168.0",
     "autoprefixer": "10.4.17",
@@ -45,6 +49,7 @@
     "prettier": "3.2.5",
     "prettier-plugin-packagejson": "2.4.10",
     "prettier-plugin-tailwindcss": "0.5.11",
+    "sass": "^1.85.1",
     "tailwindcss": "3.4.1",
     "typescript": "5.3.3"
   },

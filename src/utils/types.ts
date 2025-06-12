@@ -1,7 +1,9 @@
 import { Euler, Vector2, Vector3 } from "@react-three/fiber";
 import { BlendFunction } from "postprocessing";
-import { Mesh, Material } from "three";
+// import { Mesh, Material } from "three";
 import { GLTF } from "three-stdlib";
+import { Material } from "three/src/materials/Material";
+import { Mesh } from "three/src/objects/Mesh";
 
 export interface GLTFResult extends GLTF {
     nodes: {
@@ -35,3 +37,32 @@ export interface IMeshProps {
     position?: Vector3,
     rotation?: Vector3
 }
+
+export interface ISideMenuItem {
+    id: string,
+    icon: string,
+    label: string
+}
+
+export interface IListItem {
+    title?: string,
+    url?: string,
+}
+
+export enum EMediaType {
+    SMARTPHONE = '(min-width: 375px) and (max-width: 812px)',
+    TABLET = '(min-width: 768px) and (max-width: 1024px)',
+    DESKTOP = '(min-width: 1024px) and (max-width: 1440px)',
+    LARGE_DESKTOP = '(min-width: 1440px) and (max-width: 2560px)',
+    WIDESCREEN = '(min-width: 2560px)',
+}
+
+export enum ESideMenuItem {
+    ABOUT = 'about',
+    CONTACT = 'contact',
+}
+
+export interface SharedPageProps {
+    draftMode: boolean
+    token: string
+  }

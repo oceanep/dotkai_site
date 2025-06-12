@@ -1,72 +1,55 @@
 import type { GetStaticProps, InferGetStaticPropsType } from 'next'
-import { useLiveQuery } from 'next-sanity/preview'
-import { Bvh, Plane } from '@react-three/drei'
 
-import { readToken } from '~/lib/sanity.api'
-import { getClient } from '~/lib/sanity.client'
-import { getProjects, type Project, projectsQuery } from '~/lib/sanity.queries'
+import { readToken } from '@/lib/sanity.api'
+import { getClient } from '@/lib/sanity.client'
+import {
+  getProjects,
+  type Project,
+  getPages,
+  type Page,
+} from '@/lib/sanity.queries'
 
-import type { SharedPageProps } from '~/pages/_app'
-import ComputerMesh from '~/components/ComputerMesh'
+import type { SharedPageProps } from '@/utils/types'
+
+import dynamic from 'next/dynamic'
 
 export const getStaticProps: GetStaticProps<
   SharedPageProps & {
     projects: Project[]
+    pages: Page[]
   }
 > = async ({ draftMode = false }) => {
   const client = getClient(draftMode ? { token: readToken } : undefined)
   const projects = await getProjects(client)
+  const pages = await getPages(client)
 
   return {
     props: {
       draftMode,
       token: draftMode ? readToken : '',
       projects,
-      title: 'Projects'
+      pages,
+      title: 'Projects',
     },
   }
 }
 
+const ProjectsScene = dynamic(() => import('~/components/projectsPage/ProjectsScene'), {
+  ssr: false
+})
+
 // DOM elements here
 const DOM = () => {
-    return <></>;
-};
-// Canvas/R3F components here
-const R3F = ({projects}) => {
-    // const [projects] = useLiveQuery<Project[]>(props.projects, projectsQuery)
-    console.log('projects: ', projects.projects)
-    
-    return (
-        <Bvh>
-            {projects.projects.length > 0 ? (
-                projects.projects.map((project, i) => 
-                    <Plane 
-                      args={[.25, .25]}
-                      rotation={[0, Math.PI / 6, 0]}
-                      position={[
-                        i === 0 ? i : i / 3,
-                        -0.5,
-                        i === 0 ? i : -i / 5
-                      ]}
-                      key={`${project.slug}-${i}`}
-                    >
-                      <meshBasicMaterial attach="material" color="blue" />
-                    </Plane>)
-            ) : (
-              <ComputerMesh scale={0.2} />
-            )}
-        </Bvh>
-    );
-};
+  return <></>
+}
 
 export default function IndexPage(
   props: InferGetStaticPropsType<typeof getStaticProps>,
 ) {
-    const [projects] = useLiveQuery<Project[]>(props.projects, projectsQuery)
+  // const [projects] = useLiveQuery<Project[]>(props.projects, projectsQuery)
+  // const [pages] = useLiveQuery<Page[]>(props.pages, pagesQuery)
 
-  return (
-    <DOM/>
-  )
+  return <DOM />
 }
 
-IndexPage.canvas = (projects) => <R3F projects={projects} />
+IndexPage.canvas = (props: InferGetStaticPropsType<typeof getStaticProps>) => <ProjectsScene projects={props.projects} pages={props.pages} />

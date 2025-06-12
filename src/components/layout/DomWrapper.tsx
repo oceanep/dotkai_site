@@ -1,4 +1,5 @@
 import { useRef } from "react";
+import ThreeLoader from "../loaders/ThreeLoader";
 
 const Dom = ({ children }) => {
   const ref = useRef(null);
@@ -17,6 +18,7 @@ const Dom = ({ children }) => {
       ref={ref}
     >
       {children}
+      <ThreeLoader/>
     </div>
   );
 };
