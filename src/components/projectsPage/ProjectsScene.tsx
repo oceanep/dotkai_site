@@ -346,7 +346,7 @@ const ProjectsScene = ({
           height={meshBHeight}
           position={[meshBX, meshBY, -0.25]}
           // rotation={[0,0,0]}
-          rotation={rotationB}
+          rotation={rotationB.toArray() as [number, number, number]}
           backClick={handleBackButtonClick}
         />      
           {/* {!!isProject ? (
