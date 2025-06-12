@@ -1,6 +1,6 @@
 import { Suspense, useCallback, useEffect, useRef, useState } from 'react'
 
-import dynamic from 'next/dynamic'
+// import dynamic from 'next/dynamic'
 import { type Project, type Page } from '~/lib/sanity.queries'
 
 import { useFrame, useThree } from '@react-three/fiber'
@@ -11,22 +11,21 @@ import { EMediaType, ESideMenuItem } from '@/utils/types'
 
 import ProjectsMenu from '@/components/projectsPage/projectsMenu/ProjectsMenu'
 import ProjectsDisplay from '@/components/projectsPage/projectsDisplay/ProjectsDisplay'
+import ProjectsContent from '@/components/projectsPage/projectsDisplay/ProjectsContent'
 import PagesContent from '@/components/projectsPage/projectsDisplay/PagesContent'
 import PanelSkeleton from '@/components//skeleton/PanelSkeleton'
-import DisplaySkeleton from '@/components/skeleton/DisplaySkeleton'
 import Parallax from '../Parallax'
 import { Mesh } from 'three/src/objects/Mesh'
 import { Euler } from 'three/src/math/Euler'
 import { Vector3 } from 'three/src/math/Vector3'
 import { Color } from 'three/src/math/Color'
-import { OrbitControls } from '@react-three/drei'
 
-const ProjectsContent = dynamic(
-  () => import('@/components/projectsPage/projectsDisplay/ProjectsContent'), { 
-    ssr: false,
-    loading: () => <DisplaySkeleton/>
-  }
-)
+// const ProjectsContent = dynamic(
+//   () => import('@/components/projectsPage/projectsDisplay/ProjectsContent'), { 
+//     ssr: false,
+//     loading: () => <DisplaySkeleton/>
+//   }
+// )
 
 // Canvas/R3F components here
 const ProjectsScene = ({
@@ -260,6 +259,12 @@ const ProjectsScene = ({
         state.camera.position.clone().lerp(new Vector3(0, 0, 0), delta * 5),
       )
     }
+
+    const currentPosition = state.camera.position.clone();
+    if (!state.camera.userData.lastPosition || !currentPosition.equals(state.camera.userData.lastPosition)) {
+      console.log('Camera position changed:', currentPosition);
+      state.camera.userData.lastPosition = currentPosition;
+    }
   })
 
   // temporary fix to persist background color across pages
@@ -270,8 +275,7 @@ const ProjectsScene = ({
 
   return (
     <>
-      {/* <Parallax/> */}
-      <OrbitControls/>
+      <Parallax/>
       <Suspense
         fallback={
           <PanelSkeleton
@@ -313,14 +317,10 @@ const ProjectsScene = ({
           backClick={handleBackButtonClick}
         >      
           {!!isProject ? (
+              
               <ProjectsContent selectedProject={selectedProject} imgWidth={250} />
           ) : (
-            <Suspense fallback={
-                <DisplaySkeleton/>
-              } 
-            >
               <PagesContent selectedPage={selectedMenuItem} />
-            </Suspense>
           )}
         </ProjectsDisplay>
       </Suspense>

@@ -1,10 +1,12 @@
 import React, { useRef } from 'react'
 import { Box } from '@react-three/flex'
-import { Group, Texture, Vector3 } from 'three'
 import { useFrame, useThree } from '@react-three/fiber'
-import { Project } from '~/lib/sanity.queries'
-import { useMediaQuery } from '~/utils/hooks'
-import { EMediaType } from '~/utils/types'
+import { Project } from '@/lib/sanity.queries'
+import { useMediaQuery } from '@/utils/hooks'
+import { EMediaType } from '@/utils/types'
+import { Group } from 'three/src/objects/Group'
+import { Texture } from 'three/src/textures/Texture'
+import { Vector3 } from 'three/src/math/Vector3'
 
 interface ProjectsMenuItemProps {
   project: Project

@@ -1,9 +1,9 @@
 import React, { useCallback, useMemo, useState } from 'react';
-import SideMenuItem from './sideMenuItem';
-import siteContent from '../../../constants/siteContent';
-import { EMediaType, ESideMenuItem } from '~/utils/types';
-import { useMediaQuery } from '~/utils/hooks';
 import { ThreeEvent } from '@react-three/fiber';
+import { EMediaType, ESideMenuItem } from '@/utils/types';
+import { useMediaQuery } from '~/utils/hooks';
+import SideMenuItem from '@/components/projectsPage/sideMenu/sideMenuItem';
+import siteContent from '../../../constants/siteContent';
 
 interface SideMenuProps {
     sectionWidth: number

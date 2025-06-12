@@ -1,9 +1,9 @@
 import React from 'react';
-import TextCard from './TextCard';
-import CustomImage from './CustomImage';
-import CustomVideo from './CustomVideo';
-import { urlForImage } from '~/lib/sanity.image'
-import { Project } from '~/lib/sanity.queries';
+import { urlForImage } from '@/lib/sanity.image'
+import { Project } from '@/lib/sanity.queries';
+import TextCard from '@/components/projectsPage/projectsDisplay/TextCard';
+import CustomImage from '@/components/projectsPage/projectsDisplay/CustomImage';
+import CustomVideo from '@/components/projectsPage/projectsDisplay/CustomVideo';
 import DescCard from './DescCard';
 
 interface ProjectsContentProps {

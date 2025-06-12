@@ -1,14 +1,13 @@
 import React from 'react';
-import TextCard from './TextCard';
-import CustomImage from './CustomImage';
-import CustomVideo from './CustomVideo';
-import { Page } from '~/lib/sanity.queries';
-import DescCard from './DescCard';
-
+import { Page } from '@/lib/sanity.queries';
+import { useMediaQuery } from '@/utils/hooks';
+import { EMediaType } from '@/utils/types';
+import TextCard from '@/components/projectsPage/projectsDisplay/TextCard';
+import CustomImage from '@/components/projectsPage/projectsDisplay/CustomImage';
+import CustomVideo from '@/components/projectsPage/projectsDisplay/CustomVideo';
+import DescCard from '@/components/projectsPage/projectsDisplay/DescCard';
+import ListCard from '@/components/projectsPage/projectsDisplay/ListCard';
 import styles from './ProjectsDisplay.module.scss';
-import ListCard from './ListCard';
-import { useMediaQuery } from '~/utils/hooks';
-import { EMediaType } from '~/utils/types';
 
 interface PagesContentProps {
     selectedPage: Page;
