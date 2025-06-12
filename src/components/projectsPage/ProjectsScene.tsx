@@ -325,12 +325,12 @@ const ProjectsScene = ({
             width={meshAWidth}
             height={meshAHeight}
           />
-        <PanelSkeleton
+        {/* <PanelSkeleton
           position={[meshBX, meshBY, -0.25]}
           rotation={rotationB.toArray() as [number, number, number]}
           width={meshBWidth}
           height={meshBHeight}
-        />
+        /> */}
       {/* <Suspense fallback={
               <PanelSkeleton
                 position={[meshBX, meshBY, -0.25]}
@@ -369,7 +369,7 @@ const ProjectsScene = ({
                 // args={[width * 0.5, height * 0.9]} 
                 args={[meshBWidth, meshBHeight]} 
               />
-              <meshBasicMaterial ref={materialRef} color="#aaaaaa" map={bgTexture} />
+              <meshBasicMaterial ref={materialRef} color="#aaaaaa" />
               {/* <Html
                 wrapperClass={styles['html-content']}
                 transform 
