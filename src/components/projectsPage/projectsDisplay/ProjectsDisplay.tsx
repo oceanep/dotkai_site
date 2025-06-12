@@ -1,3 +1,4 @@
+"use client"
 import { Html, useProgress, useTexture } from '@react-three/drei'
 
 import styles from './ProjectsDisplay.module.scss'
@@ -14,7 +15,7 @@ interface ProjectsDisplayProps {
   position: Vector3
   rotation: Euler
   backClick: React.MouseEventHandler<HTMLDivElement>
-  children: React.ReactNode
+  children?: React.ReactNode
 }
 
 const ProjectsDisplay = forwardRef<Mesh, ProjectsDisplayProps>(({

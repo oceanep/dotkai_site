@@ -335,15 +335,15 @@ const ProjectsScene = ({
           // rotation={[0,0,0]}
           rotation={rotationB}
           backClick={handleBackButtonClick}
-        >      
+        />      
           {/* {!!isProject ? (
               
               <ProjectsContent selectedProject={selectedProject} imgWidth={250} />
           ) : (
               <PagesContent selectedPage={selectedMenuItem} />
           )} */}
-          <div>TESTING</div>
-        </ProjectsDisplay>
+          {/* <div>TESTING</div>
+        </ProjectsDisplay> */}
       {/* </Suspense> */}
     </>
   )
