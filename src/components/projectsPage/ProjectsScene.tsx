@@ -21,6 +21,7 @@ import { Euler } from 'three/src/math/Euler'
 import { Vector3 } from 'three/src/math/Vector3'
 import { Color } from 'three/src/math/Color'
 import dynamic from 'next/dynamic'
+import { Html, useTexture } from '@react-three/drei'
 
 // const ProjectsContent = dynamic(
 //   () => import('@/components/projectsPage/projectsDisplay/ProjectsContent'), { 
@@ -34,6 +35,9 @@ const ProjectsDisplay = dynamic(
     ssr: false
   }
 )
+
+import styles from './ProjectsDisplay.module.scss'
+
 
 // Canvas/R3F components here
 const ProjectsScene = ({
@@ -281,6 +285,11 @@ const ProjectsScene = ({
     scene.background = new Color('#ffffff')
   }, [scene])
 
+  const bgTexture = useTexture('/images/Display-0_93 aspect ratio.png')
+      const { size } = useThree()
+      const refHeight = 915
+      const scaleFactor = (refHeight / size.height) * .1
+
   return (
     <>
       <Parallax/>
@@ -327,7 +336,7 @@ const ProjectsScene = ({
           />
         }
       > */}
-        <ProjectsDisplay
+        {/* <ProjectsDisplay
           ref={displayRef}
           width={meshBWidth}
           height={meshBHeight}
@@ -336,14 +345,48 @@ const ProjectsScene = ({
           rotation={rotationB}
           backClick={handleBackButtonClick}
         />      
-          {/* {!!isProject ? (
+          {!!isProject ? (
               
               <ProjectsContent selectedProject={selectedProject} imgWidth={250} />
           ) : (
               <PagesContent selectedPage={selectedMenuItem} />
-          )} */}
-          {/* <div>TESTING</div>
+          )}
+          <div>TESTING</div>
         </ProjectsDisplay> */}
+        <group>
+            <mesh
+                // position={[0.9, .5, 0]}
+                position={[meshBX, meshBY, -0.25]}
+                rotation={rotationB}
+            >
+                <planeGeometry
+                    // args={[width * 0.5, height * 0.9]} 
+                    args={[width, height]} 
+                />
+                <meshBasicMaterial attach="material" transparent map={bgTexture} />
+                <Html
+                    wrapperClass={styles['html-content']}
+                    transform 
+                    // distanceFactor={1}
+                    scale={scaleFactor}
+                    // style={{ opacity: progress < 100 ? 0 : 1, transition: 'opacity 1s ease-in-out' }}
+                >
+                    <div className={styles['preview-wrapper']}>
+                        <div className={styles['grid']}>
+                            {isMobile && (
+                                <div
+                                    className={`${styles['mobileBackButton']} ${styles['crt-text']}`}
+                                    onClick={handleBackButtonClick}
+                                >
+                                    {`<`}
+                                </div>
+                            )}
+                              <div>TESTING</div>
+                        </div>
+                    </div>
+                </Html>
+            </mesh>
+        </group>
       {/* </Suspense> */}
     </>
   )
