@@ -340,7 +340,7 @@ const ProjectsScene = ({
             }
           > 
        */}
-        {/* <ProjectsDisplay
+        <ProjectsDisplay
           ref={displayRef}
           width={meshBWidth}
           height={meshBHeight}
@@ -349,7 +349,7 @@ const ProjectsScene = ({
           rotation={rotationB}
           backClick={handleBackButtonClick}
         />      
-          {!!isProject ? (
+          {/* {!!isProject ? (
               
               <ProjectsContent selectedProject={selectedProject} imgWidth={250} />
           ) : (
@@ -357,16 +357,16 @@ const ProjectsScene = ({
           )}
           <div>TESTING</div>
         </ProjectsDisplay> */}
-            <mesh
-               name="projectsDisplay"
-               position={[meshBX, meshBY, -0.25]}
-               rotation={rotationB.toArray() as [number, number, number]}
-            >
-              <planeGeometry
-                args={[meshBWidth, meshBHeight]} 
-              />
-              <meshBasicMaterial ref={materialRef} color="#aaaaaa" transparent map={bgTexture}/>
-            </mesh>
+            // <mesh
+            //    name="projectsDisplay"
+            //    position={[meshBX, meshBY, -0.25]}
+            //    rotation={rotationB.toArray() as [number, number, number]}
+            // >
+            //   <planeGeometry
+            //     args={[meshBWidth, meshBHeight]} 
+            //   />
+            //   <meshBasicMaterial ref={materialRef} color="#aaaaaa" transparent map={bgTexture}/>
+            // </mesh>
       {/* </Suspense> */}
     </>
   )

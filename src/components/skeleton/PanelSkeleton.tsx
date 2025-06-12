@@ -1,10 +1,10 @@
 import React, { useRef } from 'react';
-import { useFrame } from '@react-three/fiber';
+import { Euler, useFrame, Vector3 } from '@react-three/fiber';
 import { MeshBasicMaterial } from 'three/src/materials/MeshBasicMaterial';
 
 interface PanelProps {
-    position: [number, number, number];
-    rotation: [number, number, number];
+    position: Vector3;
+    rotation: Euler;
     width: number;
     height: number;
 }

@@ -34,8 +34,8 @@ const ProjectsDisplay = forwardRef<Mesh, ProjectsDisplayProps>(({
     // const { progress } = useProgress();
     return (
         <PanelSkeleton
-        position={position as [number, number, number]}
-        rotation={rotation as [number, number, number]}
+        position={position}
+        rotation={rotation}
         width={width}
         height={height}
     />
