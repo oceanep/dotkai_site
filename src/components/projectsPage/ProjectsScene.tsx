@@ -324,12 +324,12 @@ const ProjectsScene = ({
             width={meshAWidth}
             height={meshAHeight}
           />
-        <PanelSkeleton
+        {/* <PanelSkeleton
           position={[meshBX, meshBY, -0.25]}
           rotation={rotationB.toArray() as [number, number, number]}
           width={meshBWidth}
           height={meshBHeight}
-        />
+        /> */}
       {/* <Suspense fallback={
               <PanelSkeleton
                 position={[meshBX, meshBY, -0.25]}
