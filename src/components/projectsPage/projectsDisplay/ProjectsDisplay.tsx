@@ -6,6 +6,7 @@ import { forwardRef, Suspense } from 'react'
 import { useMediaQuery } from '@/utils/hooks'
 import { EMediaType } from '@/utils/types'
 import { Mesh } from 'three/src/objects/Mesh'
+import PanelSkeleton from '~/components/skeleton/PanelSkeleton'
 
 interface ProjectsDisplayProps {
   width: number
@@ -32,7 +33,13 @@ const ProjectsDisplay = forwardRef<Mesh, ProjectsDisplayProps>(({
     // const { progress } = useProgress();
     return (
         <group>
-            <mesh
+            <PanelSkeleton
+            position={position as [number, number, number]}
+            rotation={rotation as [number, number, number]}
+            width={width}
+            height={height}
+          />
+            {/* <mesh
                 // position={[0.9, .5, 0]}
                 position={position}
                 rotation={rotation}
@@ -42,8 +49,8 @@ const ProjectsDisplay = forwardRef<Mesh, ProjectsDisplayProps>(({
                     // args={[width * 0.5, height * 0.9]} 
                     args={[width, height]} 
                 />
-                <meshBasicMaterial attach="material" color="grey" map={bgTexture} />
-                {/* <Html
+                <meshBasicMaterial attach="material" transparent map={bgTexture} />
+                <Html
                     wrapperClass={styles['html-content']}
                     transform 
                     // distanceFactor={1}
@@ -65,8 +72,8 @@ const ProjectsDisplay = forwardRef<Mesh, ProjectsDisplayProps>(({
                             </Suspense>
                         </div>
                     </div>
-                </Html> */}
-            </mesh>
+                </Html>
+            </mesh> */}
         </group>
     )
 })
