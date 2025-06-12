@@ -276,7 +276,7 @@ const ProjectsScene = ({
   return (
     <>
       {/* <Parallax/> */}
-      {/* <Suspense
+      <Suspense
         fallback={
           <PanelSkeleton
             position={[meshAX, meshAY, -0.2]}
@@ -285,7 +285,7 @@ const ProjectsScene = ({
             height={meshAHeight}
           />
         }
-      > */}
+      >
         <ProjectsMenu
           width={meshAWidth}
           height={meshAHeight}
@@ -297,8 +297,8 @@ const ProjectsScene = ({
           projectClickHandler={handleProjectSelect}
           sideMenuClickHandler={handleMenuItemSelect}
         />
-      {/* </Suspense> */}
-      {/* <Suspense fallback={
+      </Suspense>
+      <Suspense fallback={
           <PanelSkeleton
             position={[meshBX, meshBY, -0.25]}
             rotation={rotationB.toArray() as [number, number, number]}
@@ -306,7 +306,7 @@ const ProjectsScene = ({
             height={meshBHeight}
           />
         }
-      > */}
+      >
         <ProjectsDisplay
           ref={displayRef}
           width={meshBWidth}
@@ -316,15 +316,14 @@ const ProjectsScene = ({
           rotation={rotationB}
           backClick={handleBackButtonClick}
         >      
-          {/* {!!isProject ? (
+          {!!isProject ? (
               
               <ProjectsContent selectedProject={selectedProject} imgWidth={250} />
           ) : (
               <PagesContent selectedPage={selectedMenuItem} />
-          )} */}
-          <div>Test</div>
+          )}
         </ProjectsDisplay>
-      {/* </Suspense> */}
+      </Suspense>
     </>
   )
 }
