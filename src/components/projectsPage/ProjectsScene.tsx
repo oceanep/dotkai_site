@@ -1,43 +1,32 @@
 import { Suspense, useCallback, useEffect, useRef, useState } from 'react'
 
-// import dynamic from 'next/dynamic'
+import dynamic from 'next/dynamic'
 import { type Project, type Page } from '~/lib/sanity.queries'
 
 import { useFrame, useThree } from '@react-three/fiber'
+
+import { Mesh } from 'three/src/objects/Mesh'
+import { Euler } from 'three/src/math/Euler'
+import { Vector3 } from 'three/src/math/Vector3'
+import { Color } from 'three/src/math/Color'
 
 import { clamp } from 'three/src/math/MathUtils'
 import { useDebouncedResize, useMediaQuery } from '@/utils/hooks'
 import { EMediaType, ESideMenuItem } from '@/utils/types'
 
 import ProjectsMenu from '@/components/projectsPage/projectsMenu/ProjectsMenu'
-// import ProjectsDisplay from '@/components/projectsPage/projectsDisplay/ProjectsDisplay'
-import ProjectsContent from '@/components/projectsPage/projectsDisplay/ProjectsContent'
+import ProjectsDisplay from '@/components/projectsPage/projectsDisplay/ProjectsDisplay'
 import PagesContent from '@/components/projectsPage/projectsDisplay/PagesContent'
 import PanelSkeleton from '@/components//skeleton/PanelSkeleton'
+import DisplaySkeleton from '@/components/skeleton/DisplaySkeleton'
 import Parallax from '../Parallax'
-import { Mesh } from 'three/src/objects/Mesh'
-import { Euler } from 'three/src/math/Euler'
-import { Vector3 } from 'three/src/math/Vector3'
-import { Color } from 'three/src/math/Color'
-import dynamic from 'next/dynamic'
-import { Html, useTexture } from '@react-three/drei'
 
-// const ProjectsContent = dynamic(
-//   () => import('@/components/projectsPage/projectsDisplay/ProjectsContent'), { 
-//     ssr: false,
-//     loading: () => <DisplaySkeleton/>
-//   }
-// )
-
-const ProjectsDisplay = dynamic(
-  () => import('@/components/projectsPage/projectsDisplay/ProjectsDisplay'), {
-    ssr: false
+const ProjectsContent = dynamic(
+  () => import('@/components/projectsPage/projectsDisplay/ProjectsContent'), { 
+    ssr: false,
+    loading: () => <DisplaySkeleton/>
   }
 )
-
-import styles from './projectsDisplay/ProjectsDisplay.module.scss'
-import { MeshBasicMaterial } from 'three/src/materials/MeshBasicMaterial'
-
 
 // Canvas/R3F components here
 const ProjectsScene = ({
@@ -285,14 +274,6 @@ const ProjectsScene = ({
     scene.background = new Color('#ffffff')
   }, [scene])
 
-  const bgTexture = useTexture('/images/display-0_93_aspect_ratio.png')
-      const { size } = useThree()
-      const refHeight = 915
-      const scaleFactor = (refHeight / size.height) * .1
-
-          const materialRef = useRef<MeshBasicMaterial>(null);
-      
-
   return (
     <>
       <Parallax/>
@@ -318,19 +299,7 @@ const ProjectsScene = ({
           sideMenuClickHandler={handleMenuItemSelect}
         />
       </Suspense>
-      {/* <PanelSkeleton
-            position={[meshAX, meshAY, -0.2]}
-            rotation={rotationA.toArray() as [number, number, number]}
-            width={meshAWidth}
-            height={meshAHeight}
-          /> */}
-        {/* <PanelSkeleton
-          position={[meshBX, meshBY, -0.25]}
-          rotation={rotationB.toArray() as [number, number, number]}
-          width={meshBWidth}
-          height={meshBHeight}
-        /> */}
-      {/* <Suspense fallback={
+      <Suspense fallback={
               <PanelSkeleton
                 position={[meshBX, meshBY, -0.25]}
                 rotation={rotationB.toArray() as [number, number, number]}
@@ -339,7 +308,7 @@ const ProjectsScene = ({
               />
             }
           > 
-       */}
+      
         <ProjectsDisplay
           ref={displayRef}
           width={meshBWidth}
@@ -356,17 +325,7 @@ const ProjectsScene = ({
               <PagesContent selectedPage={selectedMenuItem} />
           )}
         </ProjectsDisplay>
-            {/* // <mesh
-            //    name="projectsDisplay"
-            //    position={[meshBX, meshBY, -0.25]}
-            //    rotation={rotationB.toArray() as [number, number, number]}
-            // >
-            //   <planeGeometry
-            //     args={[meshBWidth, meshBHeight]} 
-            //   />
-            //   <meshBasicMaterial ref={materialRef} color="#aaaaaa" transparent map={bgTexture}/>
-            // </mesh> */}
-      {/* </Suspense> */}
+      </Suspense>
     </>
   )
 }
