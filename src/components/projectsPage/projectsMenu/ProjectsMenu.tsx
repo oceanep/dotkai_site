@@ -45,7 +45,7 @@ const ProjectsMenu: React.FC<ProjectsMenuProps> = ({
     const isMobile = useMediaQuery(EMediaType.SMARTPHONE)
     const isTablet = useMediaQuery(EMediaType.TABLET)
 
-    const bgTexture = useTexture('/images/Menu-0_84 aspect ratio.png')
+    const bgTexture = useTexture('/images/menu-0_84_aspect_ratio.png')
 
     const textures = useTexture(textureUrls)
     textures.forEach((texture) => {
@@ -129,7 +129,7 @@ const ProjectsMenu: React.FC<ProjectsMenuProps> = ({
             >
                 {projects.length > 0 && (
                     projects.map((project, i) => 
-                        <Suspense fallback={<MenuItemSkeleton isMobile={isMobile} isTablet={isTablet} index={i} />} key={i}>
+                        // <Suspense fallback={<MenuItemSkeleton isMobile={isMobile} isTablet={isTablet} index={i} />} key={i}>
                             <ProjectsMenuItem
                                 key={`${project.slug}-${i}`}
                                 project={project}
@@ -138,7 +138,7 @@ const ProjectsMenu: React.FC<ProjectsMenuProps> = ({
                                 index={i}
                                 selectProject={selectProject}
                             />
-                        </Suspense>
+                        // </Suspense>
                     )
                 )}
             </Flex>

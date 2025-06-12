@@ -33,7 +33,6 @@ const MenuTitle: React.FC<MenuTitleProps> = ({
             //If selection has been removed but z position is not at 0 lerp
             const easing = 10 * delta
             if (isProject && meshRef.current.position.z < 0.14999 || !isProject && meshRef.current.position.z > 0.01999) {
-                console.log('triggered')
                 const targetPosition = new Vector3() 
                 const targetShadowPosition = new Vector3(0, 0, 0)
 
@@ -48,15 +47,6 @@ const MenuTitle: React.FC<MenuTitleProps> = ({
             }
         }
     })
-
-    // React.useEffect(() => {
-    //     if (meshRef.current) {
-    //             console.log('title position:', meshRef.current.position);
-    //             console.log('title shadow position:', meshRef.current.children[meshRef.current.children.length - 1].position);
-    //             // console.log('Selected state:', selected);
-    //             console.log('Position prop:', position);
-    //     }
-    // }, [meshRef, isProject]);
 
     return (
         <group

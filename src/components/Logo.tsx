@@ -33,7 +33,6 @@ const Logo: FC = () => {
 
   useFrame((s, delta) => {
     if (rotate) group.current.rotation.y += delta
-    // console.log('logo position: ', logo.current.position)
   })
 
   return (
