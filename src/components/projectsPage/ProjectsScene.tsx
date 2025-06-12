@@ -14,7 +14,6 @@ import ProjectsDisplay from '@/components/projectsPage/projectsDisplay/ProjectsD
 import ProjectsContent from '@/components/projectsPage/projectsDisplay/ProjectsContent'
 import PagesContent from '@/components/projectsPage/projectsDisplay/PagesContent'
 import PanelSkeleton from '@/components//skeleton/PanelSkeleton'
-import DisplaySkeleton from '@/components/skeleton/DisplaySkeleton'
 import Parallax from '../Parallax'
 import { Mesh } from 'three/src/objects/Mesh'
 import { Euler } from 'three/src/math/Euler'
@@ -259,6 +258,12 @@ const ProjectsScene = ({
       state.camera.lookAt(
         state.camera.position.clone().lerp(new Vector3(0, 0, 0), delta * 5),
       )
+    }
+
+    const currentPosition = state.camera.position.clone();
+    if (!state.camera.userData.lastPosition || !currentPosition.equals(state.camera.userData.lastPosition)) {
+      console.log('Camera position changed:', currentPosition);
+      state.camera.userData.lastPosition = currentPosition;
     }
   })
 

@@ -1,8 +1,12 @@
 import React, { useRef } from 'react';
-import { Group, PlaneGeometry, Vector3 as Vector3Class} from 'three';
+// import { Group, PlaneGeometry, Vector3 as Vector3Class} from 'three';
+
 import { Text } from '@react-three/drei';
 import { ThreeEvent, useFrame, Vector3 } from '@react-three/fiber';
-import { ESideMenuItem } from '~/utils/types';
+import { ESideMenuItem } from '@/utils/types';
+import { Group } from 'three/src/objects/Group';
+import { Vector3 as Vector3Class } from 'three/src/math/Vector3';
+import { PlaneGeometry } from 'three/src/geometries/PlaneGeometry';
 
 interface SideMenuItemProps {
     slug: ESideMenuItem;
@@ -50,8 +54,7 @@ const SideMenuItem: React.FC<SideMenuItemProps> = ({
             //If selection has been removed but z position is not at 0 lerp
             const easing = 40 * delta
             if (selected && meshRef.current.position.z < 0.14999 || !selected && meshRef.current.position.z > 0.019999) {
-                console.log('triggered')
-                console.log('animating sidemenu item position:', meshRef.current.position);
+                
                 const targetPosition = new Vector3Class() 
                 const targetShadowPosition = new Vector3Class(0, 0, 0)
 
@@ -60,7 +63,6 @@ const SideMenuItem: React.FC<SideMenuItemProps> = ({
                 //for shadow, reverse the z position
                 targetPosition.z = selected ? 0.15 : 0.01
                 targetShadowPosition.z = selected ? -0.14 : -0.001
-                console.log('target position:', targetPosition);
                 meshRef.current.position.lerp(targetPosition, 0.2)
                 meshRef.current.children[meshRef.current.children.length - 1].position.lerp(targetShadowPosition, 0.2 * (easing));
             }
@@ -71,14 +73,6 @@ const SideMenuItem: React.FC<SideMenuItemProps> = ({
             if (!hover) meshRef.current.scale.lerp({ x: 1, y: 1, z: 1 }, 0.2 * easing)
         }
     })
-
-    React.useEffect(() => {
-        if (meshRef.current && selected) {
-                console.log('Current sidemenu item position:', meshRef.current.position);
-                // console.log('Selected state:', selected);
-                console.log('Position prop:', position);
-        }
-    }, [meshRef, selected, position]);
 
     return (
         <group
