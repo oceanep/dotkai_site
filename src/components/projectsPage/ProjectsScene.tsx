@@ -296,14 +296,67 @@ const ProjectsScene = ({
   return (
     <>
       <Parallax/>
-
+      {/* <Suspense
+        fallback={
+          <PanelSkeleton
+            position={[meshAX, meshAY, -0.2]}
+            rotation={rotationA.toArray() as [number, number, number]}
+            width={meshAWidth}
+            height={meshAHeight}
+          />
+        }
+      >
+        <ProjectsMenu
+          width={meshAWidth}
+          height={meshAHeight}
+          position={[meshAX, meshAY, -0.2]}
+          rotation={rotationA as Euler}
+          projects={projects}
+          textureUrls={textureUrls}
+          isProject={isProject}
+          projectClickHandler={handleProjectSelect}
+          sideMenuClickHandler={handleMenuItemSelect}
+        />
+      </Suspense> */}
       <PanelSkeleton
             position={[meshAX, meshAY, -0.2]}
             rotation={rotationA.toArray() as [number, number, number]}
             width={meshAWidth}
             height={meshAHeight}
           />
-
+        <PanelSkeleton
+          position={[meshBX, meshBY, -0.25]}
+          rotation={rotationB.toArray() as [number, number, number]}
+          width={meshBWidth}
+          height={meshBHeight}
+        />
+      {/* <Suspense fallback={
+              <PanelSkeleton
+                position={[meshBX, meshBY, -0.25]}
+                rotation={rotationB.toArray() as [number, number, number]}
+                width={meshBWidth}
+                height={meshBHeight}
+              />
+            }
+          > 
+       */}
+        {/* <ProjectsDisplay
+          ref={displayRef}
+          width={meshBWidth}
+          height={meshBHeight}
+          position={[meshBX, meshBY, -0.25]}
+          // rotation={[0,0,0]}
+          rotation={rotationB}
+          backClick={handleBackButtonClick}
+        />      
+          {!!isProject ? (
+              
+              <ProjectsContent selectedProject={selectedProject} imgWidth={250} />
+          ) : (
+              <PagesContent selectedPage={selectedMenuItem} />
+          )}
+          <div>TESTING</div>
+        </ProjectsDisplay> */}
             <mesh
                name="projectsDisplay"
                position={[meshBX, meshBY, -0.25]}
@@ -314,7 +367,7 @@ const ProjectsScene = ({
               />
               <meshBasicMaterial ref={materialRef} color="#aaaaaa" transparent opacity={0.5}/>
             </mesh>
-
+      {/* </Suspense> */}
     </>
   )
 }
