@@ -353,15 +353,16 @@ const ProjectsScene = ({
           )}
           <div>TESTING</div>
         </ProjectsDisplay> */}
-        <group>
+        <group
+          position={[meshBX, meshBY, -0.25]}
+          rotation={rotationB}
+        >
             <mesh
                 // position={[0.9, .5, 0]}
-                position={[meshBX, meshBY, -0.25]}
-                rotation={rotationB}
             >
                 <planeGeometry
                     // args={[width * 0.5, height * 0.9]} 
-                    args={[width, height]} 
+                    args={[meshBWidth, meshBHeight]} 
                 />
                 <meshBasicMaterial attach="material" transparent map={bgTexture} />
                 <Html
