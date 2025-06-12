@@ -355,35 +355,36 @@ const ProjectsScene = ({
         </ProjectsDisplay> */}
 
             <mesh
+               name="projectsDisplay"
                position={[meshBX, meshBY, -0.25]}
                rotation={rotationB}
             >
-                <planeGeometry
-                    // args={[width * 0.5, height * 0.9]} 
-                    args={[meshBWidth, meshBHeight]} 
-                />
-                <meshBasicMaterial attach="material"  map={bgTexture} />
-                <Html
-                    wrapperClass={styles['html-content']}
-                    transform 
-                    // distanceFactor={1}
-                    scale={scaleFactor}
-                    // style={{ opacity: progress < 100 ? 0 : 1, transition: 'opacity 1s ease-in-out' }}
-                >
-                    <div className={styles['preview-wrapper']}>
-                        <div className={styles['grid']}>
-                            {isMobile && (
-                                <div
-                                    className={`${styles['mobileBackButton']} ${styles['crt-text']}`}
-                                    onClick={handleBackButtonClick}
-                                >
-                                    {`<`}
-                                </div>
-                            )}
-                              <div>TESTING</div>
-                        </div>
-                    </div>
-                </Html>
+              <planeGeometry
+                // args={[width * 0.5, height * 0.9]} 
+                args={[meshBWidth, meshBHeight]} 
+              />
+              <meshBasicMaterial attach="material"  map={bgTexture} />
+              {/* <Html
+                wrapperClass={styles['html-content']}
+                transform 
+                // distanceFactor={1}
+                scale={scaleFactor}
+                // style={{ opacity: progress < 100 ? 0 : 1, transition: 'opacity 1s ease-in-out' }}
+              >
+                <div className={styles['preview-wrapper']}>
+                  <div className={styles['grid']}>
+                    {isMobile && (
+                      <div
+                        className={`${styles['mobileBackButton']} ${styles['crt-text']}`}
+                        onClick={handleBackButtonClick}
+                      >
+                        {`<`}
+                      </div>
+                    )}
+                      <div>TESTING</div>
+                  </div>
+                </div>
+              </Html> */}
             </mesh>
       {/* </Suspense> */}
     </>
