@@ -1,12 +1,14 @@
 import { FC, useRef } from 'react'
 import { useFrame } from '@react-three/fiber'
 import { Html, useTexture } from '@react-three/drei'
-import { Group, Mesh } from 'three'
+// import { Group, Mesh } from 'three'
 import { useControls } from 'leva'
 import { useRouter } from 'next/navigation'
 
 import { CyberButton, } from '~/styles/styled'
 import LogoMesh from '../jsx-models/LogoMesh'
+import { Group } from 'three/src/objects/Group'
+import { Mesh } from 'three/src/objects/Mesh'
 
 const Logo: FC = () => {
   const group = useRef<Group>(null)

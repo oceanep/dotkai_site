@@ -3,9 +3,10 @@ import { Html, useProgress, useTexture } from '@react-three/drei'
 import styles from './ProjectsDisplay.module.scss'
 import { Euler, useThree, Vector3 } from '@react-three/fiber'
 import { forwardRef } from 'react'
-import { Mesh } from 'three'
+// import { Mesh } from 'three'
 import { useMediaQuery } from '@/utils/hooks'
 import { EMediaType } from '@/utils/types'
+import { Mesh } from 'three/src/objects/Mesh'
 
 interface ProjectsDisplayProps {
   width: number

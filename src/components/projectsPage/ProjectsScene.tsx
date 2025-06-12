@@ -4,7 +4,6 @@ import dynamic from 'next/dynamic'
 import { type Project, type Page } from '~/lib/sanity.queries'
 
 import { useFrame, useThree } from '@react-three/fiber'
-import { Color, Euler, Mesh, Vector3 } from 'three'
 
 import { clamp } from 'three/src/math/MathUtils'
 import { useDebouncedResize, useMediaQuery } from '@/utils/hooks'
@@ -16,6 +15,10 @@ import PagesContent from '@/components/projectsPage/projectsDisplay/PagesContent
 import PanelSkeleton from '@/components//skeleton/PanelSkeleton'
 import DisplaySkeleton from '@/components/skeleton/DisplaySkeleton'
 import Parallax from '../Parallax'
+import { Mesh } from 'three/src/objects/Mesh'
+import { Euler } from 'three/src/math/Euler'
+import { Vector3 } from 'three/src/math/Vector3'
+import { Color } from 'three/src/math/Color'
 
 const ProjectsContent = dynamic(
   () => import('@/components/projectsPage/projectsDisplay/ProjectsContent'), { 

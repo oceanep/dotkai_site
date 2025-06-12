@@ -1,6 +1,7 @@
 import React, { useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
-import { MeshBasicMaterial } from 'three';
+import { MeshBasicMaterial } from 'three/src/materials/MeshBasicMaterial';
+// import { MeshBasicMaterial } from 'three';
 
 interface PanelProps {
     position: [number, number, number];

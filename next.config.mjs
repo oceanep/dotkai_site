@@ -15,12 +15,13 @@ const config = {
       '@sanity/image-url',
       '@sanity/demo',
       '@sanity/vision',
+      '@/styles/styled',
       '@tailwindcss/typography',
       '@portabletext/react',
       '@/utils/types',
       '@/utils/hooks',
       '@/lib/sanity.api',
-      '@lib/sanity.queries',
+      '@/lib/sanity.queries',
     ]
   },
   images: {
@@ -29,6 +30,9 @@ const config = {
   compiler: {
     styledComponents: true,
   },
+  transpilePackages: [
+    'three',
+  ],
   webpack: (config) => {
     config.module.rules.push({
       test: /\.(glsl|frag|vert)$/,

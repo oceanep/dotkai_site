@@ -1,7 +1,9 @@
 import { Euler, Vector2, Vector3 } from "@react-three/fiber";
 import { BlendFunction } from "postprocessing";
-import { Mesh, Material } from "three";
+// import { Mesh, Material } from "three";
 import { GLTF } from "three-stdlib";
+import { Material } from "three/src/materials/Material";
+import { Mesh } from "three/src/objects/Mesh";
 
 export interface GLTFResult extends GLTF {
     nodes: {

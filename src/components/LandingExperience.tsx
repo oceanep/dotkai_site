@@ -1,5 +1,5 @@
 import { FC, Suspense, useEffect, useRef } from "react";
-import { CapsuleGeometry, Color, MeshStandardMaterial } from "three";
+// import { CapsuleGeometry, Color, MeshStandardMaterial } from "three";
 import {
     Environment,
     Lightformer,
@@ -14,6 +14,9 @@ import { useFrame, useThree } from "@react-three/fiber";
 import Accents from "./Accents";
 // import { DigiviceMesh } from "~/jsx-models/DigiviceMesh";
 import Parallax from "./Parallax";
+import { CapsuleGeometry } from "three/src/geometries/CapsuleGeometry";
+import { MeshStandardMaterial } from "three/src/materials/MeshStandardMaterial";
+import { Color } from "three/src/math/Color";
 
 const capsuleGeometry = new CapsuleGeometry(1, 1, 4, 8);
 const capsuleMaterial = new MeshStandardMaterial();

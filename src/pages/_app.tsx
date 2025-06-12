@@ -4,10 +4,10 @@ import React, { lazy, StrictMode, useRef } from 'react'
 import dynamic from 'next/dynamic'
 import { IBM_Plex_Mono, Inter, PT_Serif } from 'next/font/google'
 
-import DomWrapper from '~/components/layout/DomWrapper'
+import DomWrapper from '@/components/layout/DomWrapper'
 import { SharedPageProps } from '@/utils/types'
 
-import '~/styles/global.css'
+import '@/styles/global.css'
 
 export interface CustomNextPage {
   (props: any): JSX.Element;
