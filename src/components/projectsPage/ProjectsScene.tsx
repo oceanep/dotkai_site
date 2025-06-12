@@ -19,6 +19,7 @@ import { Mesh } from 'three/src/objects/Mesh'
 import { Euler } from 'three/src/math/Euler'
 import { Vector3 } from 'three/src/math/Vector3'
 import { Color } from 'three/src/math/Color'
+import { OrbitControls } from '@react-three/drei'
 
 const ProjectsContent = dynamic(
   () => import('@/components/projectsPage/projectsDisplay/ProjectsContent'), { 
@@ -269,7 +270,8 @@ const ProjectsScene = ({
 
   return (
     <>
-      <Parallax/>
+      {/* <Parallax/> */}
+      <OrbitControls/>
       <Suspense
         fallback={
           <PanelSkeleton
