@@ -11,7 +11,7 @@ import { useDebouncedResize, useMediaQuery } from '@/utils/hooks'
 import { EMediaType, ESideMenuItem } from '@/utils/types'
 
 import ProjectsMenu from '@/components/projectsPage/projectsMenu/ProjectsMenu'
-import ProjectsDisplay from '@/components/projectsPage/projectsDisplay/ProjectsDisplay'
+// import ProjectsDisplay from '@/components/projectsPage/projectsDisplay/ProjectsDisplay'
 import ProjectsContent from '@/components/projectsPage/projectsDisplay/ProjectsContent'
 import PagesContent from '@/components/projectsPage/projectsDisplay/PagesContent'
 import PanelSkeleton from '@/components//skeleton/PanelSkeleton'
@@ -20,6 +20,7 @@ import { Mesh } from 'three/src/objects/Mesh'
 import { Euler } from 'three/src/math/Euler'
 import { Vector3 } from 'three/src/math/Vector3'
 import { Color } from 'three/src/math/Color'
+import dynamic from 'next/dynamic'
 
 // const ProjectsContent = dynamic(
 //   () => import('@/components/projectsPage/projectsDisplay/ProjectsContent'), { 
@@ -27,6 +28,12 @@ import { Color } from 'three/src/math/Color'
 //     loading: () => <DisplaySkeleton/>
 //   }
 // )
+
+const ProjectsDisplay = dynamic(
+  () => import('@/components/projectsPage/projectsDisplay/ProjectsDisplay'), {
+    ssr: false
+  }
+)
 
 // Canvas/R3F components here
 const ProjectsScene = ({
