@@ -12,7 +12,6 @@ interface ProjectsContentProps {
 }
 
 const ProjectsContent: React.FC<ProjectsContentProps> = ({ selectedProject, imgWidth }) => {
-    console.log('selectedProject', selectedProject);
     return (
         <>
             <TextCard
