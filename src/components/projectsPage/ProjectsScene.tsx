@@ -357,7 +357,7 @@ const ProjectsScene = ({
           )}
           <div>TESTING</div>
         </ProjectsDisplay> */}
-            // <mesh
+            {/* // <mesh
             //    name="projectsDisplay"
             //    position={[meshBX, meshBY, -0.25]}
             //    rotation={rotationB.toArray() as [number, number, number]}
@@ -366,7 +366,7 @@ const ProjectsScene = ({
             //     args={[meshBWidth, meshBHeight]} 
             //   />
             //   <meshBasicMaterial ref={materialRef} color="#aaaaaa" transparent map={bgTexture}/>
-            // </mesh>
+            // </mesh> */}
       {/* </Suspense> */}
     </>
   )
