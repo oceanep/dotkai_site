@@ -1,3 +1,4 @@
+
 import { Suspense, useCallback, useEffect, useRef, useState } from 'react'
 
 // import dynamic from 'next/dynamic'
@@ -304,12 +305,12 @@ const ProjectsScene = ({
             width={meshAWidth}
             height={meshAHeight}
           />
-        <PanelSkeleton
+        {/* <PanelSkeleton
           position={[meshBX, meshBY, -0.25]}
           rotation={rotationB.toArray() as [number, number, number]}
           width={meshBWidth}
           height={meshBHeight}
-        />
+        /> */}
       {/* <Suspense fallback={
           <PanelSkeleton
             position={[meshBX, meshBY, -0.25]}
@@ -318,7 +319,7 @@ const ProjectsScene = ({
             height={meshBHeight}
           />
         }
-      >
+      > */}
         <ProjectsDisplay
           ref={displayRef}
           width={meshBWidth}
@@ -335,7 +336,7 @@ const ProjectsScene = ({
               <PagesContent selectedPage={selectedMenuItem} />
           )}
         </ProjectsDisplay>
-      </Suspense> */}
+      {/* </Suspense> */}
     </>
   )
 }
