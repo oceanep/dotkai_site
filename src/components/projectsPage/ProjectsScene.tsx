@@ -358,39 +358,15 @@ const ProjectsScene = ({
           )}
           <div>TESTING</div>
         </ProjectsDisplay> */}
- 
-
             <mesh
                name="projectsDisplay"
                position={[meshBX, meshBY, -0.25]}
                rotation={rotationB}
             >
               <planeGeometry
-                // args={[width * 0.5, height * 0.9]} 
                 args={[meshBWidth, meshBHeight]} 
               />
-              <meshBasicMaterial ref={materialRef} color="#aaaaaa" />
-              {/* <Html
-                wrapperClass={styles['html-content']}
-                transform 
-                // distanceFactor={1}
-                scale={scaleFactor}
-                // style={{ opacity: progress < 100 ? 0 : 1, transition: 'opacity 1s ease-in-out' }}
-              >
-                <div className={styles['preview-wrapper']}>
-                  <div className={styles['grid']}>
-                    {isMobile && (
-                      <div
-                        className={`${styles['mobileBackButton']} ${styles['crt-text']}`}
-                        onClick={handleBackButtonClick}
-                      >
-                        {`<`}
-                      </div>
-                    )}
-                      <div>TESTING</div>
-                  </div>
-                </div>
-              </Html> */}
+              <meshBasicMaterial ref={materialRef} transparent map={bgTexture}/>
             </mesh>
       {/* </Suspense> */}
     </>
