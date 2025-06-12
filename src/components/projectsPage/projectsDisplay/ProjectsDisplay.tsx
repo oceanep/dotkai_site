@@ -32,10 +32,13 @@ const ProjectsDisplay = forwardRef<Mesh, ProjectsDisplayProps>(({
     // const isMobile = useMediaQuery(EMediaType.SMARTPHONE)
     // const { progress } = useProgress();
     return (
-        <group>
+        <group
+            position={position}
+            rotation={rotation}
+        >
             <PanelSkeleton
-            position={position as [number, number, number]}
-            rotation={rotation as [number, number, number]}
+            position={[0, 0, 0]}
+            rotation={[0, 0, 0]}
             width={width}
             height={height}
           />
