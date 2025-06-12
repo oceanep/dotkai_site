@@ -28,8 +28,8 @@ const ProjectsDisplay = forwardRef<Mesh, ProjectsDisplayProps>(({
     const { size } = useThree()
     const refHeight = 915
     const scaleFactor = (refHeight / size.height) * .1
-    const isMobile = useMediaQuery(EMediaType.SMARTPHONE)
-    const { progress } = useProgress();
+    // const isMobile = useMediaQuery(EMediaType.SMARTPHONE)
+    // const { progress } = useProgress();
     return (
         <group>
             <mesh
@@ -42,8 +42,8 @@ const ProjectsDisplay = forwardRef<Mesh, ProjectsDisplayProps>(({
                     // args={[width * 0.5, height * 0.9]} 
                     args={[width, height]} 
                 />
-                <meshBasicMaterial attach="material" transparent map={bgTexture} />
-                <Html
+                <meshBasicMaterial attach="material" color="grey" map={bgTexture} />
+                {/* <Html
                     wrapperClass={styles['html-content']}
                     transform 
                     // distanceFactor={1}
@@ -65,7 +65,7 @@ const ProjectsDisplay = forwardRef<Mesh, ProjectsDisplayProps>(({
                             </Suspense>
                         </div>
                     </div>
-                </Html>
+                </Html> */}
             </mesh>
         </group>
     )

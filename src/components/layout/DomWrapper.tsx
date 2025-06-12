@@ -5,7 +5,7 @@ interface DomProps {
   children: React.ReactNode;
   studio?: boolean;
 }
-const Dom = ({ children, studio = false }) => {
+const Dom = ({ children, studio = false }: DomProps) => {
   const ref = useRef(null);
 
   return (
@@ -22,7 +22,7 @@ const Dom = ({ children, studio = false }) => {
       ref={ref}
     >
       {children}
-      {!studio && <ThreeLoader/>}
+      {!studio && <ThreeLoader />}
     </div>
   );
 };
