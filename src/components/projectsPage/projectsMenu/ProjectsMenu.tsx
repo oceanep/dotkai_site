@@ -45,7 +45,7 @@ const ProjectsMenu: React.FC<ProjectsMenuProps> = ({
     const isMobile = useMediaQuery(EMediaType.SMARTPHONE)
     const isTablet = useMediaQuery(EMediaType.TABLET)
 
-    const bgTexture = useTexture('/images/Menu-0_84 aspect ratio.png')
+    const bgTexture = useTexture('/images/menu-0_84_aspect_ratio.png')
 
     const textures = useTexture(textureUrls)
     textures.forEach((texture) => {
