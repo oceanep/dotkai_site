@@ -12,6 +12,7 @@ import {
 import type { SharedPageProps } from '@/utils/types'
 
 import dynamic from 'next/dynamic'
+import ProjectsScene from '@/components/projectsPage/ProjectsScene'
 
 export const getStaticProps: GetStaticProps<
   SharedPageProps & {
@@ -34,9 +35,9 @@ export const getStaticProps: GetStaticProps<
   }
 }
 
-const ProjectsScene = dynamic(() => import('~/components/projectsPage/ProjectsScene'), {
-  ssr: false
-})
+// const ProjectsScene = dynamic(() => import('~/components/projectsPage/ProjectsScene'), {
+//   ssr: false
+// })
 
 // DOM elements here
 const DOM = () => {
