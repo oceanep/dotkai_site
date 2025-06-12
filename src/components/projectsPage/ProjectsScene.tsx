@@ -275,7 +275,7 @@ const ProjectsScene = ({
 
   return (
     <>
-      <Parallax/>
+      {/* <Parallax/> */}
       <Suspense
         fallback={
           <PanelSkeleton
