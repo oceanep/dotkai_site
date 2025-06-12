@@ -49,3 +49,4 @@ studio/.env.development
 
 # Old Models
 *.old
+*.*.old
