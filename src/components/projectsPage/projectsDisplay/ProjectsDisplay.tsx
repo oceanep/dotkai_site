@@ -30,52 +30,52 @@ const ProjectsDisplay = forwardRef<Mesh, ProjectsDisplayProps>(({
     const { size } = useThree()
     const refHeight = 915
     const scaleFactor = (refHeight / size.height) * .1
-    // const isMobile = useMediaQuery(EMediaType.SMARTPHONE)
-    // const { progress } = useProgress();
+    const isMobile = useMediaQuery(EMediaType.SMARTPHONE)
+    const { progress } = useProgress();
     return (
-        <PanelSkeleton
-        position={position}
-        rotation={rotation}
-        width={width}
-        height={height}
-    />
-        // <group>
-        //     <mesh
-        //         // position={[0.9, .5, 0]}
-        //         position={position}
-        //         rotation={rotation}
-        //         ref={ref}
-        //     >
-        //         <planeGeometry
-        //             // args={[width * 0.5, height * 0.9]} 
-        //             args={[width, height]} 
-        //         />
-        //         <meshBasicMaterial attach="material" transparent map={bgTexture} />
-        //         <Html
-        //             wrapperClass={styles['html-content']}
-        //             transform 
-        //             // distanceFactor={1}
-        //             scale={scaleFactor}
-        //             style={{ opacity: progress < 100 ? 0 : 1, transition: 'opacity 1s ease-in-out' }}
-        //         >
-        //             <div className={styles['preview-wrapper']}>
-        //                 <div className={styles['grid']}>
-        //                     {isMobile && (
-        //                         <div
-        //                             className={`${styles['mobileBackButton']} ${styles['crt-text']}`}
-        //                             onClick={backClick}
-        //                         >
-        //                             {`<`}
-        //                         </div>
-        //                     )}
-        //                     <Suspense fallback={null}>
-        //                         {children}
-        //                     </Suspense>
-        //                 </div>
-        //             </div>
-        //         </Html>
-        //     </mesh>
-        // </group>
+    //     <PanelSkeleton
+    //     position={position}
+    //     rotation={rotation}
+    //     width={width}
+    //     height={height}
+    // />
+        <group>
+            <mesh
+                // position={[0.9, .5, 0]}
+                position={position}
+                rotation={rotation}
+                ref={ref}
+            >
+                <planeGeometry
+                    // args={[width * 0.5, height * 0.9]} 
+                    args={[width, height]} 
+                />
+                <meshBasicMaterial attach="material" transparent map={bgTexture} />
+                <Html
+                    wrapperClass={styles['html-content']}
+                    transform 
+                    // distanceFactor={1}
+                    scale={scaleFactor}
+                    style={{ opacity: progress < 100 ? 0 : 1, transition: 'opacity 1s ease-in-out' }}
+                >
+                    <div className={styles['preview-wrapper']}>
+                        <div className={styles['grid']}>
+                            {isMobile && (
+                                <div
+                                    className={`${styles['mobileBackButton']} ${styles['crt-text']}`}
+                                    onClick={backClick}
+                                >
+                                    {`<`}
+                                </div>
+                            )}
+                            <Suspense fallback={null}>
+                                {children}
+                            </Suspense>
+                        </div>
+                    </div>
+                </Html>
+            </mesh>
+        </group>
     )
 })
 
