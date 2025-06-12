@@ -365,7 +365,7 @@ const ProjectsScene = ({
               <planeGeometry
                 args={[meshBWidth, meshBHeight]} 
               />
-              <meshBasicMaterial ref={materialRef} color="#aaaaaa" transparent opacity={0.5}/>
+              <meshBasicMaterial ref={materialRef} color="#aaaaaa" transparent map={bgTexture}/>
             </mesh>
       {/* </Suspense> */}
     </>
