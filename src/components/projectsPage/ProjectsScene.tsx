@@ -349,13 +349,12 @@ const ProjectsScene = ({
           rotation={rotationB.toArray() as [number, number, number]}
           backClick={handleBackButtonClick}
         >      
-          {/* {!!isProject ? (
+          {!!isProject ? (
               
               <ProjectsContent selectedProject={selectedProject} imgWidth={250} />
           ) : (
               <PagesContent selectedPage={selectedMenuItem} />
-          )} */}
-          <div>TESTING</div>
+          )}
         </ProjectsDisplay>
             {/* // <mesh
             //    name="projectsDisplay"
