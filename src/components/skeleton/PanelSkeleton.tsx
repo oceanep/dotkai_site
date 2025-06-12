@@ -13,18 +13,18 @@ const PanelSkeleton: React.FC<PanelProps> = ({ position, rotation, width, height
     const materialRef = useRef<MeshBasicMaterial>(null);
     let increasing = true;
 
-    useFrame(() => {
-        if (materialRef.current) {
-            const currentOpacity = materialRef.current.opacity;
-            if (increasing) {
-                materialRef.current.opacity = Math.min(currentOpacity + 0.01, 0.5);
-                if (materialRef.current.opacity >= 0.5) increasing = false;
-            } else {
-                materialRef.current.opacity = Math.max(currentOpacity - 0.01, 0.1);
-                if (materialRef.current.opacity <= 0.1) increasing = true;
-            }
-        }
-    });
+    // useFrame(() => {
+    //     if (materialRef.current) {
+    //         const currentOpacity = materialRef.current.opacity;
+    //         if (increasing) {
+    //             materialRef.current.opacity = Math.min(currentOpacity + 0.01, 0.5);
+    //             if (materialRef.current.opacity >= 0.5) increasing = false;
+    //         } else {
+    //             materialRef.current.opacity = Math.max(currentOpacity - 0.01, 0.1);
+    //             if (materialRef.current.opacity <= 0.1) increasing = true;
+    //         }
+    //     }
+    // });
 
     return (
         <mesh position={position} rotation={rotation}>
