@@ -26,7 +26,7 @@ const ProjectsDisplay = forwardRef<Mesh, ProjectsDisplayProps>(({
   backClick,
   children,
 }, ref) => {
-    const bgTexture = useTexture('/images/Display-0_93 aspect ratio.png')
+    const bgTexture = useTexture('/images/display-0_93_aspect_ratio.png')
     const { size } = useThree()
     const refHeight = 915
     const scaleFactor = (refHeight / size.height) * .1
