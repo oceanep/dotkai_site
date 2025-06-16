@@ -1,5 +1,6 @@
 import React from 'react';
 import { useProgress } from '@react-three/drei';
+import BracketLoader from './BracketLoader';
 
 const ThreeLoader: React.FC = () => {
   const { progress } = useProgress();
@@ -50,7 +51,7 @@ const ThreeLoader: React.FC = () => {
             <div style={{ fontSize: '1.5rem', color: 'black', marginBottom: '.5rem' }}>Experience Loading: {Math.round(progress)}%</div>
           </>
         }
-        <div
+        {/* <div
           style={{
             position: 'relative',
             width: '50px',
@@ -70,7 +71,8 @@ const ThreeLoader: React.FC = () => {
                   }
               }
               `}
-        </style>
+        </style> */}
+        <BracketLoader />
       </div>
   );
 };

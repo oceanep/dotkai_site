@@ -1,0 +1,39 @@
+.boxLeft::before {
+    content: "";
+    position: absolute;
+    width: 0.5em;
+    height: 0.5em;
+    background-color: black;
+    top: 0em;
+    left: 0.5em;
+}
+
+.boxLeft::after {
+    content: "";
+    position: absolute;
+    width: 0.5em;
+    height: 0.5em;
+    background-color: black;
+    bottom: 0em;
+    left: 0.5em;
+}
+
+.boxRight::before {
+    content: "";
+    position: absolute;
+    width: 0.5em;
+    height: 0.5em;
+    background-color: black;
+    top: 0em;
+    right: 0.5em;
+}
+
+.boxRight::after {
+    content: "";
+    position: absolute;
+    width: 0.5em;
+    height: 0.5em;
+    background-color: black;
+    bottom: 0em;
+    right: 0.5em;
+}
