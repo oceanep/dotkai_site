@@ -1,9 +1,17 @@
 import React from 'react';
 import { useProgress } from '@react-three/drei';
 import BracketLoader from './BracketLoader';
+import DotLoader from './DotLoader';
 
 const ThreeLoader: React.FC = () => {
   const { progress } = useProgress();
+  const renderProgressMessage = (p: number) => (
+    <>
+      <div style={{ fontSize: '1.5rem', color: 'black', marginBottom: '.5rem' }}>
+        <span style={{ whiteSpace: 'nowrap' }}>Experience Loading: {Math.round(p)}%</span>
+      </div>
+    </>
+  );
   return (
       <div
         style={{
@@ -21,36 +29,13 @@ const ThreeLoader: React.FC = () => {
           opacity: progress === 100 ? 0 : 1,
           transition: 'opacity 0.1s ease-in-out',
         }}
-      >
-        {progress === 0 ? (
-          <>
-            <div style={{ fontSize: '1.5rem', color: 'black', display: 'flex', alignItems: 'center', gap: '0.2rem', marginBottom: '.5rem' }}>
-              Preparing Modules
-              <span style={{ animation: 'dots 1.5s infinite' }}>.</span>
-              <span style={{ animation: 'dots 1.5s infinite 0.5s' }}>.</span>
-              <span style={{ animation: 'dots 1.5s infinite 1s' }}>.</span>
-            </div>
-              <style>
-                {`
-                  @keyframes dots {
-                    0%, 20% {
-                      opacity: 0;
-                    }
-                    40% {
-                      opacity: 1;
-                    }
-                    100% {
-                      opacity: 0;
-                    }
-                  }
-                `}
-              </style>
-          </>
-        ) :
-          <>
-            <div style={{ fontSize: '1.5rem', color: 'black', marginBottom: '.5rem' }}>Experience Loading: {Math.round(progress)}%</div>
-          </>
-        }
+        >
+        <BracketLoader>
+          {progress === 0 
+            ? (<DotLoader/>)   
+            : renderProgressMessage(progress)
+          }
+        </BracketLoader>
         {/* <div
           style={{
             position: 'relative',
@@ -72,7 +57,6 @@ const ThreeLoader: React.FC = () => {
               }
               `}
         </style> */}
-        <BracketLoader />
       </div>
   );
 };
