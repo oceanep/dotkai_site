@@ -1,6 +1,6 @@
 import type { AppProps } from 'next/app'
 
-import React, { lazy, StrictMode, useRef } from 'react'
+import React, { lazy, StrictMode, useEffect, useRef, useState } from 'react'
 import dynamic from 'next/dynamic'
 import { IBM_Plex_Mono, Inter, PT_Serif } from 'next/font/google'
 
@@ -48,10 +48,50 @@ export default function App({
   Component,
   pageProps,
 }: CustomAppProps<SharedPageProps>) {
+  const [isInitialLoad, setIsInitialLoad] = useState<boolean>(true)
+  const [isPageTransition, setIsPageTransition] = useState<boolean>(false)
+  const [hasPrevPage, setHasPrevPage] = useState<boolean>(false)
+
   const { draftMode, token } = pageProps
-  const { pathname } = useRouter();
+  const router = useRouter()
+  const { pathname } = router
 
   const ref = useRef();
+
+  useEffect(() => {
+    const handleLoad = () => {
+      if (isInitialLoad) {
+        setIsInitialLoad(false);
+        console.log('All content fully loaded');
+      }
+    };
+
+    if (typeof document !== 'undefined' && document.readyState === 'complete') {
+      handleLoad()
+    } else {
+      window.addEventListener('load', handleLoad)
+    }
+
+    const handleRouteChange = (url) => {
+      setIsPageTransition(true)
+      setHasPrevPage(true)
+      console.log(`App is changing to: ${url}`)
+    };
+
+    const handleRouteComplete = () => {
+      setTimeout(() => setIsPageTransition(false), 2000);
+    };
+
+    router.events.on('routeChangeStart', handleRouteChange);
+    router.events.on('routeChangeComplete', handleRouteComplete);
+
+    return () => {
+      router.events.off('routeChangeStart', handleRouteChange);
+      router.events.off('routeChangeComplete', handleRouteComplete);
+      window.removeEventListener('load', handleLoad);
+      setHasPrevPage(false);
+    };
+  }, [isInitialLoad, router.events])
 
   return (
     <>
@@ -68,7 +108,7 @@ export default function App({
         {draftMode ? (
           <PreviewProvider token={token}>
             <div ref={ref}>
-              <DomWrapper studio={pathname.includes('studio')}>
+              <DomWrapper studio={pathname.includes('studio')} initialLoad={!hasPrevPage} routeChange={isPageTransition}>
                 <Component {...pageProps} />
               </DomWrapper>
               {
@@ -79,7 +119,7 @@ export default function App({
                  * Page load
                  */
                 Component?.canvas && (
-                  <CanvasWrapper eventSource={ref}>
+                  <CanvasWrapper eventSource={ref} initialLoad={!hasPrevPage} routeChange={isPageTransition}>
                     <Component.canvas {...pageProps} />
                   </CanvasWrapper>
                 )
@@ -88,12 +128,12 @@ export default function App({
           </PreviewProvider>
         ) : (
           <div ref={ref}>
-            <DomWrapper studio={pathname.includes('studio')}>
+            <DomWrapper studio={pathname.includes('studio')} initialLoad={!hasPrevPage} routeChange={isPageTransition}>
               <Component {...pageProps} />
             </DomWrapper>
             {
               Component?.canvas && (
-                <CanvasWrapper eventSource={ref}>
+                <CanvasWrapper eventSource={ref} initialLoad={!hasPrevPage} routeChange={isPageTransition}>
                   <Component.canvas {...pageProps} /> 
                 </CanvasWrapper>
               )

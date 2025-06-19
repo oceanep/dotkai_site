@@ -1,17 +1,49 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useProgress } from '@react-three/drei';
 import BracketLoader from './BracketLoader';
 import DotLoader from './DotLoader';
 
-const ThreeLoader: React.FC = () => {
+interface ThreeLoaderProps {
+  setLoadingComplete: (s:boolean) => void;
+  loadingComplete?: boolean;
+  noBg?: boolean;
+  noPrep?: boolean;
+  invert?: boolean;
+}
+
+const ThreeLoader: React.FC<ThreeLoaderProps> = ({
+  setLoadingComplete,
+  loadingComplete = false,
+  noBg = false,
+  noPrep = false,
+  invert = false,
+}) => {
   const { progress } = useProgress();
+
+  // useEffect(() => {
+  //   if (progress === 100 && allowComplete) {
+  //     console.log('setting complete true:', progress)
+  //     setAllowComplete(false);
+  //     setTimeout(() => {
+  //       setLoadingComplete(true);
+  //     }, 100);
+  //   }
+  // }, [progress, setLoadingComplete]);
+
+  // useEffect(() => {
+  //   if (progress === 0) {
+  //     setAllowComplete(false);
+  //   }
+  // }, [progress]);
+
   const renderProgressMessage = (p: number) => (
     <>
-      <div style={{ fontSize: '1.5rem', color: 'black', marginBottom: '.5rem' }}>
+      <div style={{ fontSize: '1.5rem', marginBottom: '.5rem' }}>
         <span style={{ whiteSpace: 'nowrap' }}>Experience Loading: {Math.round(p)}%</span>
       </div>
     </>
   );
+
   return (
       <div
         style={{
@@ -20,45 +52,26 @@ const ThreeLoader: React.FC = () => {
           left: 0,
           width: '100vw',
           height: '100vh',
-          backgroundColor: 'rgba(226, 226, 226, 0.5)',
+          backgroundColor: invert ? 'rgba(1, 1, 1, 1)' : 'rgba(244, 244, 244, 1)',
+          color: invert ? 'rgba(244, 244, 244, 1)' : 'rgba(1, 1, 1, 1)',
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
           flexDirection: 'column',
           zIndex: 10000000,
           opacity: progress === 100 ? 0 : 1,
-          transition: 'opacity 0.1s ease-in-out',
+          pointerEvents: progress === 100 ? 'none' : 'auto', // Prevent interaction when hidden
+          // transition: 'opacity 0.5s ease-in-out', // Smooth animation
         }}
-        >
-        <BracketLoader>
-          {progress === 0 
-            ? (<DotLoader/>)   
-            : renderProgressMessage(progress)
+      >
+        <BracketLoader invert={invert}>
+          {(progress === 0 && !noPrep)
+        ? (<DotLoader/>)   
+        : renderProgressMessage(progress)
           }
         </BracketLoader>
-        {/* <div
-          style={{
-            position: 'relative',
-            width: '50px',
-            height: '50px',
-            backgroundColor: 'black',
-            animation: 'moveBackAndForth 2s ease-in-out infinite',
-          }}
-        ></div>
-        <style>
-          {`
-              @keyframes moveBackAndForth {
-                  0%, 100% {
-                  transform: translateX(-50px);
-                  }
-                  50% {
-                  transform: translateX(50px);
-                  }
-              }
-              `}
-        </style> */}
       </div>
-  );
+    )
 };
 
 export default ThreeLoader;

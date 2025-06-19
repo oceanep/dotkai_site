@@ -1,0 +1,12 @@
+/* Ensure children stay centered despite animations */
+.overlay {
+    position: relative;
+    /* ...existing code... */
+}
+
+.overlay > * {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}

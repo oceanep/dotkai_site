@@ -77,7 +77,6 @@ const styles = {
     box: {
         width: '0.5em',
         height: '3em',
-        backgroundColor: 'black',
         animationDuration: '5s',
         animationTimingFunction: 'cubic-bezier(1, 0, 0, 1)',
         animationIterationCount: 'infinite',
@@ -96,21 +95,35 @@ const styles = {
         height: '3em',
         animationName: 'expandWidth',
         animationDuration: '5s',
+        // animationDelay: '0.1s',
         animationTimingFunction: 'cubic-bezier(1, 0, 0, 1)',
         animationIterationCount: 'infinite',
     },
 };
 
-const BracketLoader: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
+const BracketLoader: React.FC<{ children?: React.ReactNode, invert?: boolean }> = ({ children, invert = false }) => {
     return (
         <>
             <style>{moveBoxesLeft}</style>
             <style>{moveBoxesRight}</style>
             <style>{expandWidth}</style>
             <div style={styles.loaderContainer}>
-                <div style={{ ...styles.box, ...styles.boxLeft }} className={classes['boxLeft']}></div>
-                <div style={{ ...styles.box, ...styles.boxRight }} className={classes['boxRight']}></div>
-                {children && <div style={styles.overlay} className={classes['overlay']}>{children}</div>}
+                <div 
+                    style={{ ...styles.box, ...styles.boxLeft }} 
+                    className={`${classes['boxLeft']} ${invert ? classes['invert'] : ''}`}
+                ></div>
+                <div 
+                    style={{ ...styles.box, ...styles.boxRight }} 
+                    className={`${classes['boxRight']} ${invert ? classes['invert'] : ''}`}
+                ></div>
+                {children && (
+                    <div 
+                        style={styles.overlay} 
+                        className={classes['overlay']}
+                    >
+                        {children}
+                    </div>
+                )}
             </div>
         </>
     );

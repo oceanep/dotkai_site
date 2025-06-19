@@ -20,11 +20,6 @@ const DotLoader: React.FC = () => {
             <div
                 style={{
                     fontSize: '1.5rem',
-                    color: 'black',
-                    // display: 'flex',
-                    // alignItems: 'center',
-                    // gap: '0.2rem',
-                    // marginBottom: '.5rem',
                     whiteSpace: 'nowrap'
                 }}
             >

@@ -1,12 +1,20 @@
-import { Suspense } from 'react'
+import { Suspense, useState } from 'react'
 import { Canvas } from '@react-three/fiber'
 import { Leva } from 'leva'
 // import { ACESFilmicToneMapping, SRGBColorSpace } from 'three'
 import { SceneContainer } from '@/styles/styled'
 import EffectPass from '@/components/EffectPass'
+import ThreeLoader from '../loaders/ThreeLoader'
 // import { ACESFilmicToneMapping, SRGBColorSpace } from 'three/src/constants'
 
-const CanvasWrapper = ({ children, eventSource }) => {
+interface CanvasProps {
+  children: React.ReactNode;
+  initialLoad?: boolean;
+  routeChange?: boolean;
+  eventSource?: React.RefObject<HTMLElement | null>;
+}
+
+const CanvasWrapper = ({ children, eventSource, routeChange = false, initialLoad = false }: CanvasProps) => {  
   return (
     <SceneContainer>
       <Leva collapsed />
@@ -31,8 +39,8 @@ const CanvasWrapper = ({ children, eventSource }) => {
       >
         <Suspense fallback={null}>
             <>
-                <EffectPass />
-                {children}
+              <EffectPass />
+              {children}
             </>
         </Suspense>
       </Canvas>
