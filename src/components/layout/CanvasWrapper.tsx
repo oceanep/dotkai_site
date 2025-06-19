@@ -15,6 +15,8 @@ interface CanvasProps {
 }
 
 const CanvasWrapper = ({ children, eventSource, routeChange = false, initialLoad = false }: CanvasProps) => {  
+  const persistentEffectPass = <EffectPass />;
+
   return (
     <SceneContainer>
       <Leva collapsed />
@@ -37,9 +39,9 @@ const CanvasWrapper = ({ children, eventSource, routeChange = false, initialLoad
         eventSource={eventSource}
         eventPrefix="client"
       >
+        {persistentEffectPass}
         <Suspense fallback={null}>
             <>
-              <EffectPass />
               {children}
             </>
         </Suspense>
