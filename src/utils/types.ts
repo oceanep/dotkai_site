@@ -26,9 +26,21 @@ export interface IWarpProps {
     frequency?: number,
     scale?: number,
     blendFunction?: BlendFunction
+    vignetteIntensity?: number,
+    noiseIntensity?: number,
 }
 
 export interface IWarpClassProps extends IWarpProps {
+    resolution: Vector2,
+}
+
+export interface INoiseProps {
+    intensity: number;
+    speed?: number;
+    blendFunction?: BlendFunction
+}
+
+export interface INoiseClassProps extends INoiseProps {
     resolution: Vector2,
 }
 
@@ -66,3 +78,12 @@ export interface SharedPageProps {
     draftMode: boolean
     token: string
   }
+
+export interface IVignetteProps {
+    intensity?: number;
+    blendFunction?: BlendFunction;
+}
+
+export interface IVignetteClassProps extends IVignetteProps {
+    resolution: Vector2;
+}

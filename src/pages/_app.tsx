@@ -1,6 +1,6 @@
 import type { AppProps } from 'next/app'
 
-import React, { lazy, StrictMode, useRef } from 'react'
+import React, { lazy, StrictMode, useEffect, useRef, useState } from 'react'
 import dynamic from 'next/dynamic'
 import { IBM_Plex_Mono, Inter, PT_Serif } from 'next/font/google'
 
@@ -48,10 +48,27 @@ export default function App({
   Component,
   pageProps,
 }: CustomAppProps<SharedPageProps>) {
+  const [hasPrevPage, setHasPrevPage] = useState<boolean>(false)
+
   const { draftMode, token } = pageProps
-  const { pathname } = useRouter();
+  const router = useRouter()
+  const { pathname } = router
 
   const ref = useRef();
+
+  useEffect(() => {
+    const handleRouteChange = (url) => {
+      setHasPrevPage(true)
+      console.log(`App is changing to: ${url}`)
+    };
+
+    router.events.on('routeChangeStart', handleRouteChange);
+
+    return () => {
+      router.events.off('routeChangeStart', handleRouteChange);
+      setHasPrevPage(false);
+    };
+  }, [router.events])
 
   return (
     <>
@@ -68,7 +85,7 @@ export default function App({
         {draftMode ? (
           <PreviewProvider token={token}>
             <div ref={ref}>
-              <DomWrapper studio={pathname.includes('studio')}>
+              <DomWrapper studio={pathname.includes('studio')} initialLoad={!hasPrevPage}>
                 <Component {...pageProps} />
               </DomWrapper>
               {
@@ -79,7 +96,7 @@ export default function App({
                  * Page load
                  */
                 Component?.canvas && (
-                  <CanvasWrapper eventSource={ref}>
+                  <CanvasWrapper eventSource={ref} initialLoad={!hasPrevPage}>
                     <Component.canvas {...pageProps} />
                   </CanvasWrapper>
                 )
@@ -88,12 +105,12 @@ export default function App({
           </PreviewProvider>
         ) : (
           <div ref={ref}>
-            <DomWrapper studio={pathname.includes('studio')}>
+            <DomWrapper studio={pathname.includes('studio')} initialLoad={!hasPrevPage}>
               <Component {...pageProps} />
             </DomWrapper>
             {
               Component?.canvas && (
-                <CanvasWrapper eventSource={ref}>
+                <CanvasWrapper eventSource={ref} initialLoad={!hasPrevPage}>
                   <Component.canvas {...pageProps} /> 
                 </CanvasWrapper>
               )

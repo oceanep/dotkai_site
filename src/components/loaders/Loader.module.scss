@@ -1,0 +1,70 @@
+.boxLeft, .boxRight {
+    background-color: rgba(1, 1, 1, 1);
+}
+
+.boxLeft::before {
+    content: "";
+    position: absolute;
+    width: 0.5em;
+    height: 0.5em;
+    background-color: rgba(1, 1, 1, 1);
+    top: 0em;
+    left: 0.5em;
+}
+
+.boxLeft::after {
+    content: "";
+    position: absolute;
+    width: 0.5em;
+    height: 0.5em;
+    background-color: rgba(1, 1, 1, 1);
+    bottom: 0em;
+    left: 0.5em;
+}
+
+.boxRight::before {
+    content: "";
+    position: absolute;
+    width: 0.5em;
+    height: 0.5em;
+    background-color: rgba(1, 1, 1, 1);
+    top: 0em;
+    right: 0.5em;
+}
+
+.boxRight::after {
+    content: "";
+    position: absolute;
+    width: 0.5em;
+    height: 0.5em;
+    background-color: rgba(1, 1, 1, 1);
+    bottom: 0em;
+    right: 0.5em;
+}
+
+.invert .boxLeft::before,
+.invert .boxLeft::after,
+.invert .boxRight::before,
+.invert .boxRight::after {
+    background-color: rgba(244, 244, 244, 1);
+}
+
+.invert {
+    background-color: rgba(244, 244, 244, 1);
+    &::before,
+    &::after {
+        background-color: rgba(244, 244, 244, 1);
+    }
+}
+
+.overlay {
+    overflow: hidden;
+    
+    & > * {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+}

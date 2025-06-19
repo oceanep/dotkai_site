@@ -1,8 +1,27 @@
 import React from 'react';
 import { useProgress } from '@react-three/drei';
+import BracketLoader from './BracketLoader';
+import DotLoader from './DotLoader';
 
-const ThreeLoader: React.FC = () => {
+interface ThreeLoaderProps {
+  noPrep?: boolean;
+  invert?: boolean;
+}
+
+const ThreeLoader: React.FC<ThreeLoaderProps> = ({
+  noPrep = false,
+  invert = false,
+}) => {
   const { progress } = useProgress();
+
+  const renderProgressMessage = (p: number) => (
+    <>
+      <div style={{ fontSize: '1.5rem', marginBottom: '.5rem' }}>
+        <span style={{ whiteSpace: 'nowrap' }}>Experience Loading: {Math.round(p)}%</span>
+      </div>
+    </>
+  );
+
   return (
       <div
         style={{
@@ -11,68 +30,26 @@ const ThreeLoader: React.FC = () => {
           left: 0,
           width: '100vw',
           height: '100vh',
-          backgroundColor: 'rgba(226, 226, 226, 0.5)',
+          backgroundColor: invert ? 'rgba(1, 1, 1, .75)' : 'rgba(244, 244, 244, 1)',
+          color: invert ? 'rgba(244, 244, 244, 1)' : 'rgba(1, 1, 1, 1)',
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
           flexDirection: 'column',
           zIndex: 10000000,
           opacity: progress === 100 ? 0 : 1,
-          transition: 'opacity 0.1s ease-in-out',
+          pointerEvents: progress === 100 ? 'none' : 'auto', // Prevent interaction when hidden
+          transition: progress < 80 ? 'none' : 'opacity 0.5s ease-in-out', // Smooth animation
         }}
       >
-        {progress === 0 ? (
-          <>
-            <div style={{ fontSize: '1.5rem', color: 'black', display: 'flex', alignItems: 'center', gap: '0.2rem', marginBottom: '.5rem' }}>
-              Preparing Modules
-              <span style={{ animation: 'dots 1.5s infinite' }}>.</span>
-              <span style={{ animation: 'dots 1.5s infinite 0.5s' }}>.</span>
-              <span style={{ animation: 'dots 1.5s infinite 1s' }}>.</span>
-            </div>
-              <style>
-                {`
-                  @keyframes dots {
-                    0%, 20% {
-                      opacity: 0;
-                    }
-                    40% {
-                      opacity: 1;
-                    }
-                    100% {
-                      opacity: 0;
-                    }
-                  }
-                `}
-              </style>
-          </>
-        ) :
-          <>
-            <div style={{ fontSize: '1.5rem', color: 'black', marginBottom: '.5rem' }}>Experience Loading: {Math.round(progress)}%</div>
-          </>
-        }
-        <div
-          style={{
-            position: 'relative',
-            width: '50px',
-            height: '50px',
-            backgroundColor: 'black',
-            animation: 'moveBackAndForth 2s ease-in-out infinite',
-          }}
-        ></div>
-        <style>
-          {`
-              @keyframes moveBackAndForth {
-                  0%, 100% {
-                  transform: translateX(-50px);
-                  }
-                  50% {
-                  transform: translateX(50px);
-                  }
-              }
-              `}
-        </style>
+        <BracketLoader invert={invert}>
+          {(progress === 0 && !noPrep)
+        ? (<DotLoader/>)   
+        : renderProgressMessage(progress)
+          }
+        </BracketLoader>
       </div>
-  );
+    )
 };
 
 export default ThreeLoader;
