@@ -152,22 +152,18 @@ const EffectPass:FC = () => {
             )} */}
             <Warp
                 {...warpProps}
-                blendFunction={BlendFunction[customEffectBlendMode]}
+                blendFunction={BlendFunction['NORMAL']}
             />
-            {noiseOn && (
-                <Noise
-                    opacity={0.2}
-                    premultiply
-                    blendFunction={BlendFunction[noiseBlendingMode]}
-                />
-            )}
-            {vignetteOn && (
-                <Vignette
-                    offset={0.5}
-                    darkness={0.5}
-                    blendFunction={BlendFunction[vignetteBlendingMode]}
-                />
-            )}
+            <Noise
+                opacity={0.2}
+                premultiply
+                blendFunction={BlendFunction['OVERLAY']}
+            />
+            <Vignette
+                offset={0.5}
+                darkness={0.5}
+                blendFunction={BlendFunction['NORMAL']}
+            />
         </EffectComposer>
     )
 }

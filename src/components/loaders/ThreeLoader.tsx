@@ -52,7 +52,7 @@ const ThreeLoader: React.FC<ThreeLoaderProps> = ({
           left: 0,
           width: '100vw',
           height: '100vh',
-          backgroundColor: invert ? 'rgba(1, 1, 1, 1)' : 'rgba(244, 244, 244, 1)',
+          backgroundColor: invert ? 'rgba(1, 1, 1, .75)' : 'rgba(244, 244, 244, 1)',
           color: invert ? 'rgba(244, 244, 244, 1)' : 'rgba(1, 1, 1, 1)',
           display: 'flex',
           justifyContent: 'center',
@@ -61,7 +61,7 @@ const ThreeLoader: React.FC<ThreeLoaderProps> = ({
           zIndex: 10000000,
           opacity: progress === 100 ? 0 : 1,
           pointerEvents: progress === 100 ? 'none' : 'auto', // Prevent interaction when hidden
-          // transition: 'opacity 0.5s ease-in-out', // Smooth animation
+          transition: progress < 80 ? 'none' : 'opacity 0.5s ease-in-out', // Smooth animation
         }}
       >
         <BracketLoader invert={invert}>

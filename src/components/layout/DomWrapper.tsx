@@ -51,21 +51,13 @@ const Dom = ({ children, studio = false, initialLoad = false, routeChange = fals
           ref={ref}
         >
           {children}
-          {(initialLoad) && (
-            <ThreeLoader
-              setLoadingComplete={(s) => setIsLoadingComplete(s)}
-              loadingComplete={isLoadingComplete}
-            />
-          )}
-          {(!initialLoad) && (
-            <ThreeLoader
-              setLoadingComplete={(s) => setIsLoadingComplete(s)}
-              loadingComplete={isLoadingComplete}
-              noBg={!initialLoad}
-              noPrep={!initialLoad}
-              invert={!initialLoad}
-            />
-          )}
+          <ThreeLoader
+            setLoadingComplete={(s) => setIsLoadingComplete(s)}
+            loadingComplete={isLoadingComplete}
+            noBg={!initialLoad}
+            noPrep={!initialLoad}
+            invert={!initialLoad}
+          />
         </div>
       )}
     </>
