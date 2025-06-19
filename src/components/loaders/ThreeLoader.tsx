@@ -1,40 +1,18 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useProgress } from '@react-three/drei';
 import BracketLoader from './BracketLoader';
 import DotLoader from './DotLoader';
 
 interface ThreeLoaderProps {
-  setLoadingComplete: (s:boolean) => void;
-  loadingComplete?: boolean;
-  noBg?: boolean;
   noPrep?: boolean;
   invert?: boolean;
 }
 
 const ThreeLoader: React.FC<ThreeLoaderProps> = ({
-  setLoadingComplete,
-  loadingComplete = false,
-  noBg = false,
   noPrep = false,
   invert = false,
 }) => {
   const { progress } = useProgress();
-
-  // useEffect(() => {
-  //   if (progress === 100 && allowComplete) {
-  //     console.log('setting complete true:', progress)
-  //     setAllowComplete(false);
-  //     setTimeout(() => {
-  //       setLoadingComplete(true);
-  //     }, 100);
-  //   }
-  // }, [progress, setLoadingComplete]);
-
-  // useEffect(() => {
-  //   if (progress === 0) {
-  //     setAllowComplete(false);
-  //   }
-  // }, [progress]);
 
   const renderProgressMessage = (p: number) => (
     <>

@@ -1,7 +1,5 @@
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import ThreeLoader from "../loaders/ThreeLoader";
-import { useEffect } from "react";
-import { useRouter } from "next/router";
 
 interface DomProps {
   children: React.ReactNode;
@@ -10,29 +8,8 @@ interface DomProps {
   routeChange?: boolean;
 }
 
-const Dom = ({ children, studio = false, initialLoad = false, routeChange = false }: DomProps) => {
+const Dom = ({ children, studio = false, initialLoad = false }: DomProps) => {
   const ref = useRef(null);
-  const [isLoadingComplete, setIsLoadingComplete] = useState(false);
-
-  useEffect(() => {
-    // console.log("Initial Load:", initialLoad);
-    // console.log("Route Change:", routeChange);
-    // console.log("Loading Complete:", isLoadingComplete)
-  }, [initialLoad, routeChange, isLoadingComplete]);
-
-  // const router = useRouter();
-
-  // useEffect(() => {
-  //   const handleRouteChange = () => {
-  //     setIsLoadingComplete(false);
-  //   };
-
-  //   router.events.on("routeChangeStart", handleRouteChange);
-
-  //   return () => {
-  //     router.events.off("routeChangeStart", handleRouteChange);
-  //   };
-  // }, [router]);
 
   return (
     <>
@@ -52,9 +29,6 @@ const Dom = ({ children, studio = false, initialLoad = false, routeChange = fals
         >
           {children}
           <ThreeLoader
-            setLoadingComplete={(s) => setIsLoadingComplete(s)}
-            loadingComplete={isLoadingComplete}
-            noBg={!initialLoad}
             noPrep={!initialLoad}
             invert={!initialLoad}
           />

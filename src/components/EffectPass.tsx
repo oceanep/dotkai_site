@@ -1,7 +1,6 @@
 import { FC } from "react";
 import { EffectComposer, ToneMapping } from "@react-three/postprocessing";
 import { ToneMappingMode, BlendFunction } from "postprocessing";
-import { VignetteEffect } from "postprocessing";
 import Warp from "@/effects/Warp";
 import NoiseEffect from "@/effects/Noise";
 import Vignette from "@/effects/Vignette";
@@ -22,7 +21,7 @@ const EffectPass: FC = () => {
                 blendFunction={BlendFunction['NORMAL']}
             />
             <NoiseEffect
-                intensity={0.5}
+                intensity={0.35}
                 blendFunction={BlendFunction['OVERLAY']}
             />
         </EffectComposer>
