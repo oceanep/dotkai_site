@@ -146,6 +146,7 @@ const Artifacts: FC = () => {
             scene.remove(squareInst);
             scene.remove(lines);
         };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [scene]);
 
     //mesh group animations

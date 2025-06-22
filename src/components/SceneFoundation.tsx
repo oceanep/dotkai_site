@@ -14,4 +14,5 @@ const SceneFoundation = memo(() => {
         </>)
 });
 
+SceneFoundation.displayName = 'SceneFoundation'
 export default SceneFoundation
