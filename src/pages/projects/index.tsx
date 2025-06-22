@@ -34,7 +34,7 @@ export const getStaticProps: GetStaticProps<
   }
 }
 
-const ProjectsScene = dynamic(() => import('~/components/projectsPage/ProjectsScene'), {
+const ProjectsScene = dynamic(() => import('@/components/projectsPage/ProjectsScene'), {
   ssr: false
 })
 

@@ -1,9 +1,9 @@
-import { Suspense, useState } from 'react'
+import { Suspense } from 'react'
 import { Canvas } from '@react-three/fiber'
 import { Leva } from 'leva'
 import { SceneContainer } from '@/styles/styled'
-import EffectPass from '@/components/EffectPass'
 import { ACESFilmicToneMapping, SRGBColorSpace } from 'three/src/constants'
+import SceneFoundation from '../SceneFoundation'
 
 interface CanvasProps {
   children: React.ReactNode;
@@ -11,8 +11,7 @@ interface CanvasProps {
   eventSource?: React.RefObject<HTMLElement | null>;
 }
 
-const CanvasWrapper = ({ children, eventSource, initialLoad = false }: CanvasProps) => {  
-  const persistentEffectPass = <EffectPass />;
+const CanvasWrapper = ({ children, eventSource }: CanvasProps) => {  
 
   return (
     <SceneContainer>
@@ -36,9 +35,9 @@ const CanvasWrapper = ({ children, eventSource, initialLoad = false }: CanvasPro
         eventSource={eventSource}
         eventPrefix="client"
       >
-        {persistentEffectPass}
         <Suspense fallback={null}>
             <>
+              <SceneFoundation/>
               {children}
             </>
         </Suspense>
