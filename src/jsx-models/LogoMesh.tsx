@@ -1,7 +1,6 @@
 import { Group, NearestFilter, TextureLoader } from 'three'
 import React, { forwardRef, useEffect } from 'react'
 import { useGLTF } from '@react-three/drei'
-import { useControls } from 'leva'
 import { GroupProps, useLoader } from '@react-three/fiber'
 import { GLTFResult } from '~/utils/types'
 
@@ -24,24 +23,14 @@ const LogoMesh = forwardRef<Group, LogoMeshProps>(
       }
     }, [gradientTexture])
 
-    const { color, emissionColor, emissionIntensity } = useControls('logo', {
-      color: '#f576f5',
-      emissionColor: '#f576f5',
-      emissionIntensity: {
-        min: 0,
-        max: 20,
-        value: 1,
-      },
-    })
-
     return (
       <group {...props} dispose={null} ref={ref}>
         <mesh castShadow receiveShadow geometry={nodes.Ocean_Mesh.geometry}>
           <meshToonMaterial
             attach="material"
-            color={color}
-            emissive={emissionColor}
-            emissiveIntensity={emissionIntensity}
+            color={'#f576f5'}
+            emissive={'#f576f5'}
+            emissiveIntensity={1}
             gradientMap={gradientTexture}
           />
         </mesh>
@@ -54,9 +43,9 @@ const LogoMesh = forwardRef<Group, LogoMeshProps>(
         <mesh castShadow receiveShadow geometry={nodes.T_mesh.geometry}>
           <meshToonMaterial
             attach="material"
-            color={color}
-            emissive={emissionColor}
-            emissiveIntensity={emissionIntensity}
+            color={'#f576f5'}
+            emissive={'#f576f5'}
+            emissiveIntensity={1}
             gradientMap={gradientTexture}
           />
         </mesh>

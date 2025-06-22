@@ -8,7 +8,6 @@ import { useFrame, useThree } from '@react-three/fiber'
 import { Mesh } from 'three/src/objects/Mesh'
 import { Euler } from 'three/src/math/Euler'
 import { Vector3 } from 'three/src/math/Vector3'
-import { Color } from 'three/src/math/Color'
 
 import { clamp } from 'three/src/math/MathUtils'
 import { useDebouncedResize, useMediaQuery } from '@/utils/hooks'
@@ -265,7 +264,7 @@ const ProjectsScene = ({
   // temporary fix to persist background color across pages
   const scene = useThree((state) => state.scene)
   useEffect(() => {
-    scene.background = new Color('#ffffff')
+    // scene.background = new Color('#ffffff')
   }, [scene])
 
   return (
