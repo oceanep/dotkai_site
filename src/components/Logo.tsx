@@ -1,12 +1,9 @@
 import { FC, useRef } from 'react'
-import { useFrame } from '@react-three/fiber'
 import { Html, useTexture } from '@react-three/drei'
-// import { Group, Mesh } from 'three'
-import { useControls } from 'leva'
 import { useRouter } from 'next/navigation'
 
 import { CyberButton, } from '~/styles/styled'
-import LogoMesh from '../jsx-models/LogoMesh'
+import LogoMesh from '@/jsx-models/LogoMesh'
 import { Group } from 'three/src/objects/Group'
 import { Mesh } from 'three/src/objects/Mesh'
 
@@ -20,21 +17,6 @@ const Logo: FC = () => {
 
   const router = useRouter()
 
-  const { position, color, visible, rotate } = useControls({
-    position: {
-      value: { x: 0, y: 0 },
-      step: 0.1,
-      joystick: 'invertY',
-    },
-    color: '#b383ff',
-    visible: true,
-    rotate: false,
-  })
-
-  useFrame((s, delta) => {
-    if (rotate) group.current.rotation.y += delta
-  })
-
   return (
     <group ref={group}>
       <LogoMesh ref={logo} position-y={-0.5} />
@@ -47,7 +29,6 @@ const Logo: FC = () => {
         position-y={0}
         position-z={-0.8}
         scale={0.8}
-        visible={visible}
       >
         <boxGeometry args={[4, 2, 0]} />
         <meshBasicMaterial transparent map={bgTexture} />

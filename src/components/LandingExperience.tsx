@@ -12,7 +12,7 @@ const LandingExperience: FC = () => {
 
     return (
         <Bvh>
-            {<Perf position="top-left" />}
+            {process.env.NODE_ENV === 'development' && <Perf position="top-left" />}
             <Suspense fallback={null}>
                 <Bounds fit clip observe margin={0.9}>
                     <Logo />

@@ -1,6 +1,5 @@
 import { Suspense } from 'react'
 import { Canvas } from '@react-three/fiber'
-import { Leva } from 'leva'
 import { SceneContainer } from '@/styles/styled'
 import { ACESFilmicToneMapping, SRGBColorSpace } from 'three/src/constants'
 import SceneFoundation from '../SceneFoundation'
@@ -15,7 +14,6 @@ const CanvasWrapper = ({ children, eventSource }: CanvasProps) => {
 
   return (
     <SceneContainer>
-      <Leva collapsed />
       <Canvas
         shadows
         dpr={[1, 2]}
