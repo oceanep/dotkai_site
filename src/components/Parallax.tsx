@@ -1,11 +1,14 @@
-import { useThree, useFrame, Vector3 } from "@react-three/fiber";
+import { useThree, useFrame } from "@react-three/fiber";
+
 import { useState, useEffect, useRef, useMemo } from "react";
+import { Vector3 } from "three/src/math/Vector3";
 import { Mesh } from "three/src/objects/Mesh";
 
 interface iParallax {
     secondaryPos?: Vector3
+    ready?: boolean
 }
-const Parallax = ({ secondaryPos = undefined }) => {
+const Parallax = ({ secondaryPos = undefined, ready = true }: iParallax) => {
     const [cursor, setCursor] = useState({x: 0, y: 0})
 
     const foci = useRef<Mesh>(null!);
@@ -17,7 +20,9 @@ const Parallax = ({ secondaryPos = undefined }) => {
         x: camera.position.x || 0,
         y: camera.position.y || 0, 
         z: camera.position.z || 3.5
-    }), [camera.position]);
+        // disable cause camera is mutable and doesn't trigger react to re-memoize anyway
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }), [ready]);
 
     const handleCursor = (e) => 
         //cursor returns as a decimal of 1 so subtract .5 to get accurate mapping to screen
@@ -43,6 +48,7 @@ const Parallax = ({ secondaryPos = undefined }) => {
 
 
     useFrame((s, delta) => {
+        if (!ready || !s.camera || !foci.current) return
         const amplitude = 1.2
         //add starting position of camera to compensate for none 0,0 origin
         const parallaxX = (cursor.x + initCamPos.x) * amplitude
@@ -53,11 +59,15 @@ const Parallax = ({ secondaryPos = undefined }) => {
         s.camera.position.x += (parallaxX - s.camera.position.x) * easing
         s.camera.position.y += (parallaxY - s.camera.position.y) * easing
         
-        if (secondaryPos) s.camera.lookAt(
-            s.camera.position
-            .clone()
-            .lerp(secondaryPos, delta * 5),
-        )
+        if (secondaryPos !== undefined) {
+            // if (!Number.isFinite(secondaryPos.x)) return
+            s.camera.lookAt(
+                secondaryPos
+                // s.camera.position
+                // .clone()
+                // .lerp(secondaryPos, delta * 5)
+            )  
+        } 
         if (secondaryPos === undefined) s.camera.lookAt(foci.current.position)
     });
 

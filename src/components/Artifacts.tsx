@@ -117,7 +117,6 @@ const Artifacts: FC = () => {
             attribute vec4 instR;
             attribute vec3 instS;
             
-            // http://barradeau.com/blog/?p=1109
             vec3 trs( inout vec3 position, vec3 T, vec4 R, vec3 S ) {
                 position *= S;
                 position += 2.0 * cross( R.xyz, cross( R.xyz, position ) + R.w * position );
