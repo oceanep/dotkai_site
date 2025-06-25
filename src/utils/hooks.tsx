@@ -3,23 +3,8 @@ import { getMobilePlatform, getVisualViewportSize, throttle } from "."
 
 export const useDebouncedResize = (): number[] => {
 
-    const { isIphoneSafari, isIphoneChrome, isAndroid, isIOS } = getMobilePlatform()
-    // alert(`window dimensions:  ${window.innerWidth} x ${window.innerHeight}`)
-    // alert(`visualViewport dimentions: ${window.visualViewport?.width} x ${window.visualViewport?.height}`)
-    // useEffect(() => {
-    //     if (isIphoneSafari) {
-    //       alert('✅ This is iPhone Safari')
-    //     } else if (isIphoneChrome) {
-    //       alert('ℹ️ This is iPhone Chrome')
-    //     } else if (isAndroid) {
-    //       alert('🤖 Android browser detected')
-    //     } else if (isIOS) {
-    //       alert('📱 iOS device but not Safari or Chrome')
-    //     } else {
-    //       alert('🖥 Not a mobile browser')
-    //     }
-    //   }, [isIphoneSafari, isIphoneChrome, isAndroid, isIOS])
-      
+    const { isIphoneSafari, isAndroid, isIOS } = getMobilePlatform()
+  
     //set screen resolution
     const [size, setSize] = useState<number[]>(
         getVisualViewportSize(isIOS || isIphoneSafari ? true : false)
@@ -27,7 +12,7 @@ export const useDebouncedResize = (): number[] => {
 
     const handleSetSize = useCallback(() =>{
         setSize(
-                getVisualViewportSize(isIOS || isIphoneSafari ? true : false)
+                getVisualViewportSize(isIOS || isAndroid ? true : false)
             )},
     [isIOS, isAndroid])
 
