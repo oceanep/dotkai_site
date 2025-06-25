@@ -60,7 +60,6 @@ export default function App({
   useEffect(() => {
     const handleRouteChange = (url) => {
       setHasPrevPage(true)
-      console.log(`App is changing to: ${url}`)
     };
 
     router.events.on('routeChangeStart', handleRouteChange);

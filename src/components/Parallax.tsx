@@ -1,13 +1,17 @@
-import { useThree, useFrame } from "@react-three/fiber";
+import { useThree, useFrame, Vector3 } from "@react-three/fiber";
 import { useState, useEffect, useRef, useMemo } from "react";
 import { Mesh } from "three/src/objects/Mesh";
-// import { Mesh } from "three";
 
-const Parallax = () => {
-    const camera = useThree(state => state.camera);
-    const foci = useRef<Mesh>(null!);
-
+interface iParallax {
+    secondaryPos?: Vector3
+}
+const Parallax = ({ secondaryPos = undefined }) => {
     const [cursor, setCursor] = useState({x: 0, y: 0})
+
+    const foci = useRef<Mesh>(null!);
+    const prevSecondary = useRef<Vector3 | undefined>(undefined);
+    
+    const camera = useThree(state => state.camera);
     
     const initCamPos = useMemo(() => ({
         x: camera.position.x || 0,
@@ -27,6 +31,17 @@ const Parallax = () => {
         return () => window.removeEventListener('mousemove', handleCursor);
     }, []);
 
+    useEffect(() => {
+        const wasDefined = !!prevSecondary.current;
+        const isDefined = !!secondaryPos;
+        if (wasDefined !== isDefined) {
+            setCursor({ x: 0, y: 0 });
+        }
+
+        prevSecondary.current = secondaryPos;
+    }, [secondaryPos]);
+
+
     useFrame((s, delta) => {
         const amplitude = 1.2
         //add starting position of camera to compensate for none 0,0 origin
@@ -37,8 +52,13 @@ const Parallax = () => {
 
         s.camera.position.x += (parallaxX - s.camera.position.x) * easing
         s.camera.position.y += (parallaxY - s.camera.position.y) * easing
-
-        s.camera.lookAt(foci.current.position)
+        
+        if (secondaryPos) s.camera.lookAt(
+            s.camera.position
+            .clone()
+            .lerp(secondaryPos, delta * 5),
+        )
+        if (secondaryPos === undefined) s.camera.lookAt(foci.current.position)
     });
 
     return (

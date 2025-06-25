@@ -76,7 +76,7 @@ $colors: (
         height: 80vh;
         height: 80dvh; // fallback
         min-width: 440px;
-        min-height: 990px;
+        min-height: 820px; //820
         padding: 16px;
     }
     @include mediaQuery(DESKTOP) {

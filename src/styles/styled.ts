@@ -16,6 +16,7 @@ export const SceneContainer = styled.div`
     margin: 0;
     padding: 0;
     overscroll-behavior: none;
+    background-color: black;
 
     & > canvas {
         /* height: 100%;

@@ -27,11 +27,9 @@ const CanvasWrapper = ({ children, eventSource }: CanvasProps) => {
       const canvasWidth = canvasElement.clientWidth;
 
       if (isIOS && canvasHeight % 2 !== 0) {
-        console.log('checking canvas height: ', canvasHeight)
         setHeight(`${canvasHeight - 1}px`);
       }
       if (isIOS && canvasWidth % 2 !== 0) {
-        console.log('checking canvas width: ', canvasWidth)
         setHeight(`${canvasWidth - 1}px`);
       }
     };

@@ -244,7 +244,7 @@ const ProjectsScene = ({
     if (showDisplay && displayRef.current) {
       state.camera.position.lerp(
         //add .85 to x to offset the camera position from the parralax component
-        displayRef.current.position.clone().add(new Vector3(.85, 0, 3.5)),
+        displayRef.current.position.clone().add(new Vector3(0.85, 0, 3.5)),
         delta * 5,
       )
       state.camera.lookAt(
@@ -269,15 +269,34 @@ const ProjectsScene = ({
 
   return (
     <>
-      <Parallax/>
+      {/* {
+        showDisplay
+          ? <Parallax secondaryPos={[ displayRef.current.position[0], displayRef.current.position[1], displayRef.current.position[2] ]} />
+          : <Parallax />
+      } */}
+      <Parallax
+        secondaryPos={
+          showDisplay && displayRef.current 
+            ? [ displayRef.current.position[0], displayRef.current.position[1], displayRef.current.position[2] ]
+            : undefined
+        }
+      />
       <Suspense
         fallback={
-          <PanelSkeleton
-            position={[meshAX, meshAY, -0.2]}
-            rotation={rotationA.toArray() as [number, number, number]}
-            width={meshAWidth}
-            height={meshAHeight}
-          />
+          <>
+            <PanelSkeleton
+              position={[meshAX, meshAY, -0.2]}
+              rotation={rotationA.toArray() as [number, number, number]}
+              width={meshAWidth}
+              height={meshAHeight}
+            />
+            <PanelSkeleton
+              position={[meshBX, meshBY, -0.25]}
+              rotation={rotationB.toArray() as [number, number, number]}
+              width={meshBWidth}
+              height={meshBHeight}
+            />
+          </>
         }
       >
         <ProjectsMenu
@@ -291,17 +310,6 @@ const ProjectsScene = ({
           projectClickHandler={handleProjectSelect}
           sideMenuClickHandler={handleMenuItemSelect}
         />
-      </Suspense>
-      <Suspense fallback={
-              <PanelSkeleton
-                position={[meshBX, meshBY, -0.25]}
-                rotation={rotationB.toArray() as [number, number, number]}
-                width={meshBWidth}
-                height={meshBHeight}
-              />
-            }
-          > 
-      
         <ProjectsDisplay
           ref={displayRef}
           width={meshBWidth}
