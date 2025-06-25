@@ -19,7 +19,7 @@ const Lighting: FC = () => {
                 <Lightformer
                     position={[0, 0, -3]}
                     scale={5}
-                    color={'"#ffe5e5"'}
+                    color={'#ffe5e5'}
                     intensity={10}
                     form="ring"
                 />

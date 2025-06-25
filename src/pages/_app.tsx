@@ -9,6 +9,7 @@ import { SharedPageProps } from '@/utils/types'
 
 import '@/styles/global.css'
 import { useRouter } from 'next/router'
+import Head from 'next/head'
 
 export interface CustomNextPage {
   (props: any): JSX.Element;
@@ -72,6 +73,9 @@ export default function App({
 
   return (
     <>
+    <Head>
+      <meta name="mobile-web-app-capable" content="yes"/>
+    </Head>
       <StrictMode>
         <style jsx global>
           {`

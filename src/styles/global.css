@@ -83,6 +83,17 @@
   font-display: swap;
 }
 
+html, body, #__next {
+  height: 100vh; /* fallback */
+  height: 100dvh;
+  width: 100vw; /* fallback */
+  width: 100dvw;
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+  position: fixed;
+}
+
 html {
   background-color: var(--white);
   font-family: var(--font-family-sans), var(--font-family-serif), sans-serif;
@@ -93,6 +104,7 @@ html {
 
 body {
   margin: 0;
+  cursor: pointer;
 }
 
 h1 {

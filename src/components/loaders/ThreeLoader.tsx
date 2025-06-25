@@ -3,6 +3,8 @@ import { useProgress } from '@react-three/drei';
 import BracketLoader from './BracketLoader';
 import DotLoader from './DotLoader';
 
+import classnames from './Loader.module.scss'
+
 interface ThreeLoaderProps {
   noPrep?: boolean;
   invert?: boolean;
@@ -28,8 +30,6 @@ const ThreeLoader: React.FC<ThreeLoaderProps> = ({
           position: 'fixed',
           top: 0,
           left: 0,
-          width: '100vw',
-          height: '100vh',
           backgroundColor: invert ? 'rgba(1, 1, 1, .75)' : 'rgba(244, 244, 244, 1)',
           color: invert ? 'rgba(244, 244, 244, 1)' : 'rgba(1, 1, 1, 1)',
           display: 'flex',
@@ -41,6 +41,7 @@ const ThreeLoader: React.FC<ThreeLoaderProps> = ({
           pointerEvents: progress === 100 ? 'none' : 'auto', // Prevent interaction when hidden
           transition: progress < 80 ? 'none' : 'opacity 0.5s ease-in-out', // Smooth animation
         }}
+        className={classnames['container']}
       >
         <BracketLoader invert={invert}>
           {(progress === 0 && !noPrep)

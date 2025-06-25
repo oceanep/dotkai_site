@@ -1,3 +1,10 @@
+.container {
+    height: 100vh;
+    height: 100dvh;
+    width: 100vw;
+    width: 100dvw;
+}
+
 .boxLeft, .boxRight {
     background-color: rgba(1, 1, 1, 1);
 }
