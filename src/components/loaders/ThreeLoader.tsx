@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useProgress } from '@react-three/drei';
 import BracketLoader from './BracketLoader';
 import DotLoader from './DotLoader';
 
 import classnames from './Loader.module.scss'
+import { getMobilePlatform } from '~/utils';
 
 interface ThreeLoaderProps {
   noPrep?: boolean;
@@ -24,13 +25,24 @@ const ThreeLoader: React.FC<ThreeLoaderProps> = ({
     </>
   );
 
+  const [platform, setPlatform] = useState(() => ({
+    isIOS: false,
+    isAndroid: false,
+    isIphoneSafari: false,
+    isIphoneChrome: false,
+  }));
+  
+  useEffect(() => {
+    setPlatform(getMobilePlatform());
+  }, []);
+
   return (
       <div
         style={{
           position: 'fixed',
           top: 0,
           left: 0,
-          backgroundColor: invert ? 'rgba(1, 1, 1, .75)' : 'rgba(244, 244, 244, 1)',
+          backgroundColor: invert && platform.isIOS ? 'rgba(1, 1, 1, 1)' : invert ? 'rgba(1, 1, 1, .75)' : 'rgba(244, 244, 244, 1)',
           color: invert ? 'rgba(244, 244, 244, 1)' : 'rgba(1, 1, 1, 1)',
           display: 'flex',
           justifyContent: 'center',
@@ -43,7 +55,7 @@ const ThreeLoader: React.FC<ThreeLoaderProps> = ({
         }}
         className={classnames['container']}
       >
-        <BracketLoader invert={invert}>
+        <BracketLoader invert={invert} isIOS={platform.isIOS}>
           {(progress === 0 && !noPrep)
         ? (<DotLoader/>)   
         : renderProgressMessage(progress)

@@ -1,3 +1,7 @@
+@mixin swing-ease {
+    animation-timing-function: cubic-bezier(0.85, 0, 0.15, 1);
+  }
+
 .container {
     height: 100vh;
     height: 100dvh;
@@ -7,6 +11,9 @@
 
 .boxLeft, .boxRight {
     background-color: rgba(1, 1, 1, 1);
+    z-index: 5;
+    will-change: 'transform';
+    backface-visibility: 'hidden';
 }
 
 .boxLeft::before {
@@ -65,6 +72,12 @@
 }
 
 .overlay {
+    position: absolute;
+    top: 1em; // absolute sizing starts from the edge of padding, so 1em is 0 for inner content
+    left: 1em; // see above
+    // transform-origin: left; // important for scaleX to mimic width
+    // transform: scaleX(0.98);
+    height: 3em;
     overflow: hidden;
     
     & > * {
@@ -72,6 +85,119 @@
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
+        z-index: 1;
+    }
+    &.invert {
+        background-color: transparent;
     }
 
+    &.ios {
+        
+        &::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 50%;
+            background-color: rgba(244, 244, 244, 1);
+            animation: moveLeftMask 5s infinite;
+            @include swing-ease();
+            z-index: 2;
+            pointer-events: none;
+        }
+        &.invert::after {
+            background-color: rgba(1, 1, 1, 1);
+        }
+
+        &::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 50%;
+            background-color: rgba(244, 244, 244, 1);
+            animation: moveRightMask 5s infinite;
+            @include swing-ease();
+            z-index: 2;
+            pointer-events: none;
+        }
+        &.invert::before {
+            background-color: rgba(1, 1, 1, 1);
+        }
+    }
+    
+
+}
+
+@keyframes moveLeftMask {
+    0% {
+
+        transform: translateX(0);
+    }
+
+    25% {
+        transform: translateX(-9.75em);
+    }
+
+    49% {
+
+        transform: translateX(0);
+    }
+
+    50% {
+
+        transform: translateX(0);
+    }
+
+    75% {
+        transform: translateX(-9.75em);
+    }
+
+    99% {
+
+        transform: translateX(0);
+    }
+
+    100% {
+
+        transform: translateX(0);
+    }
+}
+
+@keyframes moveRightMask {
+    0% {
+
+        transform: translateX(10.75em);
+    }
+
+    25% {
+        transform: translateX(20.5em);
+    }
+
+    49% {
+
+        transform: translateX(10.75em);
+    }
+
+    50% {
+
+        transform: translateX(10.75em);
+    }
+
+    75% {
+        //   width: 20.5em;
+        transform: translateX(20.5em);
+    }
+
+    99% {
+
+        transform: translateX(10.75em);
+    }
+
+    100% {
+
+        transform: translateX(10.75em);
+    }
 }

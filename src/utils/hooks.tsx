@@ -26,9 +26,6 @@ export const useDebouncedResize = (): number[] => {
     )
 
     const handleSetSize = useCallback(() =>{
-        // console.log('window dimensions: ', window.innerWidth, window.innerHeight)
-        // console.log('visualViewport dimentions: ', window.visualViewport?.width, window.visualViewport?.height)
-        console.log('is ios? ', isIOS|| isIphoneSafari)
         setSize(
                 getVisualViewportSize(isIOS || isIphoneSafari ? true : false)
             )},

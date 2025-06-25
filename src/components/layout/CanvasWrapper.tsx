@@ -26,6 +26,8 @@ const CanvasWrapper = ({ children, eventSource }: CanvasProps) => {
       const canvasHeight = canvasElement.clientHeight;
       const canvasWidth = canvasElement.clientWidth;
 
+      // Iphone Safari has an issue with transform 3Ds 
+      // Canvas height HAS to be even or interactivity box misaligns with screen
       if (isIOS && canvasHeight % 2 !== 0) {
         setHeight(`${canvasHeight - 1}px`);
       }

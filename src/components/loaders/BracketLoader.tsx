@@ -1,6 +1,8 @@
 import React from 'react';
 import classes from './Loader.module.scss';
 
+const timingFunction = `cubic-bezier(0.85, 0, 0.15, 1)`
+
 const moveBoxesLeft = `
     @keyframes moveBoxesLeft {
         0% {
@@ -45,11 +47,15 @@ const expandWidth = `
     @keyframes expandWidth {
         0% {
             width: 1em;
-            transform: translateX(0);
+            transform: scaleX(0.98) translateX(0);
         }
         25% {
             width: 20.5em; /* 12.5 em is 200px converted to em (assuming 16px base font size), add 1 em to compensate for 0% state */
             transform: translateX(-9.75em); /* 100px converted to em, add .5em for padding */
+        }
+        48% {
+            width: 1em; /* add 2% buffers to make up for css engines shit rendering performance with the brackets */
+            transform: translateX(0);
         }
         50% {
             width: 1em;
@@ -58,6 +64,10 @@ const expandWidth = `
         75% {
             width: 20.5em; /* 12.5 em is 200px converted to em, add 1 em to compensate for 0% state */
             transform: translateX(-9.75em); /* 100px converted to em, add .5em for padding */
+        }
+        98% { 
+            width: 1em; /* add 2% buffers to make up for css engines shit rendering performance with the brackets */
+            transform: translateX(0);
         }
         100% {
             width: 1em;
@@ -78,7 +88,7 @@ const styles = {
         width: '0.5em',
         height: '3em',
         animationDuration: '5s',
-        animationTimingFunction: 'cubic-bezier(1, 0, 0, 1)',
+        animationTimingFunction: timingFunction,
         animationIterationCount: 'infinite',
         position: 'relative' as 'relative',
     },
@@ -89,19 +99,30 @@ const styles = {
         animationName: 'moveBoxesRight',
     },
     overlay: {
-        position: 'absolute' as 'absolute',
-        top: '1em', // absolute sizing starts from the edge of padding, so 1em is 0 for inner content
-        left: '1em', // see above
-        height: '3em',
         animationName: 'expandWidth',
         animationDuration: '5s',
         // animationDelay: '0.1s',
-        animationTimingFunction: 'cubic-bezier(1, 0, 0, 1)',
+        animationTimingFunction: timingFunction,
         animationIterationCount: 'infinite',
     },
+    iosOverlay : {
+        width: '20.5em',
+        transform: 'translateX(-9.75em)',
+    }
 };
 
-const BracketLoader: React.FC<{ children?: React.ReactNode, invert?: boolean }> = ({ children, invert = false }) => {
+interface iBracketLoader {
+    children?: React.ReactNode,
+    invert?: boolean,
+    isIOS?: boolean
+}
+
+const BracketLoader: React.FC<iBracketLoader> = ({
+    children,
+    invert = false,
+    isIOS = false
+}) => {
+    
     return (
         <>
             <style>{moveBoxesLeft}</style>
@@ -118,8 +139,8 @@ const BracketLoader: React.FC<{ children?: React.ReactNode, invert?: boolean }> 
                 ></div>
                 {children && (
                     <div 
-                        style={styles.overlay} 
-                        className={classes['overlay']}
+                        style={isIOS ? styles.iosOverlay : styles.overlay} 
+                        className={`${classes['overlay']} ${isIOS ? classes['ios'] : ''} ${invert ? classes['invert'] : ''}`}
                     >
                         {children}
                     </div>
