@@ -6,6 +6,9 @@ import { CyberButton, } from '~/styles/styled'
 import LogoMesh from '@/jsx-models/LogoMesh'
 import { Group } from 'three/src/objects/Group'
 import { Mesh } from 'three/src/objects/Mesh'
+import { useMediaQuery } from '~/utils/hooks'
+
+import { EMediaType } from '~/utils/types'
 
 const Logo: FC = () => {
   const group = useRef<Group>(null)
@@ -17,8 +20,18 @@ const Logo: FC = () => {
 
   const router = useRouter()
 
+  const isMobile = useMediaQuery(EMediaType.SMARTPHONE)
+  const isTablet = useMediaQuery(EMediaType.TABLET)
+
   return (
-    <group ref={group}>
+    <group
+      ref={group}
+      position={
+        isMobile || isTablet
+        ? [0, 0.25, 0]
+        : [0, 0, 0]
+      }
+    >
       <LogoMesh ref={logo} position-y={-0.5} />
       <mesh position={[-0.7, 0, -0.15]} scale={1.4}>
         <boxGeometry args={[0.5, 0.11, 0]} />
@@ -34,13 +47,17 @@ const Logo: FC = () => {
         <meshBasicMaterial transparent map={bgTexture} />
       </mesh>
       <Html
-        position={[0, -0.5, 0]}
-        // occlude="blending"
-        receiveShadow
+        position={ 
+          isMobile || isTablet 
+            ? [0, -0.75, 0]
+            : [0, -0.5, 0]}
         transform
         distanceFactor={1}
       >
-        <CyberButton onClick={() => router.push('/projects')}>
+        <CyberButton
+          $mobile={isMobile || isTablet ? 1 : 0}
+          onClick={() => router.push('/projects')}
+        >
           ENTER
         </CyberButton>
       </Html>

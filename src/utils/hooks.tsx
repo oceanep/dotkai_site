@@ -1,24 +1,33 @@
 import { useCallback, useEffect, useState } from "react"
-import { throttle } from "."
-import { Vector2 } from "@react-three/fiber"
+import { getMobilePlatform, getVisualViewportSize, throttle } from "."
 
 export const useDebouncedResize = (): number[] => {
-    //set screen resolution
-    const [size, setSize] = useState<number[]>([
-        window.innerWidth,
-        window.innerHeight
-    ])
 
-    const handleSetSize = useCallback(() =>
-        setSize([window.innerWidth, window.innerHeight]),
-    [])
+    const { isIphoneSafari, isAndroid, isIOS } = getMobilePlatform()
+  
+    //set screen resolution
+    const [size, setSize] = useState<number[]>(
+        getVisualViewportSize(isIOS || isIphoneSafari ? true : false)
+    )
+
+    const handleSetSize = useCallback(() =>{
+        setSize(
+                getVisualViewportSize(isIOS || isAndroid ? true : false)
+            )},
+    [isIOS, isAndroid])
 
     useEffect(() => {
         const debouncedResize = throttle(
             handleSetSize,
         500)
+
         window.addEventListener('resize', debouncedResize)
-        return () => window.removeEventListener('resize', debouncedResize)
+        window.visualViewport?.addEventListener('resize', debouncedResize)
+
+        return () => {
+            window.removeEventListener('resize', debouncedResize)
+            window.visualViewport?.removeEventListener('resize', debouncedResize)
+        }
     }, [handleSetSize])
 
     return size

@@ -1,7 +1,10 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useProgress } from '@react-three/drei';
 import BracketLoader from './BracketLoader';
 import DotLoader from './DotLoader';
+
+import classnames from './Loader.module.scss'
+import { getMobilePlatform } from '~/utils';
 
 interface ThreeLoaderProps {
   noPrep?: boolean;
@@ -22,15 +25,24 @@ const ThreeLoader: React.FC<ThreeLoaderProps> = ({
     </>
   );
 
+  const [platform, setPlatform] = useState(() => ({
+    isIOS: false,
+    isAndroid: false,
+    isIphoneSafari: false,
+    isIphoneChrome: false,
+  }));
+  
+  useEffect(() => {
+    setPlatform(getMobilePlatform());
+  }, []);
+
   return (
       <div
         style={{
           position: 'fixed',
           top: 0,
           left: 0,
-          width: '100vw',
-          height: '100vh',
-          backgroundColor: invert ? 'rgba(1, 1, 1, .75)' : 'rgba(244, 244, 244, 1)',
+          backgroundColor: invert && platform.isIOS ? 'rgba(1, 1, 1, 1)' : invert ? 'rgba(1, 1, 1, .75)' : 'rgba(244, 244, 244, 1)',
           color: invert ? 'rgba(244, 244, 244, 1)' : 'rgba(1, 1, 1, 1)',
           display: 'flex',
           justifyContent: 'center',
@@ -41,8 +53,9 @@ const ThreeLoader: React.FC<ThreeLoaderProps> = ({
           pointerEvents: progress === 100 ? 'none' : 'auto', // Prevent interaction when hidden
           transition: progress < 80 ? 'none' : 'opacity 0.5s ease-in-out', // Smooth animation
         }}
+        className={classnames['container']}
       >
-        <BracketLoader invert={invert}>
+        <BracketLoader invert={invert} isIOS={platform.isIOS}>
           {(progress === 0 && !noPrep)
         ? (<DotLoader/>)   
         : renderProgressMessage(progress)

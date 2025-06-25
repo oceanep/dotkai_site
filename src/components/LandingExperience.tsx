@@ -1,4 +1,4 @@
-import { FC, Suspense } from "react";
+import { FC, Suspense, useEffect } from "react";
 import {
     Bounds,
     Bvh,
@@ -9,6 +9,13 @@ import Logo from '@/components/Logo'
 import Parallax from "@/components/Parallax";
 
 const LandingExperience: FC = () => {
+    
+    // useEffect(() => {
+    //     setTimeout(() => {
+    //         alert(`window dimensions:  ${window.innerWidth} x ${window.innerHeight}`)
+    //         alert(`visualViewport dimentions: ${window.visualViewport?.width} x ${window.visualViewport?.height}`)
+    //     }, 5000)
+    // }, [window.visualViewport.width, window.visualViewport.height])
 
     return (
         <Bvh>
