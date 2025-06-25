@@ -20,6 +20,8 @@ const Parallax = ({ secondaryPos = undefined, ready = true }: iParallax) => {
         x: camera.position.x || 0,
         y: camera.position.y || 0, 
         z: camera.position.z || 3.5
+        // disable cause camera is mutable and doesn't trigger react to re-memoize anyway
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }), [ready]);
 
     const handleCursor = (e) => 
