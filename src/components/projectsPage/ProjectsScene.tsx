@@ -1,4 +1,4 @@
-import { Suspense, useCallback, useEffect, useRef, useState } from 'react'
+import { Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
 import dynamic from 'next/dynamic'
 import { type Project, type Page } from '~/lib/sanity.queries'
@@ -222,12 +222,14 @@ const ProjectsScene = ({
     (slug: ESideMenuItem) => {
       const selected = pages.find((item) => item.slug === slug)
       setIsProject(false)
-      setSelectedMenuItem(selected)
+      if (selected?.slug !== selectedMenuItem?.slug) {
+        setSelectedMenuItem(selected)
+      }
       if (!!isMobile) {
         setShowDisplay(true)
       }
     },
-    [pages, isMobile],
+    [pages, isMobile, selectedMenuItem],
   )
 
   const handleBackButtonClick = () => {
@@ -238,19 +240,49 @@ const ProjectsScene = ({
     if (!isMobile) setShowDisplay(false)
   }, [isMobile])
 
+  // parallax camera control is racing against display camera control, provide a delay
+  const [parallaxReady, setParallaxReady] = useState(false)
+
+  useEffect(() => {
+    if (isMobile) {
+      setParallaxReady(false);
+      let frameId: number;
+      let frameCount = 0;
+      const maxFrames = isMobile ? 30 : 15;
+  
+      const waitFrames = () => {
+        if (frameCount < maxFrames) {
+          frameCount++;
+          frameId = requestAnimationFrame(waitFrames);
+        } else {
+          setParallaxReady(true);
+        }
+      };
+  
+      frameId = requestAnimationFrame(waitFrames);
+      return () => cancelAnimationFrame(frameId);
+    } else {
+      setParallaxReady(true); // instantly ready on desktop
+    }
+  }, [showDisplay, isMobile]);
+
+  const derivedReady = useMemo(() => {
+    return isMobile ? parallaxReady : true;
+  }, [isMobile, parallaxReady]);
+
   //3D state management
   //move camera between menu and information display
   useFrame((state, delta) => {
     if (showDisplay && displayRef.current) {
+      if (!displayRef.current.position) return
       state.camera.position.lerp(
-        //add .85 to x to offset the camera position from the parralax component
-        displayRef.current.position.clone().add(new Vector3(0.85, 0, 3.5)),
+        new Vector3(meshBX, meshBY, 3.5),
         delta * 5,
       )
       state.camera.lookAt(
         state.camera.position
           .clone()
-          .lerp(displayRef.current.position, delta * 5),
+          .lerp(new Vector3(meshBX, meshBY, -0.25), delta * 5)
       )
     }
     if (!showDisplay && displayRef.current) {
@@ -261,23 +293,13 @@ const ProjectsScene = ({
     }
   })
 
-  // temporary fix to persist background color across pages
-  const scene = useThree((state) => state.scene)
-  useEffect(() => {
-    // scene.background = new Color('#ffffff')
-  }, [scene])
-
   return (
     <>
-      {/* {
-        showDisplay
-          ? <Parallax secondaryPos={[ displayRef.current.position[0], displayRef.current.position[1], displayRef.current.position[2] ]} />
-          : <Parallax />
-      } */}
       <Parallax
+        {...(isMobile && { ready: derivedReady })}
         secondaryPos={
-          showDisplay && displayRef.current 
-            ? [ displayRef.current.position[0], displayRef.current.position[1], displayRef.current.position[2] ]
+          showDisplay && displayRef.current
+            ? new Vector3(meshBX, meshBY, -0.25)
             : undefined
         }
       />

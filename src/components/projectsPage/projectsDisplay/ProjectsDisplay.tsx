@@ -33,13 +33,11 @@ const ProjectsDisplay = forwardRef<Mesh, ProjectsDisplayProps>(({
     return (
         <group>
             <mesh
-                // position={[0.9, .5, 0]}
                 position={position}
                 rotation={rotation}
                 ref={ref}
             >
                 <planeGeometry
-                    // args={[width * 0.5, height * 0.9]} 
                     args={[width, height]} 
                 />
                 <meshBasicMaterial attach="material" transparent map={bgTexture} />
