@@ -18,7 +18,6 @@ const Warp = forwardRef<React.RefObject<FC>, IWarpProps>((props, ref) => {
         let frameCount = 0;
 
         const waitFrames = () => {
-            // console.log('waiting frames: ', frameCount)
             if (frameCount < MAX_FRAMES) {
                 frameCount++
                 frameId = requestAnimationFrame(waitFrames)
@@ -32,14 +31,13 @@ const Warp = forwardRef<React.RefObject<FC>, IWarpProps>((props, ref) => {
 
     const effect = useMemo(() => {
         if (Array.isArray(resolution) || shouldInit) {
-            // console.log('resolution format running', resolution)
             const formattedResolution: [number, number] = [
                 resolution[0] > 0 ? resolution[0] : window.innerWidth,
                 resolution[1] > 0 ? resolution[1] : window.innerHeight,
             ];
             return new WarpEffect({ resolution: formattedResolution, ...props })
         }
-    }, [resolution, shouldInit])
+    }, [resolution, shouldInit, props])
 
     
     return effect ? <primitive ref={ref} object={effect} /> : null
