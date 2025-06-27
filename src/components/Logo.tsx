@@ -55,7 +55,7 @@ const Logo: FC = () => {
         distanceFactor={1}
       >
         <CyberButton
-          $mobile={isMobile || isTablet ? 1 : 0}
+          $mobile={isMobile ? 1 : 0}
           onClick={() => router.push('/projects')}
         >
           ENTER

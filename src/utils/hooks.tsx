@@ -3,16 +3,16 @@ import { getMobilePlatform, getVisualViewportSize, throttle } from "."
 
 export const useDebouncedResize = (): number[] => {
 
-    const { isIphoneSafari, isAndroid, isIOS } = getMobilePlatform()
+    const { isIphone, isAndroid, isIOS } = getMobilePlatform()
   
     //set screen resolution
     const [size, setSize] = useState<number[]>(
-        getVisualViewportSize(isIOS || isIphoneSafari ? true : false)
+        getVisualViewportSize(isIOS ? true : false, isIphone)
     )
 
     const handleSetSize = useCallback(() =>{
         setSize(
-                getVisualViewportSize(isIOS || isAndroid ? true : false)
+                getVisualViewportSize(isIOS ? true : false, isIphone)
             )},
     [isIOS, isAndroid])
 

@@ -23,12 +23,11 @@ export function getMobilePlatform() {
   if (typeof window === 'undefined') {
     return {
       isIOS: false,
-      isIphoneSafari: false,
-      isIphoneChrome: false,
+      isIphone: false,
       isAndroid: false,
     }
   }
-
+  const screenWidth = window.screen.width
   const ua = window.navigator.userAgent
 
   const isIOS = /iPhone|iPod/.test(ua)
@@ -38,17 +37,20 @@ export function getMobilePlatform() {
 
   return {
     isIOS,
-    isIphoneSafari: isIOS && isSafari,
-    isIphoneChrome: isIOS && isChrome,
+    isIphone: isIOS && (isSafari || isChrome) && screenWidth < 520,
     isAndroid,
   }
 }
 
-export function getVisualViewportSize(iphone: boolean): [number, number] {
+export function getVisualViewportSize(iOS: boolean, iphone: boolean): [number, number] {
   if (typeof window === 'undefined') return [800, 600] // default SSR-safe fallback
 
-  const width = iphone ? window.visualViewport?.width || window.innerWidth: window.innerWidth
-  const height = iphone ? window.visualViewport?.height + 180 || window.innerHeight + 180: window.innerHeight
+  const width = iOS ? window.visualViewport?.width || window.innerWidth: window.innerWidth
+  const height = iphone
+    ? window.visualViewport?.height + 180 || window.innerHeight + 180
+    : iOS
+      ? window.visualViewport?.height || window.innerHeight
+      : window.innerHeight
 
   return [width, height]
 }

@@ -29,6 +29,15 @@ export default class WarpEffect extends Effect {
             }
         )
     }
+    setResolution(resolution: number[]) {
+        const uniform = this.uniforms.get("iResolution");
+        if (!(uniform.value && Array.isArray(uniform.value))) {
+            uniform.value[0] = resolution[0];
+            uniform.value[1] = resolution[1];
+        } else {
+            console.warn("iResolution uniform not found");
+        }
+    }
     // Animate scanlines later
     // update(renderer: WebGLRenderer, inputBuffer: WebGLRenderTarget, deltaTime?: number): void {
     //     this.uniforms.get('time').value += deltaTime
