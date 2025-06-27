@@ -28,8 +28,7 @@ const ThreeLoader: React.FC<ThreeLoaderProps> = ({
   const [platform, setPlatform] = useState(() => ({
     isIOS: false,
     isAndroid: false,
-    isIphoneSafari: false,
-    isIphoneChrome: false,
+    isIphone: false,
   }));
   
   useEffect(() => {
