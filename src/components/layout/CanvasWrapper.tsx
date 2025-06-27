@@ -16,6 +16,7 @@ const CanvasWrapper = ({ children, eventSource }: CanvasProps) => {
   const [width, setWidth] = useState("100%");
 
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const containerRef = useRef(null);
   const { isIOS } = getMobilePlatform()
   
   useEffect(() => {
@@ -32,7 +33,7 @@ const CanvasWrapper = ({ children, eventSource }: CanvasProps) => {
         setHeight(`${canvasHeight - 1}px`);
       }
       if (isIOS && canvasWidth % 2 !== 0) {
-        setHeight(`${canvasWidth - 1}px`);
+        setWidth(`${canvasWidth - 1}px`);
       }
     };
 
@@ -56,7 +57,7 @@ const CanvasWrapper = ({ children, eventSource }: CanvasProps) => {
   }, [isIOS, setHeight, setWidth]);
 
   return (
-    <SceneContainer>
+    <SceneContainer ref={containerRef}>
       <Canvas
         ref={canvasRef}
         shadows

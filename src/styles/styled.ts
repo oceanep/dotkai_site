@@ -9,6 +9,7 @@ export const SceneContainer = styled.div`
     height: 100dvh;
     width: 100vw; /* fallback */
     width: 100dvw;
+    min-height: -webkit-fill-available;
     position: fixed;
     top: 0;
     left: 0;
@@ -17,6 +18,11 @@ export const SceneContainer = styled.div`
     padding: 0;
     overscroll-behavior: none;
     background-color: black;
+
+    @media screen and (orientation: portrait) and (max-width: 1024px) and (-webkit-touch-callout: none) and (hover: none) and (pointer: coarse) {
+        height: 100svh;
+        height: -webkit-fill-available;
+    }
 
     & > canvas {
         /* height: 100%;
