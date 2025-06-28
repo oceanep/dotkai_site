@@ -46,7 +46,7 @@ export default defineType({
                     type: 'file',
                     title: 'Video',
                     options: {
-                        accept: 'video/mp4',
+                        accept: 'video/mp4, video/webm',
                     },
                     fields: [
                         defineField({
