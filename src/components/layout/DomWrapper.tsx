@@ -34,6 +34,7 @@ const Dom = ({ children, studio = false, initialLoad = false }: DomProps) => {
           />
         </div>
       )}
+      {studio && children}
     </>
   );
 };
