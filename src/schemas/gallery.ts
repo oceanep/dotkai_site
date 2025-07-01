@@ -83,6 +83,7 @@ export default defineType({
             options: {
                 list: [
                     { title: 'Tri-force', value: 'tri' },
+                    { title: 'Center', value: 'center' },
                     { title: 'In-line left', value: 'inline-left' },
                     { title: 'In-line right', value: 'inline-right' },
                     { title: 'In-line bottom', value: 'inline-bottom' },

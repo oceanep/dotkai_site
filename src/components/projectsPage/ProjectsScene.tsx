@@ -19,6 +19,7 @@ import PagesContent from '@/components/projectsPage/projectsDisplay/PagesContent
 import PanelSkeleton from '@/components//skeleton/PanelSkeleton'
 import DisplaySkeleton from '@/components/skeleton/DisplaySkeleton'
 import Parallax from '../Parallax'
+import { Perf } from 'r3f-perf'
 
 const ProjectsContent = dynamic(
   () => import('@/components/projectsPage/projectsDisplay/ProjectsContent'), { 
@@ -273,6 +274,7 @@ const ProjectsScene = ({
   //3D state management
   //move camera between menu and information display
   useFrame((state, delta) => {
+    if (!isMobile) return
     if (showDisplay && displayRef.current) {
       if (!displayRef.current.position) return
       state.camera.position.lerp(
@@ -295,6 +297,7 @@ const ProjectsScene = ({
 
   return (
     <>
+      {process.env.NODE_ENV === 'development' && <Perf position="top-left" />}
       <Parallax
         {...(isMobile && { ready: derivedReady })}
         secondaryPos={
