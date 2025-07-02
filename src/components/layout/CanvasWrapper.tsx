@@ -66,6 +66,7 @@ const CanvasWrapper = ({ children, eventSource }: CanvasProps) => {
           antialias: false,
           toneMapping: ACESFilmicToneMapping,
           outputColorSpace: SRGBColorSpace,
+          localClippingEnabled: true
         }}
         //position for landing had y of 0.5, adjust landing position later
         camera={{

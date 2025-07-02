@@ -7,12 +7,14 @@ import { EMediaType } from '@/utils/types'
 import { Group } from 'three/src/objects/Group'
 import { Texture } from 'three/src/textures/Texture'
 import { Vector3 } from 'three/src/math/Vector3'
+import { Plane } from 'three'
 
 interface ProjectsMenuItemProps {
   project: Project
   texture: Texture
   selected: boolean
   index: number
+  clippingPlanes: Plane[]
   selectProject: (newIndex: number) => void
 }
 
@@ -21,6 +23,7 @@ const ProjectsMenuItem: React.FC<ProjectsMenuItemProps> = ({
     texture,
     selected,
     index,
+    clippingPlanes,
     selectProject 
 }) => {
     const [ hover, setHover ] = React.useState(false)
@@ -88,7 +91,12 @@ const ProjectsMenuItem: React.FC<ProjectsMenuItemProps> = ({
                 name='project'
             >
                 <planeGeometry args={[ menuItemWidth, menuItemHeight ]} />
-                <meshBasicMaterial attach="material" toneMapped={false} map={texture} />
+                <meshBasicMaterial
+                    attach="material"
+                    toneMapped={false}
+                    map={texture}
+                    clippingPlanes={ clippingPlanes }
+                />
             </mesh>
             {selected && (
                 <mesh

@@ -1,7 +1,7 @@
-import React, { Suspense, useMemo } from 'react'
+import React, { useMemo, useRef } from 'react'
 
-import { Euler, Vector3 } from '@react-three/fiber'
-import { SRGBColorSpace } from 'three'
+import { Euler, useFrame, Vector3 as Vector3Like } from '@react-three/fiber'
+import { Group, Plane, SRGBColorSpace, Vector3 } from 'three'
 import { Flex } from '@react-three/flex'
 import { useTexture } from '@react-three/drei'
 
@@ -12,12 +12,11 @@ import { EMediaType, ESideMenuItem } from '@/utils/types'
 import ProjectsMenuItem from '@/components/projectsPage/projectsMenu/ProjectsMenuItem'
 import SideMenu from '@/components/projectsPage/sideMenu/sideMenu'
 import MenuTitle from '@/components/projectsPage/projectsMenu/MenuTitle'
-import MenuItemSkeleton from '@/components/skeleton/MenuItemSkeleton'
 
 interface ProjectsMenuProps {
     width: number
     height: number
-    position: Vector3
+    position: Vector3Like
     rotation: Euler
     projects: Project[]
     textureUrls: string[]
@@ -38,7 +37,7 @@ const ProjectsMenu: React.FC<ProjectsMenuProps> = ({
     projectClickHandler,
     sideMenuClickHandler
 }) => {
-    // const meshRefs = useRef<(React.RefObject<Group> | null)[]>([])
+    const groupRef = useRef<Group>(null)
 
     const [ currentIndex, setCurrentIndex ] = React.useState<number>(0)
 
@@ -56,6 +55,63 @@ const ProjectsMenu: React.FC<ProjectsMenuProps> = ({
     // Use difference in widths to add margin to flex contianer positioning
     const [ flexWidth, flexHeight ] = [ width * 0.9375, height * 0.9375 ]
     const widthDiff = isMobile ? 0 : (width - flexWidth) / 2
+
+    // create clipping planes
+    const [topPlane, bottomPlane] = useMemo(() => {
+        const groupY = position[1]
+        const h = flexHeight / 2
+
+        const topNormal = new Vector3(0, -1, 0)
+        const bottomNormal = new Vector3(0, 1, 0)
+
+        const topConstant = groupY + h
+        const bottomConstant = groupY - h
+
+        return [
+            new Plane(topNormal, topConstant),
+            new Plane(bottomNormal, bottomConstant),
+        ]
+    }, [position, flexHeight])
+
+    // Update plane distances every frame to follow container Y position
+    useFrame(() => {
+        if (!groupRef.current) return
+
+        const groupRotation = groupRef.current.rotation
+        const groupPosition = groupRef.current.position
+        const h = flexHeight / 2
+
+        // Create and apply normals
+        const topNormal = new Vector3(0, -1, 0).applyEuler(groupRotation).normalize()
+        const bottomNormal = new Vector3(0, 1, 0).applyEuler(groupRotation).normalize()
+
+        topPlane.normal.copy(topNormal)
+        bottomPlane.normal.copy(bottomNormal)
+
+        // Compute constants based on shifted positions along normals
+        const topPos = groupPosition.clone().addScaledVector(topNormal, h)
+        const bottomPos = groupPosition.clone().addScaledVector(bottomNormal, h)
+
+        topPlane.constant = topNormal.dot(topPos)
+        bottomPlane.constant = bottomNormal.dot(bottomPos)
+
+        const topPoint = topPlane.normal.clone().multiplyScalar(-topPlane.constant)
+        const bottomPoint = bottomPlane.normal.clone().multiplyScalar(-bottomPlane.constant)
+
+        // console.log('TopPoint:', topPoint.toArray())
+        // console.log('BottomPoint:', bottomPoint.toArray())
+        // console.log('TopNormal:', topNormal.toArray(), 'Const:', topPlane.constant)
+        // console.log('BottomNormal:', bottomNormal.toArray(), 'Const:', bottomPlane.constant)
+
+         // 🔍 Log actual top/bottom of the group mesh (not just clipping planes)
+        // const topOfMesh = groupPosition.clone().addScaledVector(new Vector3(0, 1, 0).applyEuler(groupRotation), h)
+        // const bottomOfMesh = groupPosition.clone().addScaledVector(new Vector3(0, -1, 0).applyEuler(groupRotation), h)
+
+        // console.log('Top of Mesh:', topOfMesh.toArray())
+        // console.log('Bottom of Mesh:', bottomOfMesh.toArray())
+    })
+
+    const clippingPlanes = [topPlane, bottomPlane]
 
     // set menu title position based on screen size
     const menuTitlePosition: [number, number, number] = useMemo(() => 
@@ -95,13 +151,17 @@ const ProjectsMenu: React.FC<ProjectsMenuProps> = ({
         <group
             position={position}
             rotation={rotation}
+            ref={groupRef}
         >
             {/* background mesh */}
             <mesh>
                 <planeGeometry
                     args={[width, height]}
                 />
-                <meshBasicMaterial attach="material" transparent map={bgTexture} />
+                <meshBasicMaterial
+                    attach="material"
+                    transparent map={bgTexture}
+                />
             </mesh>
             <MenuTitle
                 position={menuTitlePosition}
@@ -136,6 +196,7 @@ const ProjectsMenu: React.FC<ProjectsMenuProps> = ({
                                 selected={!!isProject && currentIndex === i && !isMobile}
                                 texture={textures[i]}
                                 index={i}
+                                clippingPlanes={clippingPlanes}
                                 selectProject={selectProject}
                             />
                         // </Suspense>
