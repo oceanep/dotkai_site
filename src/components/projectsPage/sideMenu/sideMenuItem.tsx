@@ -78,6 +78,7 @@ const SideMenuItem: React.FC<SideMenuItemProps> = ({
         <group
             position={position}
             ref={meshRef}
+            name='sidemenuitem'
         >
             {/* Border */}
             <lineSegments>

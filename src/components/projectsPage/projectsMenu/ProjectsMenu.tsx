@@ -1,4 +1,4 @@
-import React, { useMemo, useRef } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 
 import { Euler, useFrame, Vector3 as Vector3Like } from '@react-three/fiber'
 import { Group, Plane, SRGBColorSpace, Vector3 } from 'three'
@@ -39,7 +39,13 @@ const ProjectsMenu: React.FC<ProjectsMenuProps> = ({
 }) => {
     const groupRef = useRef<Group>(null)
 
+    const flexRef = useRef<Group>(null)
+
     const [ currentIndex, setCurrentIndex ] = React.useState<number>(0)
+
+    // State for scrollability and hover
+    const [canScroll, setCanScroll] = useState(false)
+    const [flexHovered, setFlexHovered] = useState(false)
 
     const isMobile = useMediaQuery(EMediaType.SMARTPHONE)
     const isTablet = useMediaQuery(EMediaType.TABLET)
@@ -109,7 +115,31 @@ const ProjectsMenu: React.FC<ProjectsMenuProps> = ({
 
         // console.log('Top of Mesh:', topOfMesh.toArray())
         // console.log('Bottom of Mesh:', bottomOfMesh.toArray())
+
+        // Check if last ProjectMenuItem is being clipped (for scrollability)
+        if (flexRef.current) {
+            const lastItem = flexRef.current.children
+                .filter((child) => child.name?.includes('project_group') && child instanceof Group)
+                .at(-1)
+            if (lastItem) {
+                lastItem.updateWorldMatrix(true, false)
+                const localY = lastItem.position.y
+                const worldPos = new Vector3().setFromMatrixPosition(lastItem.matrixWorld)
+                // console.log('lastItem local Y:', localY)
+                // console.log('lastItem world Y:', worldPos.y)
+
+                const isClipped = bottomPlane.distanceToPoint(worldPos) < 0
+                // console.log('distance: ', bottomPlane.distanceToPoint(worldPos))
+                if (isClipped !== canScroll) setCanScroll(isClipped)
+            }
+        }
     })
+
+    useEffect(() => {
+        console.log({canScroll})
+        console.log({flexRef})
+
+    }, [canScroll, flexRef])
 
     const clippingPlanes = [topPlane, bottomPlane]
 
@@ -152,9 +182,10 @@ const ProjectsMenu: React.FC<ProjectsMenuProps> = ({
             position={position}
             rotation={rotation}
             ref={groupRef}
+            name='projectsmenu_group'
         >
             {/* background mesh */}
-            <mesh>
+            <mesh name='background_mesh'>
                 <planeGeometry
                     args={[width, height]}
                 />
@@ -177,6 +208,7 @@ const ProjectsMenu: React.FC<ProjectsMenuProps> = ({
                 clickHandler={sideMenuClickHandler}
             />
             <Flex
+                ref={flexRef}
                 size={flexSize}
                 position={flexPosition}
                 centerAnchor
@@ -186,6 +218,7 @@ const ProjectsMenu: React.FC<ProjectsMenuProps> = ({
                 alignItems='center'
                 flexDir='row'
                 flexWrap='wrap'
+                name='flex_container'
             >
                 {projects.length > 0 && (
                     projects.map((project, i) => 

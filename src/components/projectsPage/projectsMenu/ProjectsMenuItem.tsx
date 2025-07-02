@@ -72,6 +72,7 @@ const ProjectsMenuItem: React.FC<ProjectsMenuItemProps> = ({
             margin={isMobile || isTablet ? 0.05 : 0.03}
             centerAnchor
             key={`${project.slug}-${index}`}
+            name={`project_group_${project.title}`}
         >
             <mesh
                 onClick={(e) => {
@@ -88,7 +89,7 @@ const ProjectsMenuItem: React.FC<ProjectsMenuItemProps> = ({
                     if (selected) return
                     setHover(false)
                 }}
-                name='project'
+                name={`project_${project.title}`}
             >
                 <planeGeometry args={[ menuItemWidth, menuItemHeight ]} />
                 <meshBasicMaterial
