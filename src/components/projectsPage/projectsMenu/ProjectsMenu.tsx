@@ -133,6 +133,11 @@ const ProjectsMenu: React.FC<ProjectsMenuProps> = ({
     // Manage Scrolling Behavior
     // ---------------------------------
     const [scrollBounds, setScrollBounds] = useState<{height: number, centerY: number} | null>(null)
+    
+    const lastTouchY = useRef<number>(0)
+    const targetY = useRef<number | null>(null)
+    const scrollVelocity = useRef<number>(0)
+
     const allTexturesLoaded = textures.every(tex => tex.image && tex.image.complete)
 
     // Create box from flex group including children, to calculate accurate size
@@ -171,7 +176,28 @@ const ProjectsMenu: React.FC<ProjectsMenuProps> = ({
 
     // Update plane distances every frame to follow container Y position
     useFrame(() => {
-        if (!groupRef.current) return
+        if (!flexRef.current || !scrollBounds) return
+
+        if (Math.abs(scrollVelocity.current) < 0.0001) return
+
+        // 1. Calculate where we would scroll
+        const nextDelta = scrollVelocity.current
+        const proposedY = getClampedTargetY(nextDelta)
+
+        // 2. Set as new target position
+        targetY.current = proposedY
+
+        // 3. Apply velocity damping
+        scrollVelocity.current *= isMobile ? 0.8 : 0.9 // Decay of scroll, higher is longer
+        
+        const currentY = flexRef.current.position.y
+        const lerpSpeed = isMobile ? 0.8 : 0.7
+        const nextY = !targetY.current 
+            ? targetY.current ?? flexPosition[1] 
+            : MathUtils.lerp(currentY, targetY.current, lerpSpeed)
+            
+        if (Math.abs(nextY - currentY) < 0.0001) return
+        flexRef.current.position.y = nextY
     })
 
     const getMeshBounds = (group: Group, index: number): { top: number, bottom: number } | null => {
@@ -197,64 +223,72 @@ const ProjectsMenu: React.FC<ProjectsMenuProps> = ({
         return { top, bottom }
     }
 
-    const lastTouchY = useRef(0)
+    useEffect(() => console.log({
+        groupY: position[1],
+        flexY: flexPosition[1],
+        actualGroupY: groupRef.current.position.y,
+        actualFlexY: flexRef.current.position.y
+    }), [groupRef.current, flexRef.current, flexPosition])
 
-    const handleWheel = useCallback((e: WheelEvent) => {
+    const getClampedTargetY = useCallback((delta: number): number => {
+        if (!groupRef.current || !flexRef.current || !scrollBounds) return flexRef.current?.position.y ?? 0
+
+        const direction = delta > 0 ? 'down' : 'up'
+
         const visibleHeight = flexSize[1]
-
-        const upperBound = (position[1] + flexPosition[1]) + visibleHeight / 2
-        const lowerBound = (position[1] + flexPosition[1]) - visibleHeight / 2
-        
         const scrollGroupHeight = scrollBounds?.height ?? 0
-
-        const direction = e.deltaY > 0 ? 'down' : 'up'
-        
-        const dampedDelta = MathUtils.clamp(e.deltaY * 0.001, -0.075, 0.075)
-        let newY = flexRef.current.position.y + dampedDelta
 
         const groupY = groupRef.current.position.y
         const flexY = flexRef.current.position.y
-
         const worldY = groupY + flexY
-        const worldPosTop = worldY + (visibleHeight / 2)
-        const worldPosBottom = worldY - (scrollGroupHeight - (visibleHeight / 2))
-
-        // If scrolling down when at the bottom or top, return
-        if (direction === 'up' && (worldPosTop < upperBound)) {
-            console.log('🚫 Blocked UP scroll:')
-            return
-        }
-        if (direction === 'down' && (worldPosBottom > lowerBound)) {
-            console.log('🚫 Blocked DOWN scroll:')
-            return
-        }
-
-        // If a scroll delta is over the lowerbound/upperbound, return the bound
-        if ( direction === 'up' && (worldPosTop + dampedDelta) < upperBound) {
-            flexRef.current.position.y = upperBound - (visibleHeight / 2)
-            return
-        } 
-        if ( direction === 'down' && (worldPosBottom + dampedDelta) > lowerBound) {
-            flexRef.current.position.y = lowerBound + (scrollGroupHeight - (visibleHeight / 2))
-            return
-        }
-        flexRef.current.position.y = newY
-    }, [groupRef, flexRef, scrollBounds, flexHeight])
-
-    const handleTouchStart = (e: ThreeEvent<PointerEvent>) => {
-        if (e.isPrimary && e.pointerType === 'touch') {
-            lastTouchY.current = e.clientY
-        }
-    }
-
-    const handleTouchMove = useCallback((e: ThreeEvent<PointerEvent>) => {
-        const visibleHeight = flexSize[1]
 
         const upperBound = (position[1] + flexPosition[1]) + visibleHeight / 2
         const lowerBound = (position[1] + flexPosition[1]) - visibleHeight / 2
-        
-        const scrollGroupHeight = scrollBounds?.height ?? 0
 
+        const worldTop = worldY + (visibleHeight / 2)
+        const worldBottom = worldY - (scrollGroupHeight - (visibleHeight / 2))
+
+        const proposedTop = worldTop + delta
+        const proposedBottom = worldBottom + delta
+        
+        // If scrolling down when at the bottom or top, return
+        if (direction === 'up' && (worldTop < upperBound)) {
+            console.log('🙌🏽 At the TOP:')
+            return 0
+        }
+        if (direction === 'down' && (worldBottom > lowerBound)) {
+            console.log('🙇🏽‍♂️ At the BOTTOM:')
+            return 0
+        }
+
+        // If a scroll delta is over the lowerbound/upperbound, return the bound
+        if (direction === 'up' && proposedTop < upperBound) {
+            console.log('🚫 Blocked UP scroll:')
+            return upperBound - visibleHeight / 2
+        }
+        if (direction === 'down' && proposedBottom > lowerBound) {
+            console.log('🚫 Blocked DOWN scroll:')
+            return lowerBound + (scrollGroupHeight - visibleHeight / 2)
+        }
+
+        return flexRef.current.position.y + delta
+    }, [flexRef.current, groupRef.current, scrollBounds, flexSize, position, flexPosition])
+
+    const handleWheel = useCallback((e: WheelEvent) => {
+        const scrollSpeed = 0.0002
+        const dampedDelta = MathUtils.clamp(e.deltaY * scrollSpeed, -0.075, 0.075)
+        scrollVelocity.current += dampedDelta
+        // const newY = getClampedTargetY(dampedDelta)
+        // targetY.current = newY
+    }, [getClampedTargetY])
+
+    const handleTouchStart = useCallback((e: ThreeEvent<PointerEvent>) => {
+        if (e.isPrimary && e.pointerType === 'touch') {
+            lastTouchY.current = e.clientY
+        }
+    }, [lastTouchY.current])
+
+    const handleTouchMove = useCallback((e: ThreeEvent<PointerEvent>) => {
         if ( !(e.isPrimary && e.pointerType === 'touch')) {
             console.log('❌ Not scrollable or multiple touches')
             return
@@ -262,45 +296,17 @@ const ProjectsMenu: React.FC<ProjectsMenuProps> = ({
 
         const touchY = e.clientY
         const delta = lastTouchY.current - touchY
+        
+        const scrollSpeed = 0.005; // accelleration of scroll
+        console.log({delta: delta * scrollSpeed})
+        const dampedDelta = MathUtils.clamp(delta * scrollSpeed, -0.075, 0.075);
+        
+        // let newY = getClampedTargetY(dampedDelta)
 
-        const direction = delta > 0 ? 'down' : 'up'
-        
-        const scrollSpeed = 0.01;
-        const dampedDelta = MathUtils.clamp(delta * scrollSpeed, -0.1, 0.1);
-        
-        let newY = flexRef.current.position.y + dampedDelta;
-        
-        // Calculate offsets between visible height and total scrollable area
-        // In order to track where bounding bottom and top are
-        const groupY = groupRef.current.position.y
-        const flexY = flexRef.current.position.y
-
-        const worldY = groupY + flexY
-        const worldTop = worldY + (visibleHeight / 2)
-        const worldBottom = worldY - (scrollGroupHeight - (visibleHeight / 2))
-
-        // Restrict movement if overscrolling
-        if ( direction === 'up' && (worldTop + dampedDelta) < upperBound) {
-                console.log('🚫 Blocked UP scroll:')
-                console.log({worldTop, upperBound, dampedDelta})
-                const y = upperBound - (visibleHeight / 2)
-                flexRef.current.position.y = MathUtils.lerp(flexRef.current.position.y, y, 0.8)
-                lastTouchY.current = touchY
-                return
-        } 
-        if ( direction === 'down' && (worldBottom + dampedDelta) > lowerBound) {
-            console.log('🚫 Blocked DOWN scroll:')
-            console.log({worldBottom, lowerBound, dampedDelta})
-            const y = lowerBound + (scrollGroupHeight - (visibleHeight / 2))
-            flexRef.current.position.y = MathUtils.lerp(flexRef.current.position.y, y, 0.8)
-            lastTouchY.current = touchY
-            return
-        }
-        
-        // Apply lerped local position
-        flexRef.current.position.y = MathUtils.lerp(flexRef.current.position.y, newY, 0.8);
+        // targetY.current = newY;
+        scrollVelocity.current += dampedDelta
         lastTouchY.current = touchY
-    }, [groupRef, flexRef, scrollBounds, flexHeight])
+    }, [getClampedTargetY, scrollVelocity.current])
 
     // State event callbacks
     const selectProject = (newIndex: number) => {
@@ -352,7 +358,7 @@ const ProjectsMenu: React.FC<ProjectsMenuProps> = ({
                 isProject={isProject}
                 clickHandler={sideMenuClickHandler}
             />
-            <mesh position={[flexPosition[0], flexPosition[1], flexPosition[2] + 0.01]}>
+            {/* <mesh position={[flexPosition[0], flexPosition[1], flexPosition[2] + 0.03]}>
                 <planeGeometry args={[ flexSize[0], flexSize[1] ]}/>
                 <meshBasicMaterial color={'red'} opacity={0.2} transparent/>
             </mesh>
@@ -361,10 +367,10 @@ const ProjectsMenu: React.FC<ProjectsMenuProps> = ({
                 flexRef.current 
                     ? flexRef.current?.position.y - (scrollBounds?.height/ 2 - flexSize[1] / 2) 
                     : flexPosition[1],
-                flexPosition[2] + 0.02]}>
+                flexPosition[2] + 0.01]}>
                 <planeGeometry args={[ flexSize[0], scrollBounds?.height || 0 ]}/>
                 <meshBasicMaterial color={'black'} opacity={0.5} transparent/>
-            </mesh>
+            </mesh> */}
             <Flex
                 ref={flexRef}
                 size={flexSize}
