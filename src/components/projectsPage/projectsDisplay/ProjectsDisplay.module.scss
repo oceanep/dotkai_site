@@ -80,9 +80,6 @@ $colors: (
         min-height: 800px; //small enough to compensate for iphone safari with dynamic toolbar
         padding: 16px;
     }
-    @include mediaQuery(DESKTOP) {
-        font-size: 1.2rem; 
-    }
 }
 
 .grid {

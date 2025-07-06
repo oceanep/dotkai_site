@@ -180,18 +180,14 @@ const ProjectsMenu: React.FC<ProjectsMenuProps> = ({
 
         if (Math.abs(scrollVelocity.current) < 0.0001) return
 
-        // 1. Calculate where we would scroll
-        const nextDelta = scrollVelocity.current
-        const proposedY = getClampedTargetY(nextDelta)
-
-        // 2. Set as new target position
-        targetY.current = proposedY
-
-        // 3. Apply velocity damping
-        scrollVelocity.current *= isMobile ? 0.8 : 0.9 // Decay of scroll, higher is longer
+        // Apply velocity damping
+        scrollVelocity.current *= isMobile ? 0.7 : 0.8 // Decay of scroll, higher is longer
         
         const currentY = flexRef.current.position.y
-        const lerpSpeed = isMobile ? 0.8 : 0.7
+        const lerpSpeed = isMobile ? 0.6 : 0.7
+
+        // when target is null, fallback to default position
+        // mostly for initial render
         const nextY = !targetY.current 
             ? targetY.current ?? flexPosition[1] 
             : MathUtils.lerp(currentY, targetY.current, lerpSpeed)
@@ -275,11 +271,16 @@ const ProjectsMenu: React.FC<ProjectsMenuProps> = ({
     }, [flexRef.current, groupRef.current, scrollBounds, flexSize, position, flexPosition])
 
     const handleWheel = useCallback((e: WheelEvent) => {
+        // control acceleration and possible scroll amount
         const scrollSpeed = 0.0002
         const dampedDelta = MathUtils.clamp(e.deltaY * scrollSpeed, -0.075, 0.075)
+        
+        // build velocity
         scrollVelocity.current += dampedDelta
-        // const newY = getClampedTargetY(dampedDelta)
-        // targetY.current = newY
+
+        // Bind total box size to visible box size and set so velocity can decay and lerp
+        const newY = getClampedTargetY(scrollVelocity.current)
+        targetY.current = newY
     }, [getClampedTargetY])
 
     const handleTouchStart = useCallback((e: ThreeEvent<PointerEvent>) => {
@@ -297,16 +298,21 @@ const ProjectsMenu: React.FC<ProjectsMenuProps> = ({
         const touchY = e.clientY
         const delta = lastTouchY.current - touchY
         
-        const scrollSpeed = 0.005; // accelleration of scroll
+        // control acceleration and possible scroll amount
+        const scrollSpeed = 0.003; // accelleration of scroll
         console.log({delta: delta * scrollSpeed})
-        const dampedDelta = MathUtils.clamp(delta * scrollSpeed, -0.075, 0.075);
-        
-        // let newY = getClampedTargetY(dampedDelta)
+        const dampedDelta = MathUtils.clamp(delta * scrollSpeed, -0.1, 0.1);
 
-        // targetY.current = newY;
+        // build velocity
         scrollVelocity.current += dampedDelta
+
+        // Bind total box size to visible box size and set so velocity can decay and lerp
+        const newY = getClampedTargetY(scrollVelocity.current)
+        targetY.current = newY
+
+        // Reset touch for next delta
         lastTouchY.current = touchY
-    }, [getClampedTargetY, scrollVelocity.current])
+    }, [getClampedTargetY])
 
     // State event callbacks
     const selectProject = (newIndex: number) => {
@@ -358,19 +364,6 @@ const ProjectsMenu: React.FC<ProjectsMenuProps> = ({
                 isProject={isProject}
                 clickHandler={sideMenuClickHandler}
             />
-            {/* <mesh position={[flexPosition[0], flexPosition[1], flexPosition[2] + 0.03]}>
-                <planeGeometry args={[ flexSize[0], flexSize[1] ]}/>
-                <meshBasicMaterial color={'red'} opacity={0.2} transparent/>
-            </mesh>
-            <mesh position={[
-                flexPosition[0],
-                flexRef.current 
-                    ? flexRef.current?.position.y - (scrollBounds?.height/ 2 - flexSize[1] / 2) 
-                    : flexPosition[1],
-                flexPosition[2] + 0.01]}>
-                <planeGeometry args={[ flexSize[0], scrollBounds?.height || 0 ]}/>
-                <meshBasicMaterial color={'black'} opacity={0.5} transparent/>
-            </mesh> */}
             <Flex
                 ref={flexRef}
                 size={flexSize}
