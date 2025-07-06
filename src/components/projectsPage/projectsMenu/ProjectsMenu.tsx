@@ -1,6 +1,6 @@
-import React, { Suspense, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
+import React, { Suspense, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 
-import { Euler as EulerType, useFrame, Vector3 as Vector3Like } from '@react-three/fiber'
+import { Euler as EulerType, ThreeEvent, useFrame, Vector3 as Vector3Like } from '@react-three/fiber'
 import { Box3, Euler, Group, MathUtils, Mesh, Plane, SRGBColorSpace, Vector3 } from 'three'
 import { Flex } from '@react-three/flex'
 import { useTexture } from '@react-three/drei'
@@ -13,6 +13,7 @@ import ProjectsMenuItem from '@/components/projectsPage/projectsMenu/ProjectsMen
 import SideMenu from '@/components/projectsPage/sideMenu/sideMenu'
 import MenuTitle from '@/components/projectsPage/projectsMenu/MenuTitle'
 import MenuItemSkeleton from '~/components/skeleton/MenuItemSkeleton'
+import { getMobilePlatform } from '~/utils'
 
 interface ProjectsMenuProps {
     width: number
@@ -44,12 +45,6 @@ const ProjectsMenu: React.FC<ProjectsMenuProps> = ({
 
     const [ currentIndex, setCurrentIndex ] = React.useState<number>(0)
 
-    // State for scrollability and hover
-    const [canScroll, setCanScroll] = useState(false)
-    const [canScrollDown, setCanScrollDown] = useState(false)
-    const [canScrollUp, setCanScrollUp] = useState(false)
-    const [flexHovered, setFlexHovered] = useState(false)
-
     const isMobile = useMediaQuery(EMediaType.SMARTPHONE)
     const isTablet = useMediaQuery(EMediaType.TABLET)
 
@@ -60,6 +55,9 @@ const ProjectsMenu: React.FC<ProjectsMenuProps> = ({
       texture.colorSpace = SRGBColorSpace
     })
 
+    // ---------------------------------
+    // Create and Manage Layout Sizing
+    // ---------------------------------
     // add margin to flex container sizing
     // Use difference in widths to add margin to flex contianer positioning
     const [ flexWidth, flexHeight ] = useMemo(() => [ width * 0.9375, height * 0.92 ], [height, width])
@@ -93,148 +91,87 @@ const ProjectsMenu: React.FC<ProjectsMenuProps> = ({
         : [flexWidth, flexHeight, 0]
     , [isMobile, flexWidth, flexHeight, sideMenuItemSize])
 
+    // ---------------------------------
+    // Create and Manage Clipping Planes
+    // ---------------------------------
     // create clipping planes
     const [topPlane, bottomPlane] = useMemo(() => {
         const groupY = flexPosition[1]
         const h = flexSize[1] / 2
-        // console.log({groupY, baseY: position[1], flexY: flexPosition[1]})
 
         const topNormal = new Vector3(0, -1, 0).applyEuler(new Euler(rotation[0], rotation[1], rotation[2])).normalize()
         const bottomNormal = new Vector3(0, 1, 0).applyEuler(new Euler(rotation[0], rotation[1], rotation[2])).normalize()
 
         const topConstant = groupY + h
         const bottomConstant = groupY - h
-        console.log({groupY, topConstant, bottomConstant})
-
+        
         return [
             new Plane(topNormal, topConstant),
             new Plane(bottomNormal, bottomConstant),
         ]
-    }, [position, flexPosition, isMobile, flexSize])
+    }, [rotation, flexPosition, isMobile, flexSize])
     
     // Update topPlane and bottomPlane constants when flexHeight or planes change (not every frame)
     useLayoutEffect(() => {
         if (!groupRef.current && !flexRef.current) return
-
+        
         const base = !isMobile 
-            ? new Vector3(position[0], position[1], position[2]) 
-            : new Vector3(position[0], position[1], position[2])
-        // console.log({flexPosition, testFlex: flexRef.current.position, position, testGroup: groupRef.current.position, topPlane, bottomPlane})
+        ? new Vector3(position[0], position[1], position[2]) 
+        : new Vector3(position[0], position[1], position[2])
         const h = flexSize[1] / 2 
         const topC = flexPosition[1] + h
         const bottomC = Math.abs(flexPosition[1] - h)
-        console.log({h, topC, bottomC})
-
+        
         const topPos = base.clone().addScaledVector(topPlane.normal, topC)
         const bottomPos = base.clone().addScaledVector(bottomPlane.normal, bottomC)
-
+        
         topPlane.constant = topPlane.normal.dot(topPos)
         bottomPlane.constant = bottomPlane.normal.dot(bottomPos)
     }, [groupRef.current, flexRef.current, position, flexPosition, flexSize, isMobile, topPlane, bottomPlane])
+    
+    // ---------------------------------
+    // Manage Scrolling Behavior
+    // ---------------------------------
+    const [scrollBounds, setScrollBounds] = useState<{height: number, centerY: number} | null>(null)
+    const allTexturesLoaded = textures.every(tex => tex.image && tex.image.complete)
 
-    let lastOffset;
+    // Create box from flex group including children, to calculate accurate size
+    useLayoutEffect(() => {
+        if (!flexRef.current || !allTexturesLoaded) return
+
+        let frameId: number
+
+        const checkBounds = () => {
+            flexRef.current.updateWorldMatrix(true, true)
+
+            const box = new Box3().setFromObject(flexRef.current)
+            const boxHeight = box.max.y - box.min.y
+            const centerY = (box.max.y + box.min.y) / 2
+            
+            // Early in render boxHeight doesn't have all geometry yet so we have to wait
+            // Checking some arbitrary derivative of the hardcoded flexHeight
+            // Cant compare directly because at times its genuinely shorter
+            if (boxHeight < flexHeight / 2) {
+                frameId = requestAnimationFrame(checkBounds)
+                return
+            }
+    
+            const { top } = getMeshBounds(flexRef.current, 0)
+            const { bottom } = getMeshBounds(flexRef.current, -1) 
+    
+            const verticalSpan = top - bottom
+            
+            // Add small margin because bounds calculation isn't including some level of margin or layout padding
+            setScrollBounds({ height: verticalSpan + (verticalSpan * 0.025), centerY })
+        }
+
+        frameId = requestAnimationFrame(checkBounds)
+        return () => cancelAnimationFrame(frameId)
+    }, [allTexturesLoaded, flexRef.current, projects.length, flexSize])
 
     // Update plane distances every frame to follow container Y position
     useFrame(() => {
         if (!groupRef.current) return
-
-        // const groupPosition = groupRef.current.position
-        // const h = flexHeight / 2
-
-        // // Create and apply normals
-        // const topNormal = new Vector3(0, -1, 0).applyEuler(groupRotation).normalize()
-        // const bottomNormal = new Vector3(0, 1, 0).applyEuler(groupRotation).normalize()
-
-        // topPlane.normal.copy(topNormal)
-        // bottomPlane.normal.copy(bottomNormal)
-
-        // Compute constants based on shifted positions along normals
-        // const topPos = groupPosition.clone().addScaledVector(topPlane.normal, h)
-        // const bottomPos = groupPosition.clone().addScaledVector(bottomPlane.normal, h)
-
-        // topPlane.constant = topPlane.normal.dot(topPos)
-        // bottomPlane.constant = bottomPlane.normal.dot(bottomPos)
-
-        // const topPoint = topPlane.normal.clone().multiplyScalar(-topPlane.constant)
-        // const bottomPoint = bottomPlane.normal.clone().multiplyScalar(-bottomPlane.constant)
-
-        // console.log('TopPoint:', topPoint.toArray())
-        // console.log('BottomPoint:', bottomPoint.toArray())
-        // console.log('TopNormal:', topNormal.toArray(), 'Const:', topPlane.constant)
-        // console.log('BottomNormal:', bottomNormal.toArray(), 'Const:', bottomPlane.constant)
-
-         // 🔍 Log actual top/bottom of the group mesh (not just clipping planes)
-        // const topOfMesh = groupPosition.clone().addScaledVector(new Vector3(0, 1, 0).applyEuler(groupRotation), h)
-        // const bottomOfMesh = groupPosition.clone().addScaledVector(new Vector3(0, -1, 0).applyEuler(groupRotation), h)
-
-        // console.log('Top of Mesh:', topOfMesh.toArray())
-        // console.log('Bottom of Mesh:', bottomOfMesh.toArray())
-
-        // Check if last ProjectMenuItem is being clipped (for scrollability)
-        // if (flexRef.current) {
-        //     const lastItem = flexRef.current.children
-        //         .filter((child) => child.name?.includes('project_group') && child instanceof Group)
-        //         .at(-1)
-        //     const firstItem = flexRef.current.children
-        //         .filter((child) => child.name?.includes('project_group') && child instanceof Group)
-        //         .at(0)
-        //     if (firstItem && lastItem) {
-        //         firstItem.updateWorldMatrix(true, false)
-        //         lastItem.updateWorldMatrix(true, false)
-
-        //         // Get the meshes inside the first and last items and compute the bounding boxes
-        //         const firstItemMesh = firstItem.children.find(
-        //             (child) : child is Mesh => child.name?.includes('project') && child instanceof Mesh)
-        //         if (firstItemMesh && 'geometry' in firstItemMesh && firstItemMesh.geometry.boundingBox === null)
-        //             firstItemMesh.geometry.computeBoundingBox()
-
-        //         const lastItemMesh = firstItem.children.find(
-        //             (child) : child is Mesh => child.name?.includes('project') && child instanceof Mesh)
-        //         if (lastItemMesh && 'geometry' in lastItemMesh && lastItemMesh.geometry.boundingBox === null)
-        //             lastItemMesh.geometry.computeBoundingBox()
-                
-        //         // If bounding boxes, use their offsets for more accurate scrolling
-        //         if (firstItemMesh?.geometry?.boundingBox && lastItemMesh?.geometry?.boundingBox) {
-        //             const firstBoundingBox = firstItemMesh.geometry.boundingBox
-        //             const firstHeight = firstBoundingBox.max.y - firstBoundingBox.min.y
-        //             const firstOffset = firstHeight / 2
-
-        //             const lastBoundingBox = lastItemMesh.geometry.boundingBox
-        //             const lastHeight = lastBoundingBox.max.y - lastBoundingBox.min.y
-        //             lastOffset = lastHeight / 2
-
-        //             // Compute the top and bottom world position of the meshes
-        //             const up = new Vector3(0, 1, 0).applyQuaternion(firstItem.quaternion)
-        //             const topWorldPos = new Vector3().setFromMatrixPosition(firstItem.matrixWorld).addScaledVector(up, firstOffset)
-
-        //             const down = new Vector3(0, -1, 0).applyQuaternion(lastItem.quaternion)
-        //             const bottomWorldPos = new Vector3().setFromMatrixPosition(lastItem.matrixWorld).addScaledVector(down, lastOffset)
-
-        //             const isClippedTop = topPlane.distanceToPoint(topWorldPos) < 0
-        //             const isClippedBottom = bottomPlane.distanceToPoint(bottomWorldPos) < 0
-        //             const isClipped = isClippedTop || isClippedBottom
-
-        //             if (isClippedTop != canScrollUp) setCanScrollUp(isClippedTop)
-        //             if (isClippedBottom != canScrollDown) setCanScrollDown(isClippedBottom)
-        //             if (isClipped !== canScroll) setCanScroll(isClipped)
-
-        //             return
-        //         }
-
-        //         // FALLBACK in case computing boundingBox fails
-        //         const lastWorldPos = new Vector3().setFromMatrixPosition(lastItem.matrixWorld)
-
-        //         const firstWorldPos = new Vector3().setFromMatrixPosition(firstItem.matrixWorld)
-
-        //         const isClippedTop = topPlane.distanceToPoint(firstWorldPos) < 0
-        //         const isClippedBottom = bottomPlane.distanceToPoint(lastWorldPos) < 0
-        //         const isClipped = isClippedTop || isClippedBottom
-                
-        //         if (isClippedTop != canScrollDown) setCanScrollDown(isClippedTop)
-        //         if (isClippedBottom != canScrollUp) setCanScrollUp(isClippedBottom)
-        //         if (isClipped !== canScroll) setCanScroll(isClipped)
-        //     }
-        // }
     })
 
     const getMeshBounds = (group: Group, index: number): { top: number, bottom: number } | null => {
@@ -260,196 +197,110 @@ const ProjectsMenu: React.FC<ProjectsMenuProps> = ({
         return { top, bottom }
     }
 
-    const [scrollBounds, setScrollBounds] = useState<{height: number, centerY: number} | null>(null)
-    const allTexturesLoaded = textures.every(tex => tex.image && tex.image.complete)
+    const lastTouchY = useRef(0)
 
-    useLayoutEffect(() => {
-        if (!flexRef.current || !allTexturesLoaded) return
-
-        let frameId: number
-
-        const checkBounds = () => {
-            flexRef.current.updateWorldMatrix(true, true)
-    
-            const box = new Box3().setFromObject(flexRef.current)
-            const height = box.max.y - box.min.y
-            const centerY = (box.max.y + box.min.y) / 2
-            
-            console.log({height, flexHeight})
-
-            if (height < flexHeight) {
-                frameId = requestAnimationFrame(checkBounds)
-                return
-            }
-    
-            const { top } = getMeshBounds(flexRef.current, 0)
-            const { bottom } = getMeshBounds(flexRef.current, -1) 
-    
-            const verticalSpan = top - bottom
-            
-            // Add 0.1 because bounds calculation isn't including some level of margin or layout padding
-            setScrollBounds({ height: verticalSpan + (verticalSpan * 0.025), centerY })
-        }
-
-        frameId = requestAnimationFrame(checkBounds)
-        return () => cancelAnimationFrame(frameId)
-    }, [allTexturesLoaded, flexRef.current, projects.length, flexHeight, flexWidth])
-
-    useEffect(() => {
-        // console.log({canScroll, canScrollUp, canScrollDown, groupRef, flexRef, flexHovered})
-        let lastTouchY = 0
-        // Clamp logic based on flexPosition[1] and flexHeight
-        // const upperBound = flexPosition[1] + flexHeight / 2
-        // const lowerBound = flexPosition[1] - flexHeight / 2
+    const handleWheel = useCallback((e: WheelEvent) => {
         const visibleHeight = flexSize[1]
 
         const upperBound = (position[1] + flexPosition[1]) + visibleHeight / 2
         const lowerBound = (position[1] + flexPosition[1]) - visibleHeight / 2
         
         const scrollGroupHeight = scrollBounds?.height ?? 0
-        const scrollGroupY = scrollBounds?.centerY ?? 0
 
-        const handleWheel = (e: WheelEvent) => {
-            if (flexHovered) {
-                e.preventDefault()
+        const direction = e.deltaY > 0 ? 'down' : 'up'
+        
+        const dampedDelta = MathUtils.clamp(e.deltaY * 0.001, -0.075, 0.075)
+        let newY = flexRef.current.position.y + dampedDelta
 
-                const direction = e.deltaY > 0 ? 'down' : 'up'
-                
-                const dampedDelta = MathUtils.clamp(e.deltaY * 0.001, -0.075, 0.075)
-                let newY = flexRef.current.position.y + dampedDelta
+        const groupY = groupRef.current.position.y
+        const flexY = flexRef.current.position.y
 
-                // Clone the group world matrix to simulate world movement
-                // const groupWorldPosition = groupRef.current.localToWorld(new Vector3(0, newY, 0)).y
-                const worldPosition = scrollGroupY + dampedDelta
-                // const worldPosTop = worldPosition + visibleHeight / 2
-                // const worldPosBottom = worldPosition - visibleHeight / 2
-                // const worldPosTop = worldPosition + scrollGroupHeight / 2
-                // const worldPosBottom = worldPosition - scrollGroupHeight / 2
-                const groupY = groupRef.current.position.y
-                const flexY = flexRef.current.position.y
+        const worldY = groupY + flexY
+        const worldPosTop = worldY + (visibleHeight / 2)
+        const worldPosBottom = worldY - (scrollGroupHeight - (visibleHeight / 2))
 
-                const worldY = groupY + flexY
-                const worldPosTop = worldY + (visibleHeight / 2)
-                const worldPosBottom = worldY - (scrollGroupHeight - (visibleHeight / 2))
-
-                console.log({
-                    // groupWorldPosition,
-                    flexY: worldY,
-                    // scrollGroupY,
-                    visibleHeight,
-                    scrollGroupHeight,
-                    worldPosBottom,
-                    worldPosTop,
-                    lowerBound,
-                    upperBound
-                })
-
-                if (direction === 'up' && (worldPosTop < upperBound)) {
-                    console.log('🚫 Blocked UP scroll:', worldPosTop < upperBound)
-                    return
-                }
-                if (direction === 'down' && (worldPosBottom > lowerBound)) {
-                    console.log('🚫 Blocked DOWN scroll:', worldPosBottom > lowerBound)
-                    return
-                }
-
-                // If scrolling down when at the bottom, return
-                // if (
-                //     direction === 'down' && (!canScrollDown || worldPosBottom < lowerBound)
-                // ) return
-                if ( direction === 'up' && (worldPosTop + dampedDelta) < upperBound) {
-                    flexRef.current.position.y = upperBound - (visibleHeight / 2)
-                    return
-                } 
-                if ( direction === 'down' && (worldPosBottom + dampedDelta) > lowerBound) {
-                    flexRef.current.position.y = lowerBound + (scrollGroupHeight - (visibleHeight / 2))
-                    return
-                }
-                // // If scrolling up when at the top, return
-                // if (
-                //     direction === 'up' && (!canScrollUp || worldPosTop < upperBound)
-                // ) return
-
-                // console.log('ys: ', {newY, worldPosTop, worldPosBottom, lowerBound, upperBound})
-                // newY = worldPosTop < upperBound ? upperBound : newY
-                // newY = worldPosBottom < lowerBound ? lowerBound : newY
-                // flexRef.current.position.y = MathUtils.clamp(newY, lowerBound, upperBound)
-                flexRef.current.position.y = newY
-            }
+        // If scrolling down when at the bottom or top, return
+        if (direction === 'up' && (worldPosTop < upperBound)) {
+            console.log('🚫 Blocked UP scroll:')
+            return
         }
-        const handleTouchStart = (e: TouchEvent) => {
-            if (e.touches.length === 1) {
-                lastTouchY = e.touches[0].clientY
-            }
+        if (direction === 'down' && (worldPosBottom > lowerBound)) {
+            console.log('🚫 Blocked DOWN scroll:')
+            return
         }
 
-        const handleTouchMove = (e: TouchEvent) => {
-            // console.log('🔥 TOUCH MOVE EVENT')
-            e.preventDefault()
+        // If a scroll delta is over the lowerbound/upperbound, return the bound
+        if ( direction === 'up' && (worldPosTop + dampedDelta) < upperBound) {
+            flexRef.current.position.y = upperBound - (visibleHeight / 2)
+            return
+        } 
+        if ( direction === 'down' && (worldPosBottom + dampedDelta) > lowerBound) {
+            flexRef.current.position.y = lowerBound + (scrollGroupHeight - (visibleHeight / 2))
+            return
+        }
+        flexRef.current.position.y = newY
+    }, [groupRef, flexRef, scrollBounds, flexHeight])
 
-            if ( !(e.touches.length === 1)) {
-                console.log('❌ Not scrollable or multiple touches')
+    const handleTouchStart = (e: ThreeEvent<PointerEvent>) => {
+        if (e.isPrimary && e.pointerType === 'touch') {
+            lastTouchY.current = e.clientY
+        }
+    }
+
+    const handleTouchMove = useCallback((e: ThreeEvent<PointerEvent>) => {
+        const visibleHeight = flexSize[1]
+
+        const upperBound = (position[1] + flexPosition[1]) + visibleHeight / 2
+        const lowerBound = (position[1] + flexPosition[1]) - visibleHeight / 2
+        
+        const scrollGroupHeight = scrollBounds?.height ?? 0
+
+        if ( !(e.isPrimary && e.pointerType === 'touch')) {
+            console.log('❌ Not scrollable or multiple touches')
+            return
+        }
+
+        const touchY = e.clientY
+        const delta = lastTouchY.current - touchY
+
+        const direction = delta > 0 ? 'down' : 'up'
+        
+        const scrollSpeed = 0.01;
+        const dampedDelta = MathUtils.clamp(delta * scrollSpeed, -0.1, 0.1);
+        
+        let newY = flexRef.current.position.y + dampedDelta;
+        
+        // Calculate offsets between visible height and total scrollable area
+        // In order to track where bounding bottom and top are
+        const groupY = groupRef.current.position.y
+        const flexY = flexRef.current.position.y
+
+        const worldY = groupY + flexY
+        const worldTop = worldY + (visibleHeight / 2)
+        const worldBottom = worldY - (scrollGroupHeight - (visibleHeight / 2))
+
+        // Restrict movement if overscrolling
+        if ( direction === 'up' && (worldTop + dampedDelta) < upperBound) {
+                console.log('🚫 Blocked UP scroll:')
+                console.log({worldTop, upperBound, dampedDelta})
+                const y = upperBound - (visibleHeight / 2)
+                flexRef.current.position.y = MathUtils.lerp(flexRef.current.position.y, y, 0.8)
+                lastTouchY.current = touchY
                 return
-            }
-
-            const touchY = e.touches[0].clientY
-            const delta = lastTouchY - touchY
-
-            const direction = delta > 0 ? 'down' : 'up'
-            
-            const scrollSpeed = 0.1;
-            const dampedDelta = MathUtils.clamp(delta * scrollSpeed, -0.1, 0.1);
-            
-            let newY = flexRef.current.position.y + dampedDelta;
-            
-            // Transform proposed local position to world space
-            // const worldCenter = flexRef.current.localToWorld(new Vector3(0, 0, 0)).y
-            // const worldCenter = scrollGroupY- dampedDelta
-            // const worldTop = worldCenter + scrollGroupHeight / 2
-            // const worldBottom = worldCenter - lastOffset - scrollGroupHeight / 2
-            const groupY = groupRef.current.position.y
-            const flexY = flexRef.current.position.y
-
-            const worldY = groupY + flexY
-            const worldTop = worldY + (visibleHeight / 2)
-            const worldBottom = worldY - (scrollGroupHeight - (visibleHeight / 2))
-
-            console.log({
-                scrollGroupHeight,
-                worldTop,
-                worldBottom,
-                upperBound,
-                lowerBound,
-                dampedDelta
-            })
-
-            // Restrict movement if overscrolling
-            if ( direction === 'up' && (worldTop + dampedDelta) < upperBound) {
-                    console.log('🚫 Blocked UP scroll:', worldTop < upperBound)
-                    flexRef.current.position.y = upperBound - (visibleHeight / 2)
-                    return
-            } 
-            if ( direction === 'down' && (worldBottom + dampedDelta) > lowerBound) {
-                console.log('🚫 Blocked DOWN scroll:', worldBottom < lowerBound)
-                flexRef.current.position.y = lowerBound + (scrollGroupHeight - (visibleHeight / 2))
-                return
-            }
-            
-            console.log('✅ Applying newY:', newY)
-            // Apply clamped local position
-            flexRef.current.position.y = MathUtils.lerp(flexRef.current.position.y, newY, 0.8);
-            lastTouchY = touchY
+        } 
+        if ( direction === 'down' && (worldBottom + dampedDelta) > lowerBound) {
+            console.log('🚫 Blocked DOWN scroll:')
+            console.log({worldBottom, lowerBound, dampedDelta})
+            const y = lowerBound + (scrollGroupHeight - (visibleHeight / 2))
+            flexRef.current.position.y = MathUtils.lerp(flexRef.current.position.y, y, 0.8)
+            lastTouchY.current = touchY
+            return
         }
-
-        window.addEventListener('wheel', handleWheel, { passive: false })
-        window.addEventListener('touchstart', handleTouchStart, { passive: false })
-        window.addEventListener('touchmove', handleTouchMove, { passive: false })
-        return () => {
-            window.removeEventListener('wheel', handleWheel)
-            window.removeEventListener('touchstart', handleTouchStart)
-            window.removeEventListener('touchmove', handleTouchMove)
-        }
-    }, [canScroll, canScrollUp, canScrollDown, groupRef, flexRef, flexHovered, lastOffset, scrollBounds, flexHeight])
+        
+        // Apply lerped local position
+        flexRef.current.position.y = MathUtils.lerp(flexRef.current.position.y, newY, 0.8);
+        lastTouchY.current = touchY
+    }, [groupRef, flexRef, scrollBounds, flexHeight])
 
     // State event callbacks
     const selectProject = (newIndex: number) => {
@@ -464,11 +315,20 @@ const ProjectsMenu: React.FC<ProjectsMenuProps> = ({
             rotation={rotation}
             ref={groupRef}
             name='projectsmenu_group'
+            onPointerDown={(e) => {
+                if (e.pointerType === 'touch') {
+                    handleTouchStart(e)
+                }
+            }}
+            onPointerMove={(e) => {
+                if (e.pointerType === 'touch') {
+                    handleTouchMove(e)
+                }
+            }}
         >
             {/* background mesh */}
             <mesh
-                onPointerOver={() => setFlexHovered(true)}
-                onPointerOut={() => setFlexHovered(false)}
+                onWheel={(e) => handleWheel(e.nativeEvent)}
                 name='background_mesh'
             >
                 <planeGeometry
@@ -499,7 +359,7 @@ const ProjectsMenu: React.FC<ProjectsMenuProps> = ({
             <mesh position={[
                 flexPosition[0],
                 flexRef.current 
-                    ? flexRef.current?.position.y - (scrollBounds.height/ 2 - flexSize[1] / 2) 
+                    ? flexRef.current?.position.y - (scrollBounds?.height/ 2 - flexSize[1] / 2) 
                     : flexPosition[1],
                 flexPosition[2] + 0.02]}>
                 <planeGeometry args={[ flexSize[0], scrollBounds?.height || 0 ]}/>

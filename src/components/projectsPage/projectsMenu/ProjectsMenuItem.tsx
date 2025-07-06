@@ -38,7 +38,7 @@ const ProjectsMenuItem: React.FC<ProjectsMenuItemProps> = ({
     const worldUnitsPerWidthPixel = width / window.innerWidth
     const worldUnitsPerHeightPixel = height/ window.innerHeight
     // Calculate menu item size and selected menu item size
-    const menuItemSize = isMobile || isTablet ? 130 : 90 
+    const menuItemSize = isMobile || isTablet ? 130 : 85 
     const [ menuItemWidth, menuItemHeight ] = [menuItemSize * worldUnitsPerWidthPixel, menuItemSize * worldUnitsPerHeightPixel]
     const [ itemSelectWidth, itemSelectHeight ] = [(menuItemSize + 10) * worldUnitsPerWidthPixel, (menuItemSize + 10) * worldUnitsPerHeightPixel]
 

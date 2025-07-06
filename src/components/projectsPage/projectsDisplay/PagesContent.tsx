@@ -97,7 +97,7 @@ const PagesContent: React.FC<PagesContentProps> = ({ selectedPage, imgWidth = 25
                         video={video}
                         fallback={"loading"}
                         controls
-                        width={isMobile ? 300 : 650}
+                        width={isMobile ? 350 : 650}
                         imgArrLength={selectedPage.images?.length || 0}
                         index={i + 2}
                         displayType='about-me'

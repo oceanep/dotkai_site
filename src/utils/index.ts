@@ -39,6 +39,7 @@ export function getMobilePlatform() {
     isIOS,
     isIphone: isIOS && (isSafari || isChrome) && screenWidth < 520,
     isAndroid,
+    isTouchDevice: isIOS || isAndroid
   }
 }
 
