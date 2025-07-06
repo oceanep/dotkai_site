@@ -58,6 +58,7 @@ $colors: (
     background-color: rgba(0, 0, 0, 0.01);
     box-sizing: border-box;
     overflow-y: scroll;
+    overflow-x: hidden;
     scrollbar-width: none; /* For Firefox */
     -ms-overflow-style: none; /* For Internet Explorer and Edge */
     
