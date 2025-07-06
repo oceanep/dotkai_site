@@ -171,70 +171,70 @@ const ProjectsMenu: React.FC<ProjectsMenuProps> = ({
         // console.log('Bottom of Mesh:', bottomOfMesh.toArray())
 
         // Check if last ProjectMenuItem is being clipped (for scrollability)
-        if (flexRef.current) {
-            const lastItem = flexRef.current.children
-                .filter((child) => child.name?.includes('project_group') && child instanceof Group)
-                .at(-1)
-            const firstItem = flexRef.current.children
-                .filter((child) => child.name?.includes('project_group') && child instanceof Group)
-                .at(0)
-            if (firstItem && lastItem) {
-                firstItem.updateWorldMatrix(true, false)
-                lastItem.updateWorldMatrix(true, false)
+        // if (flexRef.current) {
+        //     const lastItem = flexRef.current.children
+        //         .filter((child) => child.name?.includes('project_group') && child instanceof Group)
+        //         .at(-1)
+        //     const firstItem = flexRef.current.children
+        //         .filter((child) => child.name?.includes('project_group') && child instanceof Group)
+        //         .at(0)
+        //     if (firstItem && lastItem) {
+        //         firstItem.updateWorldMatrix(true, false)
+        //         lastItem.updateWorldMatrix(true, false)
 
-                // Get the meshes inside the first and last items and compute the bounding boxes
-                const firstItemMesh = firstItem.children.find(
-                    (child) : child is Mesh => child.name?.includes('project') && child instanceof Mesh)
-                if (firstItemMesh && 'geometry' in firstItemMesh && firstItemMesh.geometry.boundingBox === null)
-                    firstItemMesh.geometry.computeBoundingBox()
+        //         // Get the meshes inside the first and last items and compute the bounding boxes
+        //         const firstItemMesh = firstItem.children.find(
+        //             (child) : child is Mesh => child.name?.includes('project') && child instanceof Mesh)
+        //         if (firstItemMesh && 'geometry' in firstItemMesh && firstItemMesh.geometry.boundingBox === null)
+        //             firstItemMesh.geometry.computeBoundingBox()
 
-                const lastItemMesh = firstItem.children.find(
-                    (child) : child is Mesh => child.name?.includes('project') && child instanceof Mesh)
-                if (lastItemMesh && 'geometry' in lastItemMesh && lastItemMesh.geometry.boundingBox === null)
-                    lastItemMesh.geometry.computeBoundingBox()
+        //         const lastItemMesh = firstItem.children.find(
+        //             (child) : child is Mesh => child.name?.includes('project') && child instanceof Mesh)
+        //         if (lastItemMesh && 'geometry' in lastItemMesh && lastItemMesh.geometry.boundingBox === null)
+        //             lastItemMesh.geometry.computeBoundingBox()
                 
-                // If bounding boxes, use their offsets for more accurate scrolling
-                if (firstItemMesh?.geometry?.boundingBox && lastItemMesh?.geometry?.boundingBox) {
-                    const firstBoundingBox = firstItemMesh.geometry.boundingBox
-                    const firstHeight = firstBoundingBox.max.y - firstBoundingBox.min.y
-                    const firstOffset = firstHeight / 2
+        //         // If bounding boxes, use their offsets for more accurate scrolling
+        //         if (firstItemMesh?.geometry?.boundingBox && lastItemMesh?.geometry?.boundingBox) {
+        //             const firstBoundingBox = firstItemMesh.geometry.boundingBox
+        //             const firstHeight = firstBoundingBox.max.y - firstBoundingBox.min.y
+        //             const firstOffset = firstHeight / 2
 
-                    const lastBoundingBox = lastItemMesh.geometry.boundingBox
-                    const lastHeight = lastBoundingBox.max.y - lastBoundingBox.min.y
-                    lastOffset = lastHeight / 2
+        //             const lastBoundingBox = lastItemMesh.geometry.boundingBox
+        //             const lastHeight = lastBoundingBox.max.y - lastBoundingBox.min.y
+        //             lastOffset = lastHeight / 2
 
-                    // Compute the top and bottom world position of the meshes
-                    const up = new Vector3(0, 1, 0).applyQuaternion(firstItem.quaternion)
-                    const topWorldPos = new Vector3().setFromMatrixPosition(firstItem.matrixWorld).addScaledVector(up, firstOffset)
+        //             // Compute the top and bottom world position of the meshes
+        //             const up = new Vector3(0, 1, 0).applyQuaternion(firstItem.quaternion)
+        //             const topWorldPos = new Vector3().setFromMatrixPosition(firstItem.matrixWorld).addScaledVector(up, firstOffset)
 
-                    const down = new Vector3(0, -1, 0).applyQuaternion(lastItem.quaternion)
-                    const bottomWorldPos = new Vector3().setFromMatrixPosition(lastItem.matrixWorld).addScaledVector(down, lastOffset)
+        //             const down = new Vector3(0, -1, 0).applyQuaternion(lastItem.quaternion)
+        //             const bottomWorldPos = new Vector3().setFromMatrixPosition(lastItem.matrixWorld).addScaledVector(down, lastOffset)
 
-                    const isClippedTop = topPlane.distanceToPoint(topWorldPos) < 0
-                    const isClippedBottom = bottomPlane.distanceToPoint(bottomWorldPos) < 0
-                    const isClipped = isClippedTop || isClippedBottom
+        //             const isClippedTop = topPlane.distanceToPoint(topWorldPos) < 0
+        //             const isClippedBottom = bottomPlane.distanceToPoint(bottomWorldPos) < 0
+        //             const isClipped = isClippedTop || isClippedBottom
 
-                    if (isClippedTop != canScrollUp) setCanScrollUp(isClippedTop)
-                    if (isClippedBottom != canScrollDown) setCanScrollDown(isClippedBottom)
-                    if (isClipped !== canScroll) setCanScroll(isClipped)
+        //             if (isClippedTop != canScrollUp) setCanScrollUp(isClippedTop)
+        //             if (isClippedBottom != canScrollDown) setCanScrollDown(isClippedBottom)
+        //             if (isClipped !== canScroll) setCanScroll(isClipped)
 
-                    return
-                }
+        //             return
+        //         }
 
-                // FALLBACK in case computing boundingBox fails
-                const lastWorldPos = new Vector3().setFromMatrixPosition(lastItem.matrixWorld)
+        //         // FALLBACK in case computing boundingBox fails
+        //         const lastWorldPos = new Vector3().setFromMatrixPosition(lastItem.matrixWorld)
 
-                const firstWorldPos = new Vector3().setFromMatrixPosition(firstItem.matrixWorld)
+        //         const firstWorldPos = new Vector3().setFromMatrixPosition(firstItem.matrixWorld)
 
-                const isClippedTop = topPlane.distanceToPoint(firstWorldPos) < 0
-                const isClippedBottom = bottomPlane.distanceToPoint(lastWorldPos) < 0
-                const isClipped = isClippedTop || isClippedBottom
+        //         const isClippedTop = topPlane.distanceToPoint(firstWorldPos) < 0
+        //         const isClippedBottom = bottomPlane.distanceToPoint(lastWorldPos) < 0
+        //         const isClipped = isClippedTop || isClippedBottom
                 
-                if (isClippedTop != canScrollDown) setCanScrollDown(isClippedTop)
-                if (isClippedBottom != canScrollUp) setCanScrollUp(isClippedBottom)
-                if (isClipped !== canScroll) setCanScroll(isClipped)
-            }
-        }
+        //         if (isClippedTop != canScrollDown) setCanScrollDown(isClippedTop)
+        //         if (isClippedBottom != canScrollUp) setCanScrollUp(isClippedBottom)
+        //         if (isClipped !== canScroll) setCanScroll(isClipped)
+        //     }
+        // }
     })
 
     const getMeshBounds = (group: Group, index: number): { top: number, bottom: number } | null => {
@@ -286,8 +286,9 @@ const ProjectsMenu: React.FC<ProjectsMenuProps> = ({
             const { bottom } = getMeshBounds(flexRef.current, -1) 
     
             const verticalSpan = top - bottom
-    
-            setScrollBounds({ height: verticalSpan, centerY })
+            
+            // Add 0.1 because bounds calculation isn't including some level of margin or layout padding
+            setScrollBounds({ height: verticalSpan + (verticalSpan * 0.025), centerY })
         }
 
         frameId = requestAnimationFrame(checkBounds)
@@ -300,15 +301,16 @@ const ProjectsMenu: React.FC<ProjectsMenuProps> = ({
         // Clamp logic based on flexPosition[1] and flexHeight
         // const upperBound = flexPosition[1] + flexHeight / 2
         // const lowerBound = flexPosition[1] - flexHeight / 2
+        const visibleHeight = flexSize[1]
 
-        const upperBound = (position[1] + flexPosition[1]) + flexHeight / 2
-        const lowerBound = (position[1] + flexPosition[1]) - flexHeight / 2
+        const upperBound = (position[1] + flexPosition[1]) + visibleHeight / 2
+        const lowerBound = (position[1] + flexPosition[1]) - visibleHeight / 2
         
         const scrollGroupHeight = scrollBounds?.height ?? 0
         const scrollGroupY = scrollBounds?.centerY ?? 0
 
         const handleWheel = (e: WheelEvent) => {
-            if (canScroll && flexHovered) {
+            if (flexHovered) {
                 e.preventDefault()
 
                 const direction = e.deltaY > 0 ? 'down' : 'up'
@@ -319,22 +321,22 @@ const ProjectsMenu: React.FC<ProjectsMenuProps> = ({
                 // Clone the group world matrix to simulate world movement
                 // const groupWorldPosition = groupRef.current.localToWorld(new Vector3(0, newY, 0)).y
                 const worldPosition = scrollGroupY + dampedDelta
-                // const worldPosTop = worldPosition + flexHeight / 2
-                // const worldPosBottom = worldPosition - flexHeight / 2
+                // const worldPosTop = worldPosition + visibleHeight / 2
+                // const worldPosBottom = worldPosition - visibleHeight / 2
                 // const worldPosTop = worldPosition + scrollGroupHeight / 2
                 // const worldPosBottom = worldPosition - scrollGroupHeight / 2
                 const groupY = groupRef.current.position.y
                 const flexY = flexRef.current.position.y
 
                 const worldY = groupY + flexY
-                const worldPosTop = worldY + (flexHeight / 2)
-                const worldPosBottom = worldY - (scrollGroupHeight - (flexHeight / 2))
+                const worldPosTop = worldY + (visibleHeight / 2)
+                const worldPosBottom = worldY - (scrollGroupHeight - (visibleHeight / 2))
 
                 console.log({
                     // groupWorldPosition,
                     flexY: worldY,
                     // scrollGroupY,
-                    flexHeight,
+                    visibleHeight,
                     scrollGroupHeight,
                     worldPosBottom,
                     worldPosTop,
@@ -356,11 +358,11 @@ const ProjectsMenu: React.FC<ProjectsMenuProps> = ({
                 //     direction === 'down' && (!canScrollDown || worldPosBottom < lowerBound)
                 // ) return
                 if ( direction === 'up' && (worldPosTop + dampedDelta) < upperBound) {
-                    flexRef.current.position.y = upperBound - (flexHeight / 2)
+                    flexRef.current.position.y = upperBound - (visibleHeight / 2)
                     return
                 } 
                 if ( direction === 'down' && (worldPosBottom + dampedDelta) > lowerBound) {
-                    flexRef.current.position.y = lowerBound + (scrollGroupHeight - (flexHeight / 2))
+                    flexRef.current.position.y = lowerBound + (scrollGroupHeight - (visibleHeight / 2))
                     return
                 }
                 // // If scrolling up when at the top, return
@@ -385,14 +387,15 @@ const ProjectsMenu: React.FC<ProjectsMenuProps> = ({
             // console.log('🔥 TOUCH MOVE EVENT')
             e.preventDefault()
 
-            if (!(canScroll && e.touches.length === 1)) {
+            if ( !(e.touches.length === 1)) {
                 console.log('❌ Not scrollable or multiple touches')
                 return
             }
-            if (!(canScroll && e.touches.length === 1)) return
 
             const touchY = e.touches[0].clientY
             const delta = lastTouchY - touchY
+
+            const direction = delta > 0 ? 'down' : 'up'
             
             const scrollSpeed = 0.1;
             const dampedDelta = MathUtils.clamp(delta * scrollSpeed, -0.1, 0.1);
@@ -401,28 +404,34 @@ const ProjectsMenu: React.FC<ProjectsMenuProps> = ({
             
             // Transform proposed local position to world space
             // const worldCenter = flexRef.current.localToWorld(new Vector3(0, 0, 0)).y
-            const worldCenter = scrollGroupY- dampedDelta
-            const worldTop = worldCenter + scrollGroupHeight / 2
-            const worldBottom = worldCenter - lastOffset - scrollGroupHeight / 2
+            // const worldCenter = scrollGroupY- dampedDelta
+            // const worldTop = worldCenter + scrollGroupHeight / 2
+            // const worldBottom = worldCenter - lastOffset - scrollGroupHeight / 2
+            const groupY = groupRef.current.position.y
+            const flexY = flexRef.current.position.y
+
+            const worldY = groupY + flexY
+            const worldTop = worldY + (visibleHeight / 2)
+            const worldBottom = worldY - (scrollGroupHeight - (visibleHeight / 2))
 
             console.log({
                 scrollGroupHeight,
-                worldCenter,
                 worldTop,
                 worldBottom,
-                boundCenter: flexPosition[1],
                 upperBound,
                 lowerBound,
-                localY: flexRef.current.position.y,
+                dampedDelta
             })
 
             // Restrict movement if overscrolling
-            if (dampedDelta < 0 &&  worldTop < upperBound) {
-                console.log('🚫 Blocked UP scroll:', worldTop < upperBound)
-                return
-            }
-            if (dampedDelta > 0 && worldBottom > lowerBound) {
+            if ( direction === 'up' && (worldTop + dampedDelta) < upperBound) {
+                    console.log('🚫 Blocked UP scroll:', worldTop < upperBound)
+                    flexRef.current.position.y = upperBound - (visibleHeight / 2)
+                    return
+            } 
+            if ( direction === 'down' && (worldBottom + dampedDelta) > lowerBound) {
                 console.log('🚫 Blocked DOWN scroll:', worldBottom < lowerBound)
+                flexRef.current.position.y = lowerBound + (scrollGroupHeight - (visibleHeight / 2))
                 return
             }
             
@@ -486,6 +495,15 @@ const ProjectsMenu: React.FC<ProjectsMenuProps> = ({
             <mesh position={[flexPosition[0], flexPosition[1], flexPosition[2] + 0.01]}>
                 <planeGeometry args={[ flexSize[0], flexSize[1] ]}/>
                 <meshBasicMaterial color={'red'} opacity={0.2} transparent/>
+            </mesh>
+            <mesh position={[
+                flexPosition[0],
+                flexRef.current 
+                    ? flexRef.current?.position.y - (scrollBounds.height/ 2 - flexSize[1] / 2) 
+                    : flexPosition[1],
+                flexPosition[2] + 0.02]}>
+                <planeGeometry args={[ flexSize[0], scrollBounds?.height || 0 ]}/>
+                <meshBasicMaterial color={'black'} opacity={0.5} transparent/>
             </mesh>
             <Flex
                 ref={flexRef}
