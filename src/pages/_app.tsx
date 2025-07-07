@@ -73,7 +73,7 @@ export default function App({
   return (
     <>
     <Head>
-      <title>Ocean's Portfolio</title>
+      <title>Ocean&apos;s Portfolio</title>
       <meta name="mobile-web-app-capable" content="yes"/>
       <meta name="description" content="Ocean Evers-Peete's 3D UI portfolio site" />
 

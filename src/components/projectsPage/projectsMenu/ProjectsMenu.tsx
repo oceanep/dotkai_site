@@ -82,14 +82,14 @@ const ProjectsMenu: React.FC<ProjectsMenuProps> = ({
         isMobile 
         ? [ widthDiff, - ( height * 0.07 + sideMenuItemSize + 0.02) / 2, 0.02 ]
         : [ widthDiff, -0.015, 0.02 ]
-    , [isMobile, widthDiff, sideMenuItemSize])
+    , [isMobile, height, widthDiff, sideMenuItemSize])
 
     const flexSize: [number, number, number] = useMemo(() => 
         isMobile 
         // subtract title and side menu height plus gutters to make up from both positioning from the top of the group now
         ? [flexWidth, (flexHeight - sideMenuItemSize - width * 0.07 - 0.075), 0]
         : [flexWidth, flexHeight, 0]
-    , [isMobile, flexWidth, flexHeight, sideMenuItemSize])
+    , [isMobile, flexWidth, flexHeight, width, sideMenuItemSize])
 
     // ---------------------------------
     // Create and Manage Clipping Planes
@@ -109,7 +109,7 @@ const ProjectsMenu: React.FC<ProjectsMenuProps> = ({
             new Plane(topNormal, topConstant),
             new Plane(bottomNormal, bottomConstant),
         ]
-    }, [rotation, flexPosition, isMobile, flexSize])
+    }, [rotation, flexPosition, flexSize])
     
     // Update topPlane and bottomPlane constants when flexHeight or planes change (not every frame)
     useLayoutEffect(() => {
@@ -127,7 +127,7 @@ const ProjectsMenu: React.FC<ProjectsMenuProps> = ({
         
         topPlane.constant = topPlane.normal.dot(topPos)
         bottomPlane.constant = bottomPlane.normal.dot(bottomPos)
-    }, [groupRef.current, flexRef.current, position, flexPosition, flexSize, isMobile, topPlane, bottomPlane])
+    }, [position, flexPosition, flexSize, isMobile, topPlane, bottomPlane])
     
     // ---------------------------------
     // Manage Scrolling Behavior
@@ -156,7 +156,7 @@ const ProjectsMenu: React.FC<ProjectsMenuProps> = ({
             // Early in render boxHeight doesn't have all geometry yet so we have to wait
             // Checking some arbitrary derivative of the hardcoded flexHeight
             // Cant compare directly because at times its genuinely shorter
-            if (boxHeight < flexHeight / 2) {
+            if (boxHeight < flexSize[1] / 2) {
                 frameId = requestAnimationFrame(checkBounds)
                 return
             }
@@ -172,7 +172,7 @@ const ProjectsMenu: React.FC<ProjectsMenuProps> = ({
 
         frameId = requestAnimationFrame(checkBounds)
         return () => cancelAnimationFrame(frameId)
-    }, [allTexturesLoaded, flexRef.current, projects.length, flexSize])
+    }, [allTexturesLoaded, projects.length, flexSize])
 
     // Update plane distances every frame to follow container Y position
     useFrame(() => {
@@ -219,13 +219,6 @@ const ProjectsMenu: React.FC<ProjectsMenuProps> = ({
         return { top, bottom }
     }
 
-    useEffect(() => console.log({
-        groupY: position[1],
-        flexY: flexPosition[1],
-        actualGroupY: groupRef.current.position.y,
-        actualFlexY: flexRef.current.position.y
-    }), [groupRef.current, flexRef.current, flexPosition])
-
     const getClampedTargetY = useCallback((delta: number): number => {
         if (!groupRef.current || !flexRef.current || !scrollBounds) return flexRef.current?.position.y ?? 0
 
@@ -268,7 +261,7 @@ const ProjectsMenu: React.FC<ProjectsMenuProps> = ({
         }
 
         return flexRef.current.position.y + delta
-    }, [flexRef.current, groupRef.current, scrollBounds, flexSize, position, flexPosition])
+    }, [scrollBounds, flexSize, position, flexPosition])
 
     const handleWheel = useCallback((e: WheelEvent) => {
         // control acceleration and possible scroll amount
@@ -287,7 +280,7 @@ const ProjectsMenu: React.FC<ProjectsMenuProps> = ({
         if (e.isPrimary && e.pointerType === 'touch') {
             lastTouchY.current = e.clientY
         }
-    }, [lastTouchY.current])
+    }, [])
 
     const handleTouchMove = useCallback((e: ThreeEvent<PointerEvent>) => {
         if ( !(e.isPrimary && e.pointerType === 'touch')) {
