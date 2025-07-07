@@ -73,7 +73,19 @@ export default function App({
   return (
     <>
     <Head>
+      <title>Ocean's Portfolio</title>
       <meta name="mobile-web-app-capable" content="yes"/>
+      <meta name="description" content="Ocean Evers-Peete's 3D UI portfolio site" />
+
+      {/* Favicons */}
+      <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+      <link rel="icon" href="/favicon.ico" />
+      <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=2" />
+      <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+      <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+      <link rel="manifest" href="/site.webmanifest" />
+      {/* Optional: theme color */}
+      <meta name="theme-color" content="#000000" />
     </Head>
       <StrictMode>
         <style jsx global>
