@@ -31,7 +31,7 @@ const ProjectsContent: React.FC<ProjectsContentProps> = ({ selectedProject, imgW
                         alt={image.alt}
                         displayType={selectedProject.gallery.display}
                         index={i}
-                        width={200}
+                        width={image.metadata.dimensions.width > image.metadata.dimensions.height ? 300 : 200}
                         key={`${image._key}-${i}`}
                         label={image.alt}
                     />
@@ -42,7 +42,7 @@ const ProjectsContent: React.FC<ProjectsContentProps> = ({ selectedProject, imgW
                     <CustomVideo
                         video={video}
                         fallback={urlForImage(selectedProject.mainImage).width(20).format('webp').quality(20).url()}
-                        width={450}
+                        width={video?.height > video?.width ? 250 : 350}
                         imgArrLength={selectedProject.gallery.images?.length || 0}
                         displayType={selectedProject.gallery.display}
                         index={i}

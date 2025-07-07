@@ -21,7 +21,7 @@ const EffectPass: FC = () => {
                 blendFunction={BlendFunction['NORMAL']}
             />
             <NoiseEffect
-                intensity={0.35}
+                intensity={0.2}
                 blendFunction={BlendFunction['OVERLAY']}
             />
         </EffectComposer>

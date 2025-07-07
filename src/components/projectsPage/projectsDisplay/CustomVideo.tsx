@@ -18,7 +18,7 @@ export interface CustomVideoProps {
 
 const CustomVideo: React.FC<CustomVideoProps> = ({ video, fallback, width, index, imgArrLength, displayType = 'tri', label, controls = false }) => {
     const vidAspectRatio = Number(video.width) / Number(video.height)
-    const vidWidth = width ? width * vidAspectRatio : video.width
+    const vidWidth = width || video.width
     const classString = `${styles['video-wrapper']} ${ index !== undefined && styles[`item-${imgArrLength + index + 1}`]} ${styles[displayType]}`
     return (
         <div className={classString}>

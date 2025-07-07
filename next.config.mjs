@@ -42,13 +42,13 @@ const config = {
   },
 }
 
-import { createRequire } from "module";
-const require = createRequire(import.meta.url);
+// import { createRequire } from "module";
+// const require = createRequire(import.meta.url);
 
-const withBundleAnalyzer = require('@next/bundle-analyzer')({
-  enabled: process.env.ANALYZE === 'true',
-})
+// const withBundleAnalyzer = require('@next/bundle-analyzer')({
+//   enabled: process.env.ANALYZE === 'true',
+// })
 
-export default withBundleAnalyzer(config)
+// export default withBundleAnalyzer(config)
 
-// export default config
+export default config

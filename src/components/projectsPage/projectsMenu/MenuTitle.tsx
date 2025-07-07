@@ -52,6 +52,7 @@ const MenuTitle: React.FC<MenuTitleProps> = ({
         <group
             position={position}
             ref={meshRef}
+            name='menutitle'
         >
             {/* Mesh for title */}
             <mesh>

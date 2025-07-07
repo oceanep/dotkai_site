@@ -43,7 +43,7 @@ const ProjectsDisplay = forwardRef<Mesh, ProjectsDisplayProps>(({
                 <meshBasicMaterial attach="material" transparent map={bgTexture} />
                 <Html
                     wrapperClass={styles['html-content']}
-                    transform 
+                    transform
                     // distanceFactor={1}
                     scale={scaleFactor}
                     style={{ opacity: progress < 100 ? 0 : 1, transition: 'opacity 1s ease-in-out' }}

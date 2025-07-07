@@ -59,7 +59,9 @@ const PagesContent: React.FC<PagesContentProps> = ({ selectedPage, imgWidth = 25
                     />
             }
             {selectedPage.links?.length && (
-                <div className={`${styles['item-1']} ${styles['inline-left']}`}>
+                <div 
+                    className={`${styles['item-1']} ${styles['inline-left']}`}
+                >
                     <ListCard 
                         title="Relevant links"
                         list={selectedPage.links}
@@ -69,7 +71,7 @@ const PagesContent: React.FC<PagesContentProps> = ({ selectedPage, imgWidth = 25
             {selectedPage.skills?.length && (
                 <div
                     className={`${styles['item-2']} ${styles['inline-right']}`}
-                    style={{ marginTop: isMobile ? '0px' : '140px', zIndex: 10 }}
+                    style={{ marginTop: isMobile ? '0px' : '10px', zIndex: 10 }}
                 >
                     <ListCard
                         title="Skills"
@@ -95,10 +97,10 @@ const PagesContent: React.FC<PagesContentProps> = ({ selectedPage, imgWidth = 25
                         video={video}
                         fallback={"loading"}
                         controls
-                        width={isMobile ? 225 : 450}
+                        width={isMobile ? 350 : 650}
                         imgArrLength={selectedPage.images?.length || 0}
                         index={i + 2}
-                        displayType='center'
+                        displayType='about-me'
                         key={`${video._key}-${i}`}
                         label={video.alt}
                     />

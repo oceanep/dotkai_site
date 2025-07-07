@@ -7,12 +7,14 @@ import { EMediaType } from '@/utils/types'
 import { Group } from 'three/src/objects/Group'
 import { Texture } from 'three/src/textures/Texture'
 import { Vector3 } from 'three/src/math/Vector3'
+import { Plane } from 'three'
 
 interface ProjectsMenuItemProps {
   project: Project
   texture: Texture
   selected: boolean
   index: number
+  clippingPlanes: Plane[]
   selectProject: (newIndex: number) => void
 }
 
@@ -21,6 +23,7 @@ const ProjectsMenuItem: React.FC<ProjectsMenuItemProps> = ({
     texture,
     selected,
     index,
+    clippingPlanes,
     selectProject 
 }) => {
     const [ hover, setHover ] = React.useState(false)
@@ -35,7 +38,7 @@ const ProjectsMenuItem: React.FC<ProjectsMenuItemProps> = ({
     const worldUnitsPerWidthPixel = width / window.innerWidth
     const worldUnitsPerHeightPixel = height/ window.innerHeight
     // Calculate menu item size and selected menu item size
-    const menuItemSize = isMobile || isTablet ? 130 : 90 
+    const menuItemSize = isMobile || isTablet ? 130 : 85 
     const [ menuItemWidth, menuItemHeight ] = [menuItemSize * worldUnitsPerWidthPixel, menuItemSize * worldUnitsPerHeightPixel]
     const [ itemSelectWidth, itemSelectHeight ] = [(menuItemSize + 10) * worldUnitsPerWidthPixel, (menuItemSize + 10) * worldUnitsPerHeightPixel]
 
@@ -69,6 +72,7 @@ const ProjectsMenuItem: React.FC<ProjectsMenuItemProps> = ({
             margin={isMobile || isTablet ? 0.05 : 0.03}
             centerAnchor
             key={`${project.slug}-${index}`}
+            name={`project_group_${project.title}`}
         >
             <mesh
                 onClick={(e) => {
@@ -85,17 +89,28 @@ const ProjectsMenuItem: React.FC<ProjectsMenuItemProps> = ({
                     if (selected) return
                     setHover(false)
                 }}
-                name='project'
+                name={`project_${project.title}`}
             >
                 <planeGeometry args={[ menuItemWidth, menuItemHeight ]} />
-                <meshBasicMaterial attach="material" toneMapped={false} map={texture} />
+                <meshBasicMaterial
+                    attach="material"
+                    toneMapped={false}
+                    map={texture}
+                    clippingPlanes={ clippingPlanes }
+                />
             </mesh>
             {selected && (
                 <mesh
                     position={[0, 0, -0.01]} // Slightly behind the main mesh
                 >
                     <planeGeometry args={[ itemSelectWidth, itemSelectHeight ]} />
-                    <meshBasicMaterial attach="material" depthWrite={false} transparent color="black" opacity={0.25} />
+                    <meshBasicMaterial
+                        attach="material"
+                        depthWrite={false}
+                        transparent color="black"
+                        opacity={0.25}
+                        clippingPlanes={ clippingPlanes }
+                    />
                 </mesh>
             )}
         </Box>
