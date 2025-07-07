@@ -104,7 +104,13 @@ const ProjectsMenuItem: React.FC<ProjectsMenuItemProps> = ({
                     position={[0, 0, -0.01]} // Slightly behind the main mesh
                 >
                     <planeGeometry args={[ itemSelectWidth, itemSelectHeight ]} />
-                    <meshBasicMaterial attach="material" depthWrite={false} transparent color="black" opacity={0.25} />
+                    <meshBasicMaterial
+                        attach="material"
+                        depthWrite={false}
+                        transparent color="black"
+                        opacity={0.25}
+                        clippingPlanes={ clippingPlanes }
+                    />
                 </mesh>
             )}
         </Box>
