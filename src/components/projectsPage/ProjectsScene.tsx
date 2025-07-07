@@ -1,4 +1,4 @@
-import { Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { Suspense, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 
 import dynamic from 'next/dynamic'
 import { type Project, type Page } from '~/lib/sanity.queries'
@@ -294,6 +294,17 @@ const ProjectsScene = ({
       )
     }
   })
+
+  // Reset the camera so that it doesn't have to lerp from Bvh position to proper position
+  const { camera } = useThree()
+
+  useLayoutEffect(() => {
+    camera.position.set(0, 0, 3.5)
+    camera.lookAt(
+        new Vector3(0, 0, 0),
+      )
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   return (
     <>
