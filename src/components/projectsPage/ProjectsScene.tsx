@@ -202,14 +202,6 @@ const ProjectsScene = ({
   : minWidthB * aspectRatioB
   const meshBHeight = clamp(avalibaleHeightB, minHeightB, maxHeightB)
   
-  console.log({
-    isMobile,
-    isTablet,
-    isDesktop,
-    baseMinWidthB,
-    baseMaxWidthB,
-    width: meshBWidth / worldUnitsPerWidthPixel
-  })
   // For positioning Mesh B, the right area starts at:
   const rightAreaStartX = width - rightAreaWidth
   // To prevent overlapping, clamp mesh B position to mesh a's width and margin from the screen start
@@ -221,12 +213,6 @@ const ProjectsScene = ({
     ? width / 2 + meshBWidth / 2 + marginBX
     : clamp(meshBPosBase, bPosMin, bPosMax)
   // Vertically, again center it
-  console.log({
-    bPosMin,
-    bPosMax,
-    meshBPosBase,
-    meshBX
-  })
   const meshBY = 0
 
   //Event Handlers
