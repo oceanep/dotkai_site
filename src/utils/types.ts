@@ -87,3 +87,5 @@ export interface IVignetteProps {
 export interface IVignetteClassProps extends IVignetteProps {
     resolution: Vector2;
 }
+
+export type Language = 'en' | 'jp'

@@ -57,7 +57,7 @@ $colors: (
     min-width: 920px;
     min-height: 900px;
     max-width: 1110px;
-    max-height: 1090px;
+    max-height: 1030px;
     padding: 15px;
     background-color: rgba(0, 0, 0, 0.01);
     box-sizing: border-box;
@@ -85,11 +85,11 @@ $colors: (
         padding: 16px;
     }
     @include mediaQuery(TABLET) {
-        width: 74vmax;
+        width: 70vmax;
         height: 82vmax;
-        min-width: 680px;
+        min-width: 625px;
         min-height: 720px;
-        max-width: 1110px;
+        max-width: 760px;
         max-height: 880px;
     }
 }

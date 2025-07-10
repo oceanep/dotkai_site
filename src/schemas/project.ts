@@ -8,7 +8,7 @@ export default defineType({
         defineField({
             name: 'title',
             title: 'Project Title',
-            type: 'string'
+            type: 'localeString'
         }),
         defineField({
             name: 'slug',
@@ -21,6 +21,13 @@ export default defineType({
             },
         }),
         defineField({
+            name: 'order',
+            title: 'Display Order',
+            type: 'number',
+            validation: Rule => Rule.integer().min(0),
+            description: 'Lower numbers will be displayed first',
+        }),
+        defineField({
             name: 'mainImage',
             title: 'Main Image',
             type: 'image',
@@ -31,7 +38,7 @@ export default defineType({
         defineField({
             name: 'desc',
             title: 'Project Description',
-            type: 'blockContent',
+            type: 'localeBlockContent',
         }),
         defineField({
             name: 'gallery',
@@ -42,12 +49,14 @@ export default defineType({
     preview: {
         select: {
             title: 'title',
+            order: 'order',
             media: 'mainImage',
         },
         prepare(selection) {
-            const { title } = selection;
-
-            return { ...selection, subtitle: title && `by ${title}`}
+            const { title, order } = selection
+            const localizedTitle = title?.en || title?.jp || 'Untitled'
+            const subtitle = order ? `Order: ${order}` : 'No order set'
+            return { ...selection, title: localizedTitle,  subtitle: subtitle && `${subtitle} || ${title?.jp || title?.en}`}
         }
     }
 })

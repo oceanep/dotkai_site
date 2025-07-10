@@ -20,6 +20,7 @@ import PanelSkeleton from '@/components//skeleton/PanelSkeleton'
 import DisplaySkeleton from '@/components/skeleton/DisplaySkeleton'
 import Parallax from '../Parallax'
 import { Perf } from 'r3f-perf'
+import { useLanguage } from '~/utils/contexts/LanguageContext'
 
 const ProjectsContent = dynamic(
   () => import('@/components/projectsPage/projectsDisplay/ProjectsContent'), { 
@@ -36,6 +37,9 @@ const ProjectsScene = ({
   projects: Project[]
   pages: Page[]
 }) => {
+  // Context
+  const { language } = useLanguage()
+
   //State Logic
   const [selectedProject, setSelectedProject] = useState<Project>(projects[0])
   const [selectedMenuItem, setSelectedMenuItem] = useState<Page>(
@@ -74,14 +78,14 @@ const ProjectsScene = ({
 
   const baseAreaLeft = isMobile 
     ? 1 
-    : isTablet
+    : isTablet || isNormalDesktop
       ? 0.45 
-      : 0.45
+      : 0.425
   const baseAreaRight = isMobile
     ? 1 
-    : isTablet 
+    : isTablet || isNormalDesktop
       ? 0.55 
-      : 0.55
+      : 0.575
 
   const baseMinWidthA = isMobile ? 370 : isTablet ? 350 : isDesktop ? 400 : 450
   const baseMaxWidthA = isMobile ? 370 : isTablet ? 400 : isDesktop ? 500 : 550
@@ -365,9 +369,9 @@ const ProjectsScene = ({
         >      
           {!!isProject ? (
               
-              <ProjectsContent selectedProject={selectedProject} imgWidth={250} />
+              <ProjectsContent selectedProject={selectedProject} imgWidth={250} language={language} />
           ) : (
-              <PagesContent selectedPage={selectedMenuItem} />
+              <PagesContent selectedPage={selectedMenuItem} language={language}/>
           )}
         </ProjectsDisplay>
       </Suspense>
