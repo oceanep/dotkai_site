@@ -29,8 +29,8 @@ const siteContent = {
         },
     },
     jp: {
-        primaryFont: "/fonts/851letrogo_007.ttf",
-        secondaryFont: "/fonts/851letrogo_007.ttf",
+        primaryFont: "/fonts/851Gkktt_005.ttf",
+        secondaryFont: "/fonts/851Gkktt_005.ttf",
         sideMenu: {
             fontSize: 0.05,
             mobileFontSize: 0.08,
@@ -49,7 +49,7 @@ const siteContent = {
         },
         menu: {
             title: "プロジェクト",
-            fontSize: 0.08,
+            fontSize: 0.1,
             buttons: {
                 viewMore: "もっと見る",
                 back: "戻る",
