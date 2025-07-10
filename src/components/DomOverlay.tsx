@@ -14,7 +14,7 @@ const DomOverlay = () => {
                 <span className={`${classes['accent']}`}> &mdash; &nbsp; </span>
                 <span>&copy;Kai.World 2025</span>
                 <span className={`${classes['accent']}`}>&nbsp; | &nbsp;</span>
-                <span> Version: 1.0.4</span>
+                <span> Version: 1.0.5</span>
                 <span className={`${classes['accent']}`}> &nbsp; &mdash; </span>
             </div>
         </div>

@@ -29,8 +29,8 @@ const siteContent = {
         },
     },
     jp: {
-        primaryFont: "Noto Sans JP",
-        secondaryFont: "Noto Sans JP",
+        primaryFont: "/fonts/851letrogo_007.ttf",
+        secondaryFont: "/fonts/851letrogo_007.ttf",
         sideMenu: {
             fontSize: 0.05,
             mobileFontSize: 0.08,
@@ -43,7 +43,7 @@ const siteContent = {
                 {
                     id: "about",
                     icon: "👤",
-                    label: "私について",
+                    label: "僕について",
                 },
             ],
         },

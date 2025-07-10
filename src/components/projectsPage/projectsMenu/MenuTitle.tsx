@@ -3,13 +3,14 @@ import { Text } from '@react-three/drei';
 import siteContent from '~/constants/siteContent';
 import { Group, PlaneGeometry, Vector3 } from 'three';
 import { useFrame } from '@react-three/fiber';
+import { Language } from '~/utils/types';
 
 interface MenuTitleProps {
     position: [number, number, number];
     width: number;
     height: number;
     isProject: boolean;
-    language?: 'en' | 'jp';
+    language?: Language;
 }
 
 const MenuTitle: React.FC<MenuTitleProps> = ({

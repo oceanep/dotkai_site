@@ -24,6 +24,7 @@ const PagesContent: React.FC<PagesContentProps> = ({ selectedPage, imgWidth = 25
             <TextCard
                 text={selectedPage?.title[language].toUpperCase()}
                 isTitle
+                isJp={language === "jp"}
             />
             {selectedPage?.mainImage && (
                 <CustomImage

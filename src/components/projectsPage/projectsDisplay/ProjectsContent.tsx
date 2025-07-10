@@ -19,6 +19,7 @@ const ProjectsContent: React.FC<ProjectsContentProps> = ({ selectedProject, imgW
             <TextCard
                 text={selectedProject.title[language].toUpperCase()}
                 isTitle
+                isJp={language === "jp"}
             />
             <CustomImage
                 src={selectedProject.mainImage}
