@@ -57,7 +57,7 @@ $colors: (
     min-width: 920px;
     min-height: 900px;
     max-width: 1110px;
-    max-height: 1090px;
+    max-height: 1030px;
     padding: 15px;
     background-color: rgba(0, 0, 0, 0.01);
     box-sizing: border-box;
@@ -85,11 +85,11 @@ $colors: (
         padding: 16px;
     }
     @include mediaQuery(TABLET) {
-        width: 74vmax;
+        width: 70vmax;
         height: 82vmax;
-        min-width: 680px;
+        min-width: 625px;
         min-height: 720px;
-        max-width: 1110px;
+        max-width: 760px;
         max-height: 880px;
     }
 }
@@ -440,9 +440,27 @@ $colors: (
             font-size: 1em;
             font-weight: normal;
             letter-spacing: 0.1em;
+            text-wrap-mode: nowrap;
             // padding: 15px;
             // border: 1px solid rgb(111, 111, 111);
         }
+
+        &.jp-title {
+            h1 {
+                font-family: GKKtt !important;
+                font-weight: 400;
+                font-size: 1.3em;
+                letter-spacing: 0;
+                text-wrap-mode: nowrap;
+            }
+            
+            @include mediaQuery(MOBILE_AND_TABLET) {
+                h1 {
+                    font-size: .8em;
+                }
+            }
+    }
+
     }
 
     .secondaryTitle-wrapper {
@@ -491,6 +509,7 @@ $colors: (
         font-size: 1em;
         font-weight: normal;
         letter-spacing: 0.1em;
+        text-wrap-mode: nowrap;
         // padding: 15px;
         // border: 1px solid rgb(111, 111, 111);
     }
@@ -503,6 +522,23 @@ $colors: (
             font-size: 0.8em;
         }
     }
+
+    &.jp-title {
+        h1 {
+            font-family: GKKtt !important;
+            font-weight: 400;
+            font-size: 1.3em;
+            letter-spacing: 0;
+            text-wrap-mode: nowrap;
+        }
+        
+        @include mediaQuery(MOBILE_AND_TABLET) {
+            h1 {
+                font-size: .8em;
+            }
+        }
+    }
+
 }
 
 
@@ -937,9 +973,26 @@ $colors: (
             font-size: 1em;
             font-weight: normal;
             letter-spacing: 0.1em;
+            text-wrap-mode: nowrap;
             padding: 26px; // attempt safari transform bug fix by using even numbers
             // border: 1px solid rgb(111, 111, 111);
         }
+
+        &.jp-title {
+            h1 {
+                font-family: GKKtt !important;
+                font-weight: 400;
+                font-size: 1.3em;
+                letter-spacing: 0;
+                text-wrap-mode: nowrap;
+            }
+        
+            @include mediaQuery(MOBILE_AND_TABLET) {
+                h1 {
+                    font-size: .8em;
+                }
+            }
+    }
     }
 
     .secondaryTitle-wrapper {
@@ -966,8 +1019,9 @@ $colors: (
 
     .subtitle-wrapper {
         display: inline-block;
-        right: 275px;
-        top: 35px;
+        right: -50px;
+        top: 10px;
+        min-width: 286px;
     }
 
     @include mediaQuery(MOBILE_AND_TABLET) {

@@ -14,6 +14,7 @@ import SideMenu from '@/components/projectsPage/sideMenu/sideMenu'
 import MenuTitle from '@/components/projectsPage/projectsMenu/MenuTitle'
 import MenuItemSkeleton from '~/components/skeleton/MenuItemSkeleton'
 import { getMobilePlatform } from '~/utils'
+import { useLanguage } from '~/utils/contexts/LanguageContext'
 
 interface ProjectsMenuProps {
     width: number
@@ -47,6 +48,8 @@ const ProjectsMenu: React.FC<ProjectsMenuProps> = ({
 
     const isMobile = useMediaQuery(EMediaType.SMARTPHONE)
     const isTablet = useMediaQuery(EMediaType.TABLET)
+
+    const { language } = useLanguage()
 
     const bgTexture = useTexture('/images/menu-0_84_aspect_ratio.png')
 
@@ -349,6 +352,7 @@ const ProjectsMenu: React.FC<ProjectsMenuProps> = ({
                 width={width * 0.5}
                 height={height * 0.07}
                 isProject={isProject}
+                language={language}
             />
             <SideMenu 
                 sectionWidth={width}
@@ -356,6 +360,7 @@ const ProjectsMenu: React.FC<ProjectsMenuProps> = ({
                 menuItemSize={sideMenuItemSize}
                 isProject={isProject}
                 clickHandler={sideMenuClickHandler}
+                language={language}
             />
             <Flex
                 ref={flexRef}

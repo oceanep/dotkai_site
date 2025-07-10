@@ -6,6 +6,7 @@ interface TextCardProps {
     isSecondaryTitle?: boolean
     isSubtitle?: boolean
     flip?: boolean
+    isJp?: boolean
 }
 
 const TextCard:React.FC<TextCardProps> = ({
@@ -13,15 +14,17 @@ const TextCard:React.FC<TextCardProps> = ({
     isTitle = false, 
     isSecondaryTitle = false,
     isSubtitle = false, 
-    flip = false
+    flip = false,
+    isJp = false
 }) => {
     const classString = `${
         styles['title-card']} 
         ${isTitle ? styles['title-wrapper'] : ''} 
         ${isSecondaryTitle ? styles['secondaryTitle-wrapper'] : ''} 
         ${isSubtitle ? styles['subtitle-wrapper'] : ''} 
-        ${flip ? styles['flip'] : ''
-    }`.replace(/\s+/g, ' ').trim();
+        ${flip ? styles['flip'] : ''}
+        ${isJp ? styles['jp-title'] : ''}
+    `.replace(/\s+/g, ' ').trim();
     
     return (
         <div className={classString}>

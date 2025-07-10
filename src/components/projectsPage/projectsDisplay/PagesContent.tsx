@@ -1,7 +1,7 @@
 import React from 'react';
 import { Page } from '@/lib/sanity.queries';
 import { useMediaQuery } from '@/utils/hooks';
-import { EMediaType } from '@/utils/types';
+import { EMediaType, Language } from '@/utils/types';
 import TextCard from '@/components/projectsPage/projectsDisplay/TextCard';
 import CustomImage from '@/components/projectsPage/projectsDisplay/CustomImage';
 import CustomVideo from '@/components/projectsPage/projectsDisplay/CustomVideo';
@@ -11,18 +11,20 @@ import styles from './ProjectsDisplay.module.scss';
 
 interface PagesContentProps {
     selectedPage: Page;
-    imgWidth?: number
+    imgWidth?: number;
+    language?: Language;
 }
 
-const PagesContent: React.FC<PagesContentProps> = ({ selectedPage, imgWidth = 250 }) => {
+const PagesContent: React.FC<PagesContentProps> = ({ selectedPage, imgWidth = 250, language = 'en' }) => {
     //Media queries
     const isMobile = useMediaQuery(EMediaType.SMARTPHONE)
     
     return (
         <>
             <TextCard
-                text={selectedPage?.title.toUpperCase()}
+                text={selectedPage?.title[language].toUpperCase()}
                 isTitle
+                isJp={language === "jp"}
             />
             {selectedPage?.mainImage && (
                 <CustomImage
@@ -31,30 +33,30 @@ const PagesContent: React.FC<PagesContentProps> = ({ selectedPage, imgWidth = 25
                     width={imgWidth}
                 />
             )}
-            {selectedPage?.secondaryTitle || selectedPage?.subtitle 
+            {selectedPage?.secondaryTitle?.[language] || selectedPage?.subtitle?.[language] 
                 ?   
                     <div className={`${styles['titledDesc-wrapper']} ${!selectedPage?.mainImage ? styles['no-image'] : ''}`}>
-                        {selectedPage?.secondaryTitle && (
+                        {selectedPage?.secondaryTitle[language] && (
                             <TextCard
-                                text={selectedPage.secondaryTitle}
+                                text={selectedPage.secondaryTitle[language]}
                                 isSecondaryTitle
                                 flip
                             />
                         )}
                         {selectedPage?.subtitle && (
                             <TextCard
-                                text={selectedPage.subtitle}
+                                text={selectedPage.subtitle[language]}
                                 isSubtitle
                             />
                         )}
                         <DescCard
-                            text={selectedPage.mainText}
+                            text={selectedPage.mainText[language]}
                             noImage={!selectedPage?.mainImage}
                         />
                     </div>
                 : 
                     <DescCard
-                        text={selectedPage.mainText}
+                        text={selectedPage.mainText[language]}
                         noImage={!selectedPage?.mainImage}
                     />
             }

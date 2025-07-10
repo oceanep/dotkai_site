@@ -10,6 +10,7 @@ import { SharedPageProps } from '@/utils/types'
 import '@/styles/global.css'
 import { useRouter } from 'next/router'
 import Head from 'next/head'
+import { LanguageProvider } from '~/utils/contexts/LanguageContext'
 
 export interface CustomNextPage {
   (props: any): JSX.Element;
@@ -99,38 +100,42 @@ export default function App({
         </style>
         {draftMode ? (
           <PreviewProvider token={token}>
+            <LanguageProvider>
+              <div ref={ref}>
+                <DomWrapper studio={pathname.includes('studio')} initialLoad={!hasPrevPage}>
+                  <Component {...pageProps} />
+                </DomWrapper>
+                {
+                  /**
+                   * Assign canvas items to canvas property of components
+                   * Check if property exist here and render conditionally
+                   * This assures a persistent 3d canvas that doesn't rerender every
+                   * Page load
+                   */
+                  Component?.canvas && (
+                    <CanvasWrapper eventSource={ref} initialLoad={!hasPrevPage}>
+                      <Component.canvas {...pageProps} />
+                    </CanvasWrapper>
+                  )
+                }
+              </div>
+            </LanguageProvider>
+          </PreviewProvider>
+        ) : (
+          <LanguageProvider>
             <div ref={ref}>
               <DomWrapper studio={pathname.includes('studio')} initialLoad={!hasPrevPage}>
                 <Component {...pageProps} />
               </DomWrapper>
               {
-                /**
-                 * Assign canvas items to canvas property of components
-                 * Check if property exist here and render conditionally
-                 * This assures a persistent 3d canvas that doesn't rerender every
-                 * Page load
-                 */
                 Component?.canvas && (
                   <CanvasWrapper eventSource={ref} initialLoad={!hasPrevPage}>
-                    <Component.canvas {...pageProps} />
+                    <Component.canvas {...pageProps} /> 
                   </CanvasWrapper>
                 )
               }
             </div>
-          </PreviewProvider>
-        ) : (
-          <div ref={ref}>
-            <DomWrapper studio={pathname.includes('studio')} initialLoad={!hasPrevPage}>
-              <Component {...pageProps} />
-            </DomWrapper>
-            {
-              Component?.canvas && (
-                <CanvasWrapper eventSource={ref} initialLoad={!hasPrevPage}>
-                  <Component.canvas {...pageProps} /> 
-                </CanvasWrapper>
-              )
-            }
-          </div>
+          </LanguageProvider>
         )}
       </StrictMode>
     </>

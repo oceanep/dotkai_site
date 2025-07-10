@@ -75,12 +75,22 @@
   font-style: normal;
   font-display: swap;
 }
+
 @font-face {
   font-family: NeueMachina;
   src: url("/fonts/PPNeueMachina-InktrapRegularItalic.otf") format("opentype");
   font-weight: 400;
   font-style: italic;
   font-display: swap;
+}
+
+@font-face {
+  font-family: GKKtt;
+  src: url("/fonts/851Gkktt_005.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  ascent-override: 80%;
 }
 
 html, body, #__next {

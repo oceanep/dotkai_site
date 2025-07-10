@@ -4,26 +4,29 @@ import { Project } from '@/lib/sanity.queries';
 import TextCard from '@/components/projectsPage/projectsDisplay/TextCard';
 import CustomImage from '@/components/projectsPage/projectsDisplay/CustomImage';
 import CustomVideo from '@/components/projectsPage/projectsDisplay/CustomVideo';
-import DescCard from './DescCard';
+import DescCard from '@/components/projectsPage/projectsDisplay/DescCard';
+import { Language } from '@/utils/types';
 
 interface ProjectsContentProps {
     selectedProject: Project;
     imgWidth: number;
+    language: Language;
 }
 
-const ProjectsContent: React.FC<ProjectsContentProps> = ({ selectedProject, imgWidth }) => {
+const ProjectsContent: React.FC<ProjectsContentProps> = ({ selectedProject, imgWidth, language = 'en' }) => {
     return (
         <>
             <TextCard
-                text={selectedProject.title.toUpperCase()}
+                text={selectedProject.title[language].toUpperCase()}
                 isTitle
+                isJp={language === "jp"}
             />
             <CustomImage
                 src={selectedProject.mainImage}
-                alt={selectedProject.title}
+                alt={selectedProject.title[language]}
                 width={imgWidth}
             />
-            <DescCard text={selectedProject.desc} />
+            <DescCard text={selectedProject.desc[language]} />
             {selectedProject.gallery.images?.length > 0 &&
                 selectedProject.gallery.images.map((image, i) => (
                     <CustomImage

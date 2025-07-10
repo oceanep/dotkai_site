@@ -1,5 +1,6 @@
 import { useRef } from "react";
 import ThreeLoader from "../loaders/ThreeLoader";
+import DomOverlay from "../DomOverlay";
 
 interface DomProps {
   children: React.ReactNode;
@@ -27,6 +28,7 @@ const Dom = ({ children, studio = false, initialLoad = false }: DomProps) => {
           }}
           ref={ref}
         >
+          <DomOverlay/>
           {children}
           <ThreeLoader
             noPrep={!initialLoad}

@@ -8,18 +8,18 @@ export default defineType({
         defineField({
             name: 'title',
             title: 'Title',
-            type: 'string',
+            type: 'localeString',
             validation: (Rule) => Rule.required(),
         }),
         defineField({
             name: 'secondaryTitle',
             title: 'secondaryTitle',
-            type: 'string',
+            type: 'localeString',
         }),
         defineField({
             name: 'subtitle',
             title: 'Subtitle',
-            type: 'string',
+            type: 'localeString',
         }),
         defineField({
             name: 'slug',
@@ -34,7 +34,7 @@ export default defineType({
         defineField({
             name: 'mainText',
             title: 'Main Text',
-            type: 'blockContent',
+            type: 'localeBlockContent',
             validation: (Rule) => Rule.required(),
         }),
         defineField({
@@ -154,9 +154,11 @@ export default defineType({
             title: 'title',
         },
         prepare(selection) {
-            const { title } = selection;
-
-            return { ...selection, subtitle: title && `by ${title}`}
+            const { title } = selection
+            const localizedTitle = title?.en || title?.jp || 'Untitled'
+            const subtitle = title?.jp || title?.en || ''
+            console.log('testing ', title)
+            return { ...selection, title: localizedTitle,  subtitle: subtitle && `${subtitle}`}
         }
     },
 });
