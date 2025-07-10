@@ -85,14 +85,6 @@
 }
 
 @font-face {
-  font-family: Letrogo;
-  src: url("/fonts/851letrogo_007.ttf") format("truetype");
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
   font-family: GKKtt;
   src: url("/fonts/851Gkktt_005.ttf") format("truetype");
   font-weight: 400;
