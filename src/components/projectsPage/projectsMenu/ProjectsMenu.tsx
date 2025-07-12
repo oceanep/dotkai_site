@@ -295,9 +295,13 @@ const ProjectsMenu: React.FC<ProjectsMenuProps> = ({
         const delta = lastTouchY.current - touchY
         
         // control acceleration and possible scroll amount
-        const scrollSpeed = 0.003; // accelleration of scroll
-        console.log({delta: delta * scrollSpeed})
-        const dampedDelta = MathUtils.clamp(delta * scrollSpeed, -0.1, 0.1);
+        const dpr = window.devicePixelRatio
+        const scrollSpeed = dpr >= 3 ? 0.003 : 0.3; // accelleration of scroll
+        const dampedDelta = MathUtils.clamp(
+            delta * scrollSpeed,
+            dpr >= 3 ? -0.1 : -0.5,
+            dpr >= 3 ? 0.1 : 0.5
+        );
 
         // build velocity
         scrollVelocity.current += dampedDelta

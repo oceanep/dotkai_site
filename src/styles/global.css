@@ -105,7 +105,7 @@ html, body, #__next {
 }
 
 html {
-  background-color: var(--white);
+  background-color: var(--black);
   font-family: var(--font-family-sans), var(--font-family-serif), sans-serif;
   -webkit-text-size-adjust: 100%;
   -moz-text-size-adjust: 100%;
