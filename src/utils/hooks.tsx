@@ -14,7 +14,7 @@ export const useDebouncedResize = (): number[] => {
         setSize(
                 getVisualViewportSize(isIOS ? true : false, isIphone || isAndroid)
             )},
-    [isIOS, isIphone])
+    [isIOS, isIphone, isAndroid])
 
     useEffect(() => {
         const debouncedResize = throttle(
