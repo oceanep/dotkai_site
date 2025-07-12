@@ -286,7 +286,6 @@ const ProjectsMenu: React.FC<ProjectsMenuProps> = ({
     }, [])
 
     const handleTouchMove = useCallback((e: ThreeEvent<PointerEvent>) => {
-        // e.nativeEvent.preventDefault()
         if ( !(e.isPrimary && e.pointerType === 'touch')) {
             console.log('❌ Not scrollable or multiple touches')
             return
@@ -296,10 +295,8 @@ const ProjectsMenu: React.FC<ProjectsMenuProps> = ({
         const delta = lastTouchY.current - touchY
         
         // control acceleration and possible scroll amount
-        console.log({dpr: window.devicePixelRatio})
         const dpr = window.devicePixelRatio
         const scrollSpeed = dpr >= 3 ? 0.003 : 0.3; // accelleration of scroll
-        // console.log({delta: delta * scrollSpeed})
         const dampedDelta = MathUtils.clamp(
             delta * scrollSpeed,
             dpr >= 3 ? -0.1 : -0.5,
