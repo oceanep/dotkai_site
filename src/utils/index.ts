@@ -43,11 +43,11 @@ export function getMobilePlatform() {
   }
 }
 
-export function getVisualViewportSize(iOS: boolean, iphone: boolean): [number, number] {
+export function getVisualViewportSize(iOS: boolean, phone: boolean): [number, number] {
   if (typeof window === 'undefined') return [800, 600] // default SSR-safe fallback
 
   const width = iOS ? window.visualViewport?.width || window.innerWidth: window.innerWidth
-  const height = iphone
+  const height = phone
     ? window.visualViewport?.height + 180 || window.innerHeight + 180
     : iOS
       ? window.visualViewport?.height || window.innerHeight

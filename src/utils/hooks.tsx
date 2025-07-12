@@ -7,12 +7,12 @@ export const useDebouncedResize = (): number[] => {
   
     //set screen resolution
     const [size, setSize] = useState<number[]>(
-        getVisualViewportSize(isIOS ? true : false, isIphone)
+        getVisualViewportSize(isIOS ? true : false, isIphone || isAndroid)
     )
 
     const handleSetSize = useCallback(() =>{
         setSize(
-                getVisualViewportSize(isIOS ? true : false, isIphone)
+                getVisualViewportSize(isIOS ? true : false, isIphone || isAndroid)
             )},
     [isIOS, isIphone])
 
