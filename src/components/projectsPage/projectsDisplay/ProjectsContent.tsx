@@ -26,14 +26,20 @@ const ProjectsContent: React.FC<ProjectsContentProps> = ({ selectedProject, imgW
                 alt={selectedProject.title[language]}
                 width={imgWidth}
             />
-            <DescCard text={selectedProject.desc[language]} />
+            <DescCard
+                text={selectedProject.desc[language]}
+                longDesc={selectedProject?.longDesc || false}
+            />
+            {selectedProject?.desc_cont && (
+                <DescCard cont text={selectedProject.desc_cont[language]} />
+            )}
             {selectedProject.gallery.images?.length > 0 &&
                 selectedProject.gallery.images.map((image, i) => (
                     <CustomImage
                         src={image}
                         alt={image.alt}
                         displayType={selectedProject.gallery.display}
-                        index={i}
+                        index={selectedProject?.longDesc ? i + 3 : i}
                         width={image.metadata.dimensions.width > image.metadata.dimensions.height ? 300 : 200}
                         key={`${image._key}-${i}`}
                         label={image.alt}
@@ -48,7 +54,7 @@ const ProjectsContent: React.FC<ProjectsContentProps> = ({ selectedProject, imgW
                         width={video?.height > video?.width ? 250 : 350}
                         imgArrLength={selectedProject.gallery.images?.length || 0}
                         displayType={selectedProject.gallery.display}
-                        index={i}
+                        index={selectedProject?.longDesc ? i + 3 : i}
                         key={`${video._key}-${i}`}
                         label={video.alt}
                     />

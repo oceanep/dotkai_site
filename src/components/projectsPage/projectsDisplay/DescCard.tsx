@@ -6,12 +6,14 @@ import styles from './ProjectsDisplay.module.scss'
 interface DescCardProps {
     text: PortableTextBlock | PortableTextBlock[]
     noImage?: boolean
+    cont?: boolean
+    longDesc?: boolean
 }
 
-const DescCard:React.FC<DescCardProps> = ({ text, noImage = false }) => {
+const DescCard:React.FC<DescCardProps> = ({ text, noImage = false, cont = false, longDesc = false }) => {
 
     return (
-        <div className={`${styles['description-wrapper']} ${noImage ? styles['no-image'] : ''}`}>
+        <div className={`${styles['description-wrapper']} ${noImage ? styles['no-image'] : ''} ${cont ? styles['continued'] : ''} ${longDesc ? styles['long'] : ''}`}>
             <div className={styles['description-card']}>
                 <div className={styles['crt-text']}>
                     <PortableText value={text} components={customMarks} />
