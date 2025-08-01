@@ -41,6 +41,18 @@ export default defineType({
             type: 'localeBlockContent',
         }),
         defineField({
+            name: 'longDesc',
+            title: 'Extra Long Description',
+            type: 'boolean',
+            description: 'Indicates if the project description is extra long',
+        }),
+        defineField({
+            name: 'desc_cont',
+            title: 'Project Description Continued',
+            type: 'localeBlockContent',
+            description: 'Additional project description (optional)',
+        }),
+        defineField({
             name: 'gallery',
             title: 'Image & Video Gallery',
             type: 'gallery',

@@ -1059,6 +1059,23 @@ $colors: (
             margin-top: 26px; // attempt safari transform bug fix by using even numbers
         }
     }
+
+    &.continued {
+        grid-row: 5/7;
+        align-self: flex-start;
+        margin-top: 25px;
+
+        @include mediaQuery(MOBILE_AND_TABLET) {
+            grid-row: 5 / 7;
+            margin-top: 26px; // attempt safari transform bug fix by using even numbers
+        }
+    }
+
+    &.long{
+        grid-column: 1/7;
+        align-self: flex-start;
+        margin: 0px 50px;
+    }
     
     @include mediaQuery(MOBILE_AND_TABLET) {
         grid-column: 1 / 7;

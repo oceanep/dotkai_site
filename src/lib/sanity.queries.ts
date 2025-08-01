@@ -28,6 +28,8 @@ export const postSlugsQuery = groq`
 export const projectsQuery = groq`
   *[_type == "project" && defined(slug.current)] |  order(order asc, _createdAt asc) {
       "desc": desc,
+      "longDesc": longDesc,
+      "desc_cont": desc_cont,
       "title": title,
       "slug": slug.current,
       "mainImage": mainImage{
@@ -151,6 +153,8 @@ export interface Project {
   title?: string
   slug: Slug
   desc?: PortableTextBlock[]
+  desc_cont?: PortableTextBlock[]
+  longDesc?: boolean
   mainImage?: ImageAsset
   mainImageUrl?: string
   gallery?: Gallery
