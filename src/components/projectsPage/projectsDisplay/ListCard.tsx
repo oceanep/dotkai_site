@@ -21,7 +21,12 @@ const ListCard:React.FC<ListCardProps> = ({ title, list }) => {
                             {item?.url 
                                 ?
                                     <strong>
-                                        <a href={item.url} className={styles['list-link']}>
+                                        <a
+                                            href={item.url}
+                                            className={styles['list-link']}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                        >
                                             {item.title}
                                         </a>
                                     </strong>
